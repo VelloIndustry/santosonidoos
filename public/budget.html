@@ -603,7 +603,12 @@
     <span class="logo">Santo Sonido OS</span>
     <span class="badge">Budget — Internal</span>
   </div>
-  <button class="btn btn-primary" onclick="openModal()">+ Entrada</button>
+  <div style="display:flex;align-items:center;gap:12px;">
+    <a href="/crm" style="color:#888;font-size:13px;text-decoration:none;">CRM</a>
+    <a href="/invoices" style="color:#888;font-size:13px;text-decoration:none;">Facturas</a>
+    <form method="POST" action="/logout" style="margin:0"><button style="background:none;border:none;color:#555;font-size:13px;cursor:pointer;padding:0" onmouseover="this.style.color='#e57373'" onmouseout="this.style.color='#555'">Salir</button></form>
+    <button class="btn btn-primary" onclick="openModal()">+ Entrada</button>
+  </div>
 </div>
 
 <div class="main">

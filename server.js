@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const { requireAuth } = require('./middleware/auth');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -18,6 +19,9 @@ app.use(require('cookie-parser')());
 app.get('/health', (req, res) => {
   res.json({ status: 'healthy' });
 });
+
+// Auth routes (login/logout pages — no auth required)
+app.use('/', require('./routes/auth'));
 
 // Budget tracker — internal only
 app.use('/api/budget', require('./routes/budget'));
@@ -137,8 +141,8 @@ app.get('/work', (req, res) => serveHtmlPage(res, 'work.html'));
 app.get('/studio', (req, res) => serveHtmlPage(res, 'studio.html'));
 app.get('/producer', (req, res) => serveHtmlPage(res, 'producer.html'));
 app.get('/artists', (req, res) => serveHtmlPage(res, 'artists.html'));
-app.get('/budget', (req, res) => serveHtmlPage(res, 'budget.html'));
-app.get('/crm', (req, res) => serveHtmlPage(res, 'crm.html'));
+app.get('/budget', requireAuth, (req, res) => serveHtmlPage(res, 'budget.html'));
+app.get('/crm', requireAuth, (req, res) => serveHtmlPage(res, 'crm.html'));
 app.get('/crm/join', (req, res) => {
   // Inject bot WhatsApp number for wa.me link on success screen
   const htmlPath = path.join(__dirname, 'public', 'crm-join.html');
@@ -158,8 +162,8 @@ app.get('/join', (req, res) => serveHtmlPage(res, 'join.html'));
 app.get('/dashboard', (req, res) => serveHtmlPage(res, 'dashboard.html'));
 app.get('/privacy', (req, res) => serveHtmlPage(res, 'privacy.html'));
 app.get('/terms', (req, res) => serveHtmlPage(res, 'terms.html'));
-app.get('/invoice/:token', (req, res) => serveHtmlPage(res, 'invoice.html'));
-app.get('/invoices', (req, res) => serveHtmlPage(res, 'invoices.html'));
+app.get('/invoice/:token', (req, res) => serveHtmlPage(res, 'invoice.html')); // public
+app.get('/invoices', requireAuth, (req, res) => serveHtmlPage(res, 'invoices.html'));
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
