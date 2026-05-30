@@ -136,7 +136,7 @@ function serveHtmlPage(res, filename) {
   }
 }
 
-app.get('/', (req, res) => serveHtmlPage(res, 'index.html'));
+app.get('/', (req, res) => res.redirect('/budget'));
 app.get('/work', (req, res) => serveHtmlPage(res, 'work.html'));
 app.get('/studio', (req, res) => serveHtmlPage(res, 'studio.html'));
 app.get('/producer', (req, res) => serveHtmlPage(res, 'producer.html'));
