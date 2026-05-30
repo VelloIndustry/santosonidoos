@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cotizaciones & Facturas — Santo Sonido OS</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0d0d0d; color: #e0e0e0; font-family: 'Helvetica Neue', Arial, sans-serif; min-height: 100vh; }
+    header { background: #111; border-bottom: 1px solid #222; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }
+    .logo { color: #d4a847; font-size: 18px; font-weight: 700; letter-spacing: 1px; }
+    .nav-links { display: flex; gap: 20px; }
+    .nav-links a { color: #888; text-decoration: none; font-size: 13px; }
+    .nav-links a:hover { color: #d4a847; }
+    .nav-links a.active { color: #d4a847; }
+    main { max-width: 1100px; margin: 0 auto; padding: 28px 20px; }
+    h1 { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .page-sub { color: #666; font-size: 13px; margin-bottom: 24px; }
+    .toolbar { display: flex; gap: 12px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
+    .toolbar select, .toolbar input { background: #1a1a1a; border: 1px solid #2a2a2a; color: #e0e0e0; padding: 8px 12px; border-radius: 6px; font-size: 13px; }
+    .btn { padding: 9px 18px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; }
+    .btn-gold { background: #d4a847; color: #000; }
+    .btn-gold:hover { background: #e6bc5a; }
+    .btn-sm { padding: 5px 12px; font-size: 12px; }
+    .btn-outline { background: transparent; border: 1px solid #333; color: #ccc; }
+    .btn-outline:hover { border-color: #d4a847; color: #d4a847; }
+    .btn-danger { background: transparent; border: 1px solid #c0392b; color: #e57373; }
+    .btn-danger:hover { background: #c0392b22; }
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 24px; }
+    .stat-card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 16px; }
+    .stat-label { color: #666; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .stat-value { color: #d4a847; font-size: 22px; font-weight: 700; }
+    .stat-sub { color: #888; font-size: 11px; margin-top: 3px; }
+    table { width: 100%; border-collapse: collapse; }
+    thead th { text-align: left; color: #666; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; border-bottom: 1px solid #222; }
+    tbody tr { border-bottom: 1px solid #1a1a1a; }
+    tbody tr:hover { background: #161616; }
+    tbody td { padding: 12px 12px; font-size: 13px; color: #ccc; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+    .badge-quote { background: #1a3a5c; color: #5b9bd5; }
+    .badge-invoice { background: #1a2a1a; color: #5bd55b; }
+    .badge-paid { background: #1a3a1a; color: #4CAF50; }
+    .badge-sent { background: #1a2a3a; color: #5b9bd5; }
+    .badge-draft { background: #2a2a2a; color: #888; }
+    .badge-cancelled { background: #2a1a1a; color: #e57373; }
+    .amount-col { color: #d4a847; font-weight: 600; }
+    .actions { display: flex; gap: 6px; }
+    .empty { text-align: center; padding: 60px; color: #444; }
+    /* Modal */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
+    .modal-overlay.hidden { display: none; }
+    .modal { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; width: 100%; max-width: 500px; padding: 28px; }
+    .modal h2 { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 20px; }
+    .form-row { margin-bottom: 14px; }
+    label { display: block; color: #888; font-size: 12px; margin-bottom: 5px; }
+    input, select, textarea { width: 100%; background: #111; border: 1px solid #2a2a2a; color: #e0e0e0; padding: 9px 12px; border-radius: 6px; font-size: 13px; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: #d4a847; }
+    textarea { resize: vertical; min-height: 70px; }
+    .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+    .copy-link { cursor: pointer; color: #d4a847; font-size: 12px; text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">🎵 Santo Sonido OS</div>
+    <div class="nav-links">
+      <a href="/budget">Budget</a>
+      <a href="/crm">CRM</a>
+      <a href="/invoices" class="active">Facturas</a>
+    </div>
+  </header>
+
+  <main>
+    <h1>Cotizaciones & Facturas</h1>
+    <p class="page-sub">Historial de cotizaciones e invoices generados por el bot o manualmente.</p>
+
+    <div class="stats-row" id="stats-row">
+      <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value" id="s-total">—</div></div>
+      <div class="stat-card"><div class="stat-label">Pagadas</div><div class="stat-value" id="s-paid">—</div></div>
+      <div class="stat-card"><div class="stat-label">Enviadas</div><div class="stat-value" id="s-sent">—</div></div>
+      <div class="stat-card"><div class="stat-label">Ingresos (COP)</div><div class="stat-value" id="s-income">—</div></div>
+    </div>
+
+    <div class="toolbar">
+      <select id="filter-status" onchange="load()">
+        <option value="">Todos los estados</option>
+        <option value="draft">Borrador</option>
+        <option value="sent">Enviada</option>
+        <option value="paid">Pagada</option>
+        <option value="cancelled">Cancelada</option>
+      </select>
+      <select id="filter-type" onchange="load()">
+        <option value="">Todos los tipos</option>
+        <option value="quote">Cotizaciones</option>
+        <option value="invoice">Facturas</option>
+      </select>
+      <button class="btn btn-gold" onclick="openModal()">+ Nueva</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Número</th>
+          <th>Tipo</th>
+          <th>Cliente</th>
+          <th>Descripción</th>
+          <th>Monto COP</th>
+          <th>Estado</th>
+          <th>Fecha</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    <div class="empty hidden" id="empty">No hay facturas aún.</div>
+  </main>
+
+  <!-- New invoice modal -->
+  <div class="modal-overlay hidden" id="modal">
+    <div class="modal">
+      <h2 id="modal-title">Nueva Cotización / Factura</h2>
+      <div class="form-row">
+        <label>Tipo</label>
+        <select id="f-type">
+          <option value="quote">Cotización</option>
+          <option value="invoice">Factura</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Cliente *</label>
+        <input id="f-client" type="text" placeholder="Nombre del cliente" />
+      </div>
+      <div class="form-row">
+        <label>Teléfono</label>
+        <input id="f-phone" type="text" placeholder="+573001234567" />
+      </div>
+      <div class="form-row">
+        <label>Monto COP *</label>
+        <input id="f-amount" type="number" placeholder="500000" />
+      </div>
+      <div class="form-row">
+        <label>Track</label>
+        <select id="f-track">
+          <option value="Studio">Studio</option>
+          <option value="Artist">Artist</option>
+          <option value="Producer">Producer</option>
+          <option value="Camera">Camera</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Descripción *</label>
+        <textarea id="f-desc" placeholder="Mix y master del sencillo..."></textarea>
+      </div>
+      <div class="form-row">
+        <label>Fecha de vencimiento</label>
+        <input id="f-due" type="date" />
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
+        <button class="btn btn-gold" onclick="createInvoice()">Crear</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SECRET = localStorage.getItem('budgetSecret') || prompt('Ingresa el secret de acceso:') || '';
+    if (SECRET) localStorage.setItem('budgetSecret', SECRET);
+    const HEADERS = { 'Content-Type': 'application/json', 'x-budget-secret': SECRET };
+
+    function fmt(n) { return Number(n).toLocaleString('es-CO'); }
+    function fmtDate(d) { return d ? new Date(d).toLocaleDateString('es-CO') : '—'; }
+
+    const statusMap = { draft: 'Borrador', sent: 'Enviada', paid: 'Pagada', cancelled: 'Cancelada' };
+    const typeMap = { quote: 'Cotización', invoice: 'Factura' };
+
+    async function load() {
+      const status = document.getElementById('filter-status').value;
+      const type = document.getElementById('filter-type').value;
+      const params = new URLSearchParams();
+      if (status) params.set('status', status);
+      if (type) params.set('type', type);
+
+      const res = await fetch(`/api/invoices?${params}`, { headers: HEADERS });
+      const items = await res.json();
+      renderTable(items);
+      renderStats(items);
+    }
+
+    function renderStats(items) {
+      const paid = items.filter(i => i.status === 'paid');
+      const sent = items.filter(i => i.status === 'sent');
+      const income = paid.reduce((s, i) => s + Number(i.amount_cop || 0), 0);
+      document.getElementById('s-total').textContent = items.length;
+      document.getElementById('s-paid').textContent = paid.length;
+      document.getElementById('s-sent').textContent = sent.length;
+      document.getElementById('s-income').textContent = `$${fmt(income)}`;
+    }
+
+    function renderTable(items) {
+      const tbody = document.getElementById('tbody');
+      const empty = document.getElementById('empty');
+      if (!items.length) { tbody.innerHTML = ''; empty.classList.remove('hidden'); return; }
+      empty.classList.add('hidden');
+
+      tbody.innerHTML = items.map(inv => {
+        const typeClass = inv.type === 'quote' ? 'badge-quote' : 'badge-invoice';
+        const statusClass = { draft: 'badge-draft', sent: 'badge-sent', paid: 'badge-paid', cancelled: 'badge-cancelled' }[inv.status] || 'badge-draft';
+        const viewUrl = `/invoice/${inv.public_token}`;
+        return `
+          <tr>
+            <td><a href="${viewUrl}" target="_blank" style="color:#d4a847;text-decoration:none;">${inv.invoice_number}</a></td>
+            <td><span class="badge ${typeClass}">${typeMap[inv.type] || inv.type}</span></td>
+            <td>${inv.client_name}</td>
+            <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${inv.description}</td>
+            <td class="amount-col">$${fmt(inv.amount_cop)}</td>
+            <td><span class="badge ${statusClass}">${statusMap[inv.status] || inv.status}</span></td>
+            <td>${fmtDate(inv.created_at)}</td>
+            <td>
+              <div class="actions">
+                ${inv.status !== 'paid' && inv.status !== 'cancelled' ? `<button class="btn btn-sm btn-outline" onclick="markStatus(${inv.id}, '${inv.status === 'sent' ? 'paid' : 'sent'}')">→ ${inv.status === 'sent' ? 'Pagada' : 'Enviada'}</button>` : ''}
+                <button class="btn btn-sm btn-outline" onclick="copyLink('${viewUrl}')">🔗</button>
+                ${inv.status !== 'paid' ? `<button class="btn btn-sm btn-danger" onclick="markStatus(${inv.id}, 'cancelled')">✕</button>` : ''}
+              </div>
+            </td>
+          </tr>`;
+      }).join('');
+    }
+
+    async function markStatus(id, status) {
+      const label = { sent: 'enviada', paid: 'pagada', cancelled: 'cancelada' }[status] || status;
+      if (!confirm(`¿Marcar como ${label}?`)) return;
+      await fetch(`/api/invoices/${id}/status`, { method: 'PUT', headers: HEADERS, body: JSON.stringify({ status }) });
+      load();
+    }
+
+    function copyLink(url) {
+      const full = location.origin + url;
+      navigator.clipboard.writeText(full).then(() => alert('¡Enlace copiado!\n' + full));
+    }
+
+    function openModal() { document.getElementById('modal').classList.remove('hidden'); }
+    function closeModal() { document.getElementById('modal').classList.add('hidden'); }
+
+    async function createInvoice() {
+      const body = {
+        type: document.getElementById('f-type').value,
+        client_name: document.getElementById('f-client').value.trim(),
+        client_phone: document.getElementById('f-phone').value.trim() || undefined,
+        amount_cop: Number(document.getElementById('f-amount').value),
+        track: document.getElementById('f-track').value,
+        description: document.getElementById('f-desc').value.trim(),
+        due_date: document.getElementById('f-due').value || undefined,
+      };
+      if (!body.client_name || !body.amount_cop || !body.description) {
+        alert('Completa los campos obligatorios.'); return;
+      }
+      const res = await fetch('/api/invoices', { method: 'POST', headers: HEADERS, body: JSON.stringify(body) });
+      if (!res.ok) { alert('Error al crear. Intenta de nuevo.'); return; }
+      closeModal();
+      load();
+    }
+
+    load();
+  </script>
+</body>
+</html>

@@ -1,0 +1,2642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Santo Sonido OS — Production · Music · Business</title>
+    <meta name="description" content="Santo Sonido OS is a dual-track music business: full-service production studio (beats, mix & master, music videos) and home of recording artist Faker — debut album Chamba Mentality Vol. 1, July 2026. Caracas, Mexico City, Medellín, Bogotá, Buenos Aires, Madrid.">
+    <meta property="og:title" content="Santo Sonido OS — Production · Music · Business">
+    <meta property="og:description" content="Full-service production studio + recording artist. Caracas · Mexico City · Medellín · Bogotá · Buenos Aires · Madrid. Booking open.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://pub-629428d185ca4960a0a73c850d32294b.r2.dev/company_104094/images/ced0f79d-9bbb-4885-aed3-8064ed9d34e9.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://pub-629428d185ca4960a0a73c850d32294b.r2.dev/company_104094/images/ced0f79d-9bbb-4885-aed3-8064ed9d34e9.jpg">
+    <meta property="og:url" content="https://santosonidoos.polsia.app/">
+    <meta property="og:locale" content="es_VE">
+    <meta name="twitter:title" content="Santo Sonido OS — Production · Music · Business">
+    <meta name="twitter:description" content="Full-service production studio + recording artist. Caracas · Mexico City · Medellín · Bogotá · Buenos Aires · Madrid. Booking open.">
+    <link rel="canonical" href="https://santosonidoos.polsia.app/">
+    <link rel="alternate" hreflang="es" href="https://santosonidoos.polsia.app/">
+    <link rel="alternate" hreflang="en" href="https://santosonidoos.polsia.app/">
+    <link rel="alternate" hreflang="x-default" href="https://santosonidoos.polsia.app/">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://www.youtube.com">
+    <link rel="preconnect" href="https://open.spotify.com">
+    <link rel="preconnect" href="https://plausible.io">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black: #0a0a0a;
+            --deep: #111111;
+            --surface: #1a1a1a;
+            --surface-2: #222222;
+            --border: #2a2a2a;
+            --border-light: #333333;
+            --muted: #666666;
+            --text: #e0e0e0;
+            --white: #f5f5f5;
+            --gold: #d4a847;
+            --gold-dim: #b8922e;
+            --gold-bright: #f0c060;
+            --warm: #ff6b35;
+            --accent: #c9553a;
+            --red: #e03e2d;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--black);
+            color: var(--text);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Grain */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            color: var(--white);
+        }
+        .display {
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 0.04em;
+        }
+
+        /* ---- NAV ---- */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            padding: 16px 8vw;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(180deg, rgba(10,10,10,0.95) 0%, transparent 100%);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        .nav-logo img {
+            height: 40px;
+            width: auto;
+            display: block;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            list-style: none;
+        }
+        .nav-links a {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--muted);
+            text-decoration: none;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--white); }
+
+        .nav-cta {
+            background: var(--gold) !important;
+            color: var(--black) !important;
+            padding: 10px 20px;
+            font-weight: 700 !important;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition: background 0.2s !important;
+        }
+        .nav-cta:hover { background: var(--gold-bright) !important; }
+
+        /* ---- HERO ---- */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 0 8vw 10vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg-image {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+        .hero-bg-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+        }
+        .hero-bg-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                180deg,
+                rgba(10,10,10,0.35) 0%,
+                rgba(10,10,10,0.2) 30%,
+                rgba(10,10,10,0.65) 70%,
+                rgba(10,10,10,0.95) 100%
+            );
+        }
+
+        /* Big background text */
+        .hero-bg-text {
+            position: absolute;
+            bottom: -0.15em;
+            left: -0.04em;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(160px, 25vw, 340px);
+            line-height: 1;
+            letter-spacing: 0.04em;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(212,168,71,0.06);
+            pointer-events: none;
+            user-select: none;
+            white-space: nowrap;
+            z-index: 1;
+        }
+
+        .hero-eyebrow {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            position: relative;
+            z-index: 2;
+        }
+        .hero-eyebrow::before {
+            content: '';
+            width: 40px;
+            height: 1px;
+            background: var(--gold);
+            flex-shrink: 0;
+        }
+
+        .hero h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(4.5rem, 11vw, 10rem);
+            line-height: 0.95;
+            letter-spacing: 0.04em;
+            max-width: 1000px;
+            margin-bottom: 36px;
+            position: relative;
+            z-index: 2;
+        }
+        .hero h1 .gold { color: var(--gold); }
+        .hero h1 .outline {
+            color: transparent;
+            -webkit-text-stroke: 2px var(--white);
+        }
+
+        .hero-sub {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: rgba(224,224,224,0.85);
+            max-width: 500px;
+            margin-bottom: 48px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--gold);
+            color: var(--black);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 16px 32px;
+            text-decoration: none;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .btn-primary:hover {
+            background: var(--gold-bright);
+            transform: translateY(-1px);
+        }
+        .btn-primary .arrow { font-size: 1rem; transition: transform 0.2s; }
+        .btn-primary:hover .arrow { transform: translateX(4px); }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: transparent;
+            color: var(--text);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 16px 28px;
+            border: 1px solid var(--border-light);
+            text-decoration: none;
+            transition: border-color 0.2s, color 0.2s;
+        }
+        .btn-secondary:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        /* Hero marquee strip */
+        .marquee-strip {
+            background: var(--gold);
+            overflow: hidden;
+            white-space: nowrap;
+            padding: 12px 0;
+        }
+        .marquee-inner {
+            display: inline-block;
+            animation: marquee 32s linear infinite;
+        }
+        .marquee-inner span {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--black);
+            padding: 0 32px;
+        }
+        .marquee-inner span.sep { opacity: 0.4; }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ---- DIVIDER ---- */
+        .divider {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+        }
+
+        /* ---- SECTION BASE ---- */
+        .section {
+            padding: 120px 8vw;
+        }
+
+        .section-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            font-size: clamp(2rem, 4vw, 3.4rem);
+            line-height: 1.12;
+            letter-spacing: -0.02em;
+            margin-bottom: 64px;
+            max-width: 680px;
+        }
+
+        /* ---- DUAL TRACK ---- */
+        .tracks {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2px;
+            background: var(--border);
+            border: 1px solid var(--border);
+        }
+
+        .track {
+            background: var(--deep);
+            padding: 0;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.3s;
+        }
+
+        .track-image {
+            width: 100%;
+            aspect-ratio: 4/3;
+            overflow: hidden;
+            position: relative;
+        }
+        .track-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+        .track:hover .track-image img {
+            transform: scale(1.03);
+        }
+        .track-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 40%, rgba(10,10,10,0.7) 100%);
+        }
+
+        .track-content {
+            padding: 48px 52px 52px;
+            background: var(--deep);
+            transition: background 0.3s;
+        }
+        .track:hover .track-content { background: #161616; }
+
+        .track-content::before {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 3px;
+            margin-bottom: 36px;
+            margin-left: -52px;
+            width: calc(100% + 104px);
+        }
+        .track-producer .track-content::before { background: var(--gold); }
+        .track-artist .track-content::before { background: var(--accent); }
+
+        .track-number {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 5rem;
+            line-height: 1;
+            color: rgba(255,255,255,0.04);
+            position: absolute;
+            top: 32px; right: 40px;
+            letter-spacing: 0.04em;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .track-badge {
+            display: inline-block;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            padding: 6px 14px;
+            margin-bottom: 20px;
+            border: 1px solid;
+        }
+        .track-producer .track-badge { color: var(--gold); border-color: var(--gold); }
+        .track-artist .track-badge { color: var(--accent); border-color: var(--accent); }
+
+        .track h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2.5rem, 4vw, 4rem);
+            letter-spacing: 0.04em;
+            line-height: 1;
+            margin-bottom: 20px;
+        }
+
+        .track-desc {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--muted);
+            margin-bottom: 32px;
+            max-width: 380px;
+        }
+
+        .track-features {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 36px;
+        }
+        .track-features li {
+            font-size: 0.9rem;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .track-features li::before {
+            content: '';
+            width: 20px;
+            height: 1px;
+            flex-shrink: 0;
+        }
+        .track-producer .track-features li::before { background: var(--gold); }
+        .track-artist .track-features li::before { background: var(--accent); }
+
+        .track-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: gap 0.2s;
+        }
+        .track-link:hover { gap: 16px; }
+        .track-producer .track-link { color: var(--gold); }
+        .track-artist .track-link { color: var(--accent); }
+
+        /* ---- ARTIST AUTO-ROTATE ---- */
+        .track-artist {
+            color: inherit;
+            transition: opacity 0.2s;
+        }
+        .track-artist:hover { opacity: 0.92; }
+        .artist-autorotate {
+            position: relative;
+            overflow: hidden;
+        }
+        .ar-slide {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.7s ease;
+        }
+        .ar-slide.ar-active {
+            display: block;
+            opacity: 1;
+        }
+        .ar-slide.ar-fade-out {
+            display: block;
+            opacity: 0;
+        }
+        /* Auto-rotate indicator dots */
+        .ar-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 16px 0 8px;
+            background: var(--deep);
+        }
+        .ar-dot {
+            width: 22px;
+            height: 3px;
+            background: rgba(212,168,71,0.2);
+            display: inline-block;
+            transition: background 0.3s;
+        }
+        .ar-dot.ar-dot-active { background: var(--gold); }
+        /* Apache placeholder image */
+        .apache-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a0d0a 0%, #2d1510 30%, #1c1008 60%, #0f0a0f 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .apache-placeholder::before {
+            content: 'APACHE';
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(4rem, 8vw, 8rem);
+            letter-spacing: 0.12em;
+            color: rgba(201,85,58,0.12);
+            position: absolute;
+            pointer-events: none;
+        }
+        .apache-placeholder-inner {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+        .apache-placeholder-inner span {
+            display: block;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(1.8rem, 3vw, 3rem);
+            letter-spacing: 0.1em;
+            color: rgba(201,85,58,0.5);
+        }
+
+        /* Ryan Castro placeholder image */
+        .ryan-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0d0d1a 0%, #141428 35%, #0a0a18 65%, #050510 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .ryan-placeholder::before {
+            content: 'RYAN';
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(4rem, 8vw, 8rem);
+            letter-spacing: 0.12em;
+            color: rgba(212,168,71,0.08);
+            position: absolute;
+            pointer-events: none;
+        }
+        .ryan-placeholder-inner {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+        .ryan-placeholder-inner span {
+            display: block;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(1.8rem, 3vw, 3rem);
+            letter-spacing: 0.1em;
+            color: rgba(212,168,71,0.35);
+        }
+
+        /* ---- WORK SECTION ---- */
+        .work-section {
+            padding: 120px 8vw;
+            background: var(--black);
+            position: relative;
+        }
+
+        .work-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+        }
+
+        /* Credentials block */
+        .credentials-block {
+            margin-bottom: 100px;
+        }
+
+        .cred-wall {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2px;
+            background: var(--border);
+            border: 1px solid var(--border);
+        }
+
+        .cred-card {
+            background: var(--deep);
+            padding: 52px 52px 56px;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.25s;
+        }
+        .cred-card:hover { background: #141414; }
+        .cred-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gold);
+        }
+
+        .cred-year {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(5rem, 10vw, 9rem);
+            line-height: 1;
+            color: rgba(212,168,71,0.06);
+            position: absolute;
+            bottom: -0.12em;
+            right: -0.04em;
+            letter-spacing: 0.04em;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .cred-icon-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+        .cred-trophy {
+            font-size: 2rem;
+            line-height: 1;
+        }
+        .cred-badge {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--gold);
+            border: 1px solid rgba(212,168,71,0.4);
+            padding: 6px 14px;
+        }
+
+        .cred-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(1.8rem, 3vw, 2.8rem);
+            letter-spacing: 0.04em;
+            line-height: 1.08;
+            color: var(--white);
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+            max-width: 420px;
+        }
+
+        .cred-sub {
+            font-size: 0.9rem;
+            color: var(--muted);
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+            max-width: 400px;
+        }
+        .cred-sub strong {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        /* Content category headers */
+        .work-category {
+            margin-bottom: 80px;
+        }
+        .work-category:last-child { margin-bottom: 0; }
+
+        .work-cat-header {
+            display: flex;
+            align-items: flex-end;
+            gap: 24px;
+            margin-bottom: 36px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        .work-cat-num {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 4rem;
+            line-height: 1;
+            color: rgba(212,168,71,0.1);
+            letter-spacing: 0.04em;
+            flex-shrink: 0;
+        }
+        .work-cat-info {}
+        .work-cat-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+            margin-bottom: 6px;
+        }
+        .work-cat-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            letter-spacing: 0.04em;
+            line-height: 1;
+            color: var(--white);
+        }
+
+        /* Videos grid */
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            background: var(--border);
+            border: 1px solid var(--border);
+        }
+
+        .video-card {
+            background: var(--deep);
+            overflow: hidden;
+            transition: background 0.25s;
+            cursor: pointer;
+        }
+        .video-card:hover { background: #161616; }
+
+        .video-thumb {
+            aspect-ratio: 16/9;
+            background: var(--surface);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .video-thumb-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        .video-play-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px solid rgba(212,168,71,0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: rgba(212,168,71,0.5);
+            transition: border-color 0.2s, color 0.2s, transform 0.2s;
+            flex-shrink: 0;
+        }
+        .video-card:hover .video-play-icon {
+            border-color: var(--gold);
+            color: var(--gold);
+            transform: scale(1.08);
+        }
+        .video-embed-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(212,168,71,0.3);
+        }
+        /* Placeholder gradient tints per card */
+        .video-thumb.tint-1 { background: linear-gradient(135deg, #111111 0%, #1a1510 100%); }
+        .video-thumb.tint-2 { background: linear-gradient(135deg, #0f0d14 0%, #171218 100%); }
+        .video-thumb.tint-3 { background: linear-gradient(135deg, #100f0a 0%, #1a1808 100%); }
+
+        .video-card-info {
+            padding: 20px 24px 24px;
+        }
+        .video-card-info .vc-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+            margin-bottom: 6px;
+        }
+        .video-card-info .vc-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+        .video-card-info .vc-desc {
+            font-size: 0.82rem;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+        /* Embed container (for real embeds later) */
+        .video-embed-container {
+            display: none; /* show when embed is added */
+            aspect-ratio: 16/9;
+            width: 100%;
+        }
+        .video-embed-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Songs/Audio list */
+        .songs-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            background: var(--border);
+            border: 1px solid var(--border);
+        }
+
+        .song-card {
+            background: var(--deep);
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 0;
+            align-items: stretch;
+            transition: background 0.25s;
+        }
+        .song-card:hover { background: #161616; }
+
+        .song-num {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            line-height: 1;
+            color: rgba(255,255,255,0.04);
+            padding: 28px 24px 28px 36px;
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .song-info {
+            padding: 28px 32px;
+            border-left: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+        }
+        .song-artist {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+            margin-bottom: 6px;
+        }
+        .song-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(1.4rem, 2.5vw, 2rem);
+            letter-spacing: 0.04em;
+            color: var(--white);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+        .song-meta {
+            font-size: 0.82rem;
+            color: var(--muted);
+        }
+        .song-meta .feat { color: var(--text); }
+
+        /* Spotify / player embed slot */
+        .song-player-slot {
+            padding: 20px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 180px;
+        }
+        .song-player-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .play-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1px solid rgba(212,168,71,0.3);
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(212,168,71,0.4);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: border-color 0.2s, color 0.2s, background 0.2s;
+        }
+        .song-card:hover .play-btn {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: rgba(212,168,71,0.06);
+        }
+        .player-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.55rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(212,168,71,0.25);
+            text-align: center;
+        }
+        /* Spotify embed slot (for real embeds later) */
+        .song-embed-container {
+            display: none; /* show when embed added */
+        }
+        .song-embed-container iframe {
+            width: 100%;
+            border: none;
+            border-radius: 0;
+        }
+
+        /* Photos masonry/grid */
+        .photos-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2px;
+            background: var(--border);
+            border: 1px solid var(--border);
+        }
+
+        .photo-card {
+            background: var(--surface);
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+        }
+        .photo-card:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+
+        .photo-thumb {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .photo-card:nth-child(1) .photo-thumb { aspect-ratio: 1 / 1; height: 100%; }
+
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 10px;
+            transition: transform 0.5s ease;
+        }
+        .photo-card:hover .photo-placeholder {
+            transform: scale(1.03);
+        }
+        .photo-icon {
+            font-size: 1.6rem;
+            opacity: 0.25;
+        }
+        .photo-upload-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.55rem;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.12);
+        }
+
+        /* Tints for photo placeholders */
+        .photo-placeholder.pt-1 { background: linear-gradient(135deg, #161210 0%, #221a12 100%); }
+        .photo-placeholder.pt-2 { background: linear-gradient(135deg, #101318 0%, #18202a 100%); }
+        .photo-placeholder.pt-3 { background: linear-gradient(135deg, #121012 0%, #1a141e 100%); }
+        .photo-placeholder.pt-4 { background: linear-gradient(135deg, #0e1210 0%, #161e14 100%); }
+        .photo-placeholder.pt-5 { background: linear-gradient(135deg, #14100a 0%, #20180e 100%); }
+
+        .photo-caption {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            padding: 14px 18px;
+            background: linear-gradient(0deg, rgba(10,10,10,0.9) 0%, transparent 100%);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .photo-card:hover .photo-caption { opacity: 1; }
+
+        /* Actual photo img (for real photos later) */
+        .photo-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            transition: transform 0.5s ease;
+        }
+        .photo-card:hover .photo-thumb img {
+            transform: scale(1.04);
+        }
+
+        /* Content coming banner */
+        .content-coming-note {
+            margin-top: 24px;
+            padding: 18px 24px;
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--gold-dim);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .content-coming-note .ccn-icon { font-size: 1rem; opacity: 0.5; flex-shrink: 0; }
+        .content-coming-note p {
+            font-size: 0.82rem;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+        .content-coming-note strong { color: var(--text); }
+
+        /* ---- MOBILE (work) ---- */
+        @media (max-width: 900px) {
+            .cred-wall { grid-template-columns: 1fr; }
+            .cred-card { padding: 40px 32px 44px; }
+            .videos-grid { grid-template-columns: 1fr; }
+            .photos-grid { grid-template-columns: repeat(2, 1fr); }
+            .photo-card:nth-child(1) { grid-column: span 2; }
+            .song-num { padding: 20px 16px 20px 24px; font-size: 2rem; }
+            .song-info { padding: 20px 20px; }
+            .song-player-slot { min-width: 100px; padding: 20px 20px; }
+        }
+
+        @media (max-width: 560px) {
+            .videos-grid { grid-template-columns: 1fr; }
+            .photos-grid { grid-template-columns: 1fr 1fr; }
+            .photo-card:nth-child(1) { grid-column: span 2; }
+            .song-card { grid-template-columns: auto 1fr; }
+            .song-player-slot { display: none; }
+        }
+
+        /* ---- PRODUCTION SERVICES ---- */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            margin-bottom: 2px;
+        }
+        .services-grid-bottom {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-top: none;
+        }
+
+        .service-card {
+            background: var(--deep);
+            padding: 44px 40px;
+            transition: background 0.25s;
+        }
+        .service-card:hover { background: #161616; }
+
+        .service-icon {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            display: block;
+            line-height: 1;
+        }
+
+        .service-card h3 {
+            font-size: 1.05rem;
+            margin-bottom: 10px;
+            letter-spacing: -0.01em;
+        }
+
+        .service-card p {
+            font-size: 0.9rem;
+            line-height: 1.65;
+            color: var(--muted);
+        }
+
+        /* ---- IMAGE BREAK SECTION ---- */
+        .image-break {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2px;
+            background: var(--border);
+            height: 480px;
+        }
+        .image-break-cell {
+            overflow: hidden;
+            position: relative;
+        }
+        .image-break-cell img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+        .image-break-cell:nth-child(1) img {
+            object-position: 25% center;
+        }
+        .image-break-cell:nth-child(2) img {
+            object-position: 25% center;
+        }
+        .image-break-cell:nth-child(3) img {
+            object-position: 25% center;
+        }
+        .image-break-cell:hover img {
+            transform: scale(1.04);
+        }
+        .image-break-cell .caption {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            padding: 20px 24px;
+            background: linear-gradient(0deg, rgba(10,10,10,0.85) 0%, transparent 100%);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+        }
+
+        /* ---- ALBUM RELEASE ---- */
+        .album-section {
+            padding: 120px 8vw;
+            background: var(--deep);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .album-section::before {
+            content: '';
+            position: absolute;
+            top: -200px; right: -200px;
+            width: 700px; height: 700px;
+            background: radial-gradient(circle, rgba(201,85,58,0.07) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+        .album-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .album-visual {
+            position: relative;
+        }
+
+        .album-art {
+            width: 100%;
+            aspect-ratio: 1;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--border);
+        }
+        .album-art img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+        .album-art:hover img {
+            transform: scale(1.03);
+        }
+        .album-art::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                135deg,
+                rgba(201,85,58,0.12) 0%,
+                transparent 50%,
+                rgba(212,168,71,0.08) 100%
+            );
+            pointer-events: none;
+        }
+
+        .album-corner-tag {
+            position: absolute;
+            bottom: 0; right: 0;
+            background: var(--accent);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--white);
+            padding: 10px 16px;
+            z-index: 2;
+        }
+
+        .album-info { position: relative; z-index: 1; }
+
+        .album-coming {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(201,85,58,0.12);
+            border: 1px solid rgba(201,85,58,0.3);
+            color: var(--accent);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            padding: 10px 18px;
+            margin-bottom: 32px;
+        }
+        .album-coming .dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .album-info h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(3rem, 5.5vw, 5rem);
+            letter-spacing: 0.04em;
+            line-height: 1;
+            margin-bottom: 8px;
+            max-width: 100%;
+        }
+        .album-info .artist-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 28px;
+        }
+        .album-info .artist-name span { color: var(--gold); font-weight: 700; }
+
+        .album-info p {
+            font-size: 1rem;
+            line-height: 1.75;
+            color: var(--muted);
+            margin-bottom: 40px;
+        }
+
+        .album-meta-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 44px;
+        }
+        .album-meta-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.9rem;
+        }
+        .album-meta-list .label {
+            color: var(--muted);
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            width: 90px;
+            flex-shrink: 0;
+        }
+        .album-meta-list .val {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        /* ---- LATAM SECTION ---- */
+        .latam-section {
+            padding: 120px 8vw;
+        }
+
+        .latam-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.6fr;
+            gap: 80px;
+            align-items: start;
+        }
+
+        .latam-left h2 {
+            font-size: clamp(2rem, 3.5vw, 3rem);
+            line-height: 1.15;
+            margin-bottom: 24px;
+        }
+        .latam-left p {
+            font-size: 1rem;
+            line-height: 1.75;
+            color: var(--muted);
+            margin-bottom: 32px;
+        }
+
+        .latam-right {
+            border-left: 1px solid var(--border);
+            padding-left: 80px;
+        }
+
+        .country-block {
+            margin-bottom: 40px;
+        }
+        .country-block:last-child { margin-bottom: 0; }
+
+        .country-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .country-name::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .city-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .city-tag {
+            font-size: 0.85rem;
+            color: var(--text);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 7px 14px;
+            transition: border-color 0.2s, color 0.2s;
+        }
+        .city-tag:hover {
+            border-color: var(--gold-dim);
+            color: var(--gold);
+        }
+
+        /* ---- CONTACT / CTA ---- */
+        .contact-section {
+            padding: 160px 8vw;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-section::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px; height: 800px;
+            background: radial-gradient(circle, rgba(212,168,71,0.04) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .contact-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: start;
+            position: relative;
+            z-index: 1;
+        }
+
+        .contact-left h2 {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            line-height: 1.05;
+            letter-spacing: -0.02em;
+            margin-bottom: 24px;
+        }
+        .contact-left p {
+            font-size: 1rem;
+            line-height: 1.75;
+            color: var(--muted);
+            margin-bottom: 36px;
+        }
+
+        .contact-channels {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .contact-channel {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            padding: 18px 24px;
+            border: 1px solid var(--border);
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .contact-channel:hover {
+            border-color: var(--gold);
+            background: rgba(212,168,71,0.04);
+        }
+        .contact-channel-icon { font-size: 1.2rem; }
+        .contact-channel-info .label {
+            font-size: 0.7rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 3px;
+        }
+        .contact-channel-info .value {
+            font-size: 0.95rem;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        /* Form */
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .form-group label {
+            font-size: 0.72rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem;
+            padding: 14px 18px;
+            outline: none;
+            transition: border-color 0.2s;
+            -webkit-appearance: none;
+            border-radius: 0;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--gold);
+        }
+        .form-group textarea { resize: vertical; min-height: 120px; }
+        .form-group select option { background: var(--deep); }
+
+        .form-submit {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 8px;
+        }
+        .form-submit p {
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+
+        /* Success state */
+        .form-success {
+            display: none;
+            padding: 32px;
+            border: 1px solid var(--gold);
+            background: rgba(212,168,71,0.05);
+            text-align: center;
+        }
+        .form-success h3 { font-size: 1.2rem; margin-bottom: 10px; }
+        .form-success p { color: var(--muted); font-size: 0.9rem; }
+
+        /* ---- FOOTER ---- */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 60px 8vw 48px;
+        }
+
+        .footer-top {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 48px;
+            margin-bottom: 48px;
+        }
+
+        .footer-brand-block .brand-logo {
+            height: 36px;
+            width: auto;
+            display: block;
+            margin-bottom: 16px;
+        }
+        .footer-brand-block p {
+            font-size: 0.88rem;
+            line-height: 1.7;
+            color: var(--muted);
+        }
+
+        .footer-col h4 {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 20px;
+        }
+        .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+        .footer-col ul a {
+            font-size: 0.9rem;
+            color: var(--text);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer-col ul a:hover { color: var(--gold); }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border);
+            padding-top: 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .footer-bottom p { font-size: 0.82rem; color: var(--muted); }
+        .footer-bottom a { color: var(--gold-dim); text-decoration: none; }
+        .footer-bottom a:hover { color: var(--gold); }
+
+        .social-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .social-link {
+            font-size: 0.8rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .social-link:hover { color: var(--gold); }
+
+        /* ---- MOBILE ---- */
+        @media (max-width: 900px) {
+            nav { padding: 18px 6vw; }
+            .nav-links { display: none; }
+            .hero { padding: 0 6vw 10vh; }
+
+            .tracks { grid-template-columns: 1fr; }
+            .track-content { padding: 36px 28px 40px; }
+            .track-content::before { margin-left: -28px; width: calc(100% + 56px); }
+
+            .services-grid { grid-template-columns: 1fr 1fr; }
+            .services-grid-bottom { grid-template-columns: 1fr; }
+
+            .image-break { grid-template-columns: 1fr; height: auto; }
+            .image-break-cell { height: 260px; }
+
+            .album-inner { grid-template-columns: 1fr; gap: 48px; }
+
+            .latam-grid { grid-template-columns: 1fr; gap: 48px; }
+            .latam-right { border-left: none; padding-left: 0; border-top: 1px solid var(--border); padding-top: 48px; }
+
+            .contact-inner { grid-template-columns: 1fr; gap: 48px; }
+            .form-row { grid-template-columns: 1fr; }
+
+            .footer-top { grid-template-columns: 1fr; gap: 32px; }
+            .footer-bottom { flex-direction: column; text-align: center; }
+
+            .section { padding: 80px 6vw; }
+            .album-section, .latam-section, .contact-section { padding: 80px 6vw; }
+        }
+
+        @media (max-width: 560px) {
+            .services-grid { grid-template-columns: 1fr; }
+            .hero h1 { font-size: clamp(3.5rem, 15vw, 5rem); }
+            .nav-logo img { height: 32px; }
+        }
+
+        /* Chamba Carousel */
+        .chamba-carousel {
+            position: relative;
+        }
+        .chamba-slide {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+        .chamba-slide.chamba-active {
+            display: block;
+            opacity: 1;
+        }
+        .chamba-slide.chamba-fade-out {
+            display: block;
+            opacity: 0;
+        }
+        .chamba-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding-top: 32px;
+        }
+        .chamba-dot {
+            width: 28px;
+            height: 3px;
+            background: rgba(212,168,71,0.2);
+            display: inline-block;
+            transition: background 0.3s;
+            cursor: pointer;
+        }
+        .chamba-dot.chamba-dot-active {
+            background: var(--gold);
+        }
+
+        /* ---- CAROUSEL NAVIGATION ARROWS ---- */
+        .carousel-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding-top: 24px;
+        }
+        .carousel-arrow {
+            width: 44px;
+            height: 44px;
+            border: 1px solid var(--gold);
+            background: transparent;
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            transition: background 0.2s, color 0.2s, transform 0.15s;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .carousel-arrow:hover {
+            background: var(--gold);
+            color: var(--black);
+            transform: scale(1.05);
+        }
+        .carousel-arrow:active {
+            transform: scale(0.95);
+        }
+        .carousel-counter {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            color: var(--muted);
+            min-width: 48px;
+            text-align: center;
+        }
+        /* Artist section arrows (inside the track card) */
+        .ar-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 20px 0 12px;
+            background: var(--deep);
+        }
+        .ar-nav .carousel-arrow {
+            width: 36px;
+            height: 36px;
+            font-size: 0.9rem;
+        }
+    </style>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "@id": "https://santosonidoos.polsia.app/#business",
+      "name": "Santo Sonido Studio",
+      "description": "Estudio de grabación profesional en El Poblado, Medellín. Grabación, mezcla, masterización, producción musical, videos musicales, visualizadores, fotografía y edición de contenido.",
+      "url": "https://santosonidoos.polsia.app/",
+      "telephone": "+573148824744",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Provenza, El Poblado",
+        "addressLocality": "Medellín",
+        "addressRegion": "Antioquia",
+        "addressCountry": "CO"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "6.2089",
+        "longitude": "-75.5664"
+      },
+      "openingHours": ["Mo-Fr 10:00-22:00", "Sa 10:00-22:00", "Su 12:00-20:00"],
+      "priceRange": "$$",
+      "paymentAccepted": "Cash, Credit Card, Bank Transfer, Nequi, Daviplata",
+      "currenciesAccepted": "COP, USD",
+      "areaServed": [
+        {"@type": "City", "name": "Medellín"},
+        {"@type": "City", "name": "Bogotá"},
+        {"@type": "Country", "name": "Colombia"},
+        {"@type": "Country", "name": "Venezuela"},
+        {"@type": "Country", "name": "Mexico"},
+        {"@type": "Country", "name": "Argentina"},
+        {"@type": "Country", "name": "Spain"}
+      ],
+      "image": "https://pub-629428d185ca4960a0a73c850d32294b.r2.dev/company_104094/images/ced0f79d-9bbb-4885-aed3-8064ed9d34e9.jpg",
+      "additionalType": "https://schema.org/MusicVenue",
+      "sameAs": ["https://wa.me/573148824744"],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Servicios de Producción Musical — Santo Sonido",
+        "itemListElement": [
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Grabación"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Mezcla"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Masterización"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Producción Completa"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Alquiler de Estudio"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Videos Musicales"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Visualizadores"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Sesiones Fotográficas"}},
+          {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Edición de Contenido"}}
+        ]
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Cuánto cuesta grabar en un estudio en Medellín?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Los precios varían según el proyecto. Contáctanos por WhatsApp para una cotización personalizada según tu proyecto, duración de sesión y servicios requeridos."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Qué servicios ofrece Santo Sonido?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Santo Sonido ofrece: grabación vocal e instrumental, mezcla, masterización, producción musical completa, alquiler de estudio por hora o sesión, producción de videos musicales, visualizadores animados, sesiones fotográficas profesionales y edición de contenido para redes sociales."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Dónde queda Santo Sonido?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Estamos ubicados en el corazón de Provenza, El Poblado, Medellín, Colombia. Una de las zonas más conectadas y con mejor infraestructura de la ciudad."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo alquilar el estudio por horas?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí, ofrecemos alquiler por hora y por sesión. Contáctanos para verificar disponibilidad y tarifas actualizadas."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Trabajan con artistas internacionales?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Tenemos experiencia trabajando con artistas de Venezuela, México, Argentina, España y Estados Unidos. El equipo habla español e inglés. Medellín es visa-free para ciudadanos de EE.UU. y la Unión Europea."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Hacen producción de videos musicales?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Producimos videos musicales completos, visualizadores y contenido para redes sociales. Medellín ofrece locaciones únicas para grabaciones internacionales a una fracción del costo de otras ciudades."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Cómo puedo agendar una sesión?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Puedes contactarnos directamente por WhatsApp al +57 314 882 4744 o completar el formulario de contacto en nuestra página web. Respondemos en menos de 24 horas."
+          }
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "Servicios — Santo Sonido Studio Medellín",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "item": {
+            "@type": "Service",
+            "name": "Grabación Profesional",
+            "description": "Sesiones de grabación vocal e instrumental en estudio profesional con ingenieros certificados. Booths acústicamente tratados, equipo de alta gama.",
+            "provider": {"@type": "LocalBusiness", "@id": "https://santosonidoos.polsia.app/#business"},
+            "areaServed": {"@type": "City", "name": "Medellín"},
+            "serviceType": "Music Recording"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@type": "Service",
+            "name": "Mezcla",
+            "description": "Mezcla profesional para tu música. Balance, procesamiento dinámico, efectos y espacialidad para que tu canción suene en cualquier plataforma.",
+            "provider": {"@type": "LocalBusiness", "@id": "https://santosonidoos.polsia.app/#business"},
+            "areaServed": {"@type": "City", "name": "Medellín"},
+            "serviceType": "Music Mixing"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "Service",
+            "name": "Masterización",
+            "description": "Masterización para plataformas digitales (Spotify, Apple Music, YouTube) con estándares de loudness internacionales y preparación para distribución.",
+            "provider": {"@type": "LocalBusiness", "@id": "https://santosonidoos.polsia.app/#business"},
+            "areaServed": {"@type": "City", "name": "Medellín"},
+            "serviceType": "Music Mastering"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "Service",
+            "name": "Producción Musical Completa",
+            "description": "Producción integral: beat, arreglos, grabación, mezcla y masterización. De la idea al producto final listo para distribución.",
+            "provider": {"@type": "LocalBusiness", "@id": "https://santosonidoos.polsia.app/#business"},
+            "areaServed": {"@type": "City", "name": "Medellín"},
+            "serviceType": "Full Music Production"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "Service",
+            "name": "Alquiler de Estudio",
+            "description": "Alquiler de estudio por hora o por sesión completa. Incluye equipo, sala de control y ingeniería básica.",
+            "provider": {"@type": "LocalBusiness", "@id": "https://santosonidoos.polsia.app/#business"},
+            "areaServed": {"@type": "City", "name": "Medellín"},
+            "serviceType": "Studio Rental"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "item": {
+            "@type": "Service",
+            "name": "Videos Musicales",
+            "description": "Producción de videos musicales profesionales en Medellín. Dirección, rodaje, edición y colorización. Locaciones únicas en Colombia.",
+            "provider": {"@type": "LocalBusiness", "@id": "https://santosonidoos.polsia.app/#business"},
+            "areaServed": {"@type": "City", "name": "Medellín"},
+            "serviceType": "Music Video Production"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
+          "item": {
+            "@type": "Service",
+            "name": "Visualizadores",
+            "description": "Visualizadores animados para plataformas digitales y redes sociales. Contenido visual atractivo para acompañar tu lanzamiento.",
+            "provider": {"@type": "LocalBusiness", "@id": "https://santosonidoos.polsia.app/#business"},
+            "areaServed": {"@type": "City", "name": "Medellín"},
+            "serviceType": "Music Visualizer Production"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 8,
+          "item": {
+            "@type": "Service",
+            "name": "Sesiones Fotográficas",
+            "description": "Fotografía artística y editorial para artistas musicales. Portadas de álbum, press kit, contenido para redes sociales.",
+            "provider": {"@type": "LocalBusiness", "@id": "https://santosonidoos.polsia.app/#business"},
+            "areaServed": {"@type": "City", "name": "Medellín"},
+            "serviceType": "Artist Photography"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 9,
+          "item": {
+            "@type": "Service",
+            "name": "Edición de Contenido",
+            "description": "Edición de contenido audiovisual para redes sociales. Reels, stories, clips y material promocional optimizado para cada plataforma.",
+            "provider": {"@type": "LocalBusiness", "@id": "https://santosonidoos.polsia.app/#business"},
+            "areaServed": {"@type": "City", "name": "Medellín"},
+            "serviceType": "Content Editing"
+          }
+        }
+      ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "MusicGroup",
+      "name": "Faker",
+      "url": "https://santosonidoos.polsia.app/",
+      "description": "Caracas-based recording artist. Debut album Chamba Mentality Vol. 1, July 2026.",
+      "genre": ["Latin Trap", "Urban", "Hip-Hop"],
+      "foundingLocation": {
+        "@type": "Place",
+        "name": "Caracas, Venezuela"
+      },
+      "image": "https://pub-629428d185ca4960a0a73c850d32294b.r2.dev/company_104094/images/ced0f79d-9bbb-4885-aed3-8064ed9d34e9.jpg"
+    }
+    </script>
+    <!-- Plausible Analytics -->
+    <script defer data-domain="santosonidoos.polsia.app" src="https://plausible.io/js/script.js"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+    <a href="/" class="nav-logo">
+        <img src="https://pub-629428d185ca4960a0a73c850d32294b.r2.dev/company_104094/images/5c790cf3-90bd-48ec-a19e-db96255854f2.jpg" alt="Santo Sonido OS">
+    </a>
+    <ul class="nav-links">
+        <li><a href="/producer">Producer</a></li>
+        <li><a href="/artists">Artists</a></li>
+        <li><a href="/work">Work</a></li>
+        <li><a href="/studio">Studio</a></li>
+        <li><a href="#contact" class="nav-cta">Book Now</a></li>
+    </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-bg-image">
+        <img src="https://pub-629428d185ca4960a0a73c850d32294b.r2.dev/company_104094/images/ced0f79d-9bbb-4885-aed3-8064ed9d34e9.jpg" alt="Santo Sonido OS Studio" loading="eager">
+    </div>
+    <div class="hero-bg-text">SONIDO</div>
+    <div class="hero-eyebrow">Caracas · Mexico City · Medellín · Bogotá · Buenos Aires · Madrid</div>
+    <h1>
+        <span class="gold">Sound</span><br>
+        is <span class="outline">Business.</span>
+    </h1>
+    <p class="hero-sub">
+        <a href="/studio" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">Full-service music production studio</a>. Recording artist development.
+        Two tracks, one operation. Meet <a href="/artists" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">our artists</a>.
+    </p>
+    <div class="hero-actions">
+        <a href="#contact" class="btn-primary">
+            Book a Session <span class="arrow">→</span>
+        </a>
+        <a href="/producer" class="btn-secondary">
+            See Services
+        </a>
+    </div>
+    <div style="margin-top: 20px; position: relative; z-index: 2;">
+        <a href="/work" style="font-family: 'Space Grotesk', sans-serif; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-dim); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: color 0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--gold-dim)'">
+            View Our Work <span style="font-size: 0.9em;">→</span>
+        </a>
+    </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip">
+    <div class="marquee-inner">
+        <span>Beats &amp; Production</span><span class="sep">◆</span>
+        <span>Mix &amp; Master</span><span class="sep">◆</span>
+        <span>Caracas</span><span class="sep">◆</span>
+        <span>Mexico City</span><span class="sep">◆</span>
+        <span>Medellín</span><span class="sep">◆</span>
+        <span>Bogotá</span><span class="sep">◆</span>
+        <span>Buenos Aires</span><span class="sep">◆</span>
+        <span>Madrid</span><span class="sep">◆</span>
+        <span>Sync Licensing</span><span class="sep">◆</span>
+        <span>Javier "Faker" — Chamba Mentality Vol. 1</span><span class="sep">◆</span>
+        <span>Beats &amp; Production</span><span class="sep">◆</span>
+        <span>Mix &amp; Master</span><span class="sep">◆</span>
+        <span>Caracas</span><span class="sep">◆</span>
+        <span>Mexico City</span><span class="sep">◆</span>
+        <span>Medellín</span><span class="sep">◆</span>
+        <span>Bogotá</span><span class="sep">◆</span>
+        <span>Buenos Aires</span><span class="sep">◆</span>
+        <span>Madrid</span><span class="sep">◆</span>
+        <span>Sync Licensing</span><span class="sep">◆</span>
+        <span>Javier "Faker" — Chamba Mentality Vol. 1</span><span class="sep">◆</span>
+    </div>
+</div>
+
+<!-- TWO TRACKS -->
+<section class="section" id="producer" style="padding-bottom: 0;">
+    <div class="section-label">What We Do</div>
+    <h2>Two tracks.</h2>
+
+    <div class="tracks">
+        <!-- PRODUCER TRACK -->
+        <div class="track track-producer">
+            <div class="track-image">
+                <img src="https://pub-629428d185ca4960a0a73c850d32294b.r2.dev/company_104094/images/01872f74-1d65-4013-a432-dc5999e00a93.jpg" alt="Production Studio">
+            </div>
+            <div class="track-content">
+                <div class="track-badge">Producer</div>
+                <h3>Full-Service<br>Production</h3>
+                <p class="track-desc">
+                    Beats, engineering, mix, master — and the visuals to match.
+                    We build records from scratch and finish them for release.
+                </p>
+                <ul class="track-features">
+                    <li>Music Production</li>
+                    <li>Mix &amp; Master</li>
+                    <li>Recording Engineering</li>
+                    <li>Video &amp; Visuals</li>
+                </ul>
+                <a href="/producer" class="track-link">See All Services →</a>
+            </div>
+        </div>
+        <!-- ARTIST TRACK (auto-rotate) -->
+        <a href="/artists" class="track track-artist" id="artist" style="text-decoration: none; display: block; cursor: pointer;">
+            <div class="artist-autorotate" id="artistAutoRotate">
+                <!-- SLIDE 1: Faker -->
+                <div class="ar-slide ar-active">
+                    <div class="track-image">
+                        <img src="https://pub-629428d185ca4960a0a73c850d32294b.r2.dev/company_104094/images/c2505f37-2d4b-4316-9cf9-a2c94a3c2abb.jpg" alt="Faker — Recording Artist">
+                    </div>
+                    <div class="track-content">
+                        <div class="track-badge">Artists</div>
+                        <h3>Javier<br>"Faker"</h3>
+                        <p class="track-desc">
+                            Recording artist. Debut album Chamba Mentality Vol. 1
+                            dropping July 2026. Built in the studio, tested in the street.
+                        </p>
+                        <ul class="track-features">
+                            <li>Original Music</li>
+                            <li>Artist Development</li>
+                            <li>Live Performance</li>
+                            <li>Sync Licensing</li>
+                        </ul>
+                        <span class="track-link" style="pointer-events: none;">Meet the Artists →</span>
+                    </div>
+                </div>
+                <!-- SLIDE 2: Apache -->
+                <div class="ar-slide">
+                    <div class="track-image">
+                        <div class="apache-placeholder">
+                            <div class="apache-placeholder-inner">
+                                <span>◆</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="track-content">
+                        <div class="track-badge">Artists</div>
+                        <h3>Apache</h3>
+                        <p class="track-desc">
+                            Coming soon. New artist under the Santo Sonido OS roster.
+                            More details dropping soon — watch this space.
+                        </p>
+                        <ul class="track-features">
+                            <li>Original Music</li>
+                            <li>Artist Development</li>
+                            <li>Live Performance</li>
+                            <li>Sync Licensing</li>
+                        </ul>
+                        <span class="track-link" style="opacity:0.4; pointer-events: none;">Details Coming Soon</span>
+                    </div>
+                </div>
+                <!-- SLIDE 3: Ryan Castro -->
+                <div class="ar-slide">
+                    <div class="track-image">
+                        <div class="ryan-placeholder">
+                            <div class="ryan-placeholder-inner">
+                                <span>◆</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="track-content">
+                        <div class="track-badge">Artists</div>
+                        <h3>Ryan<br>Castro</h3>
+                        <p class="track-desc">
+                            Details coming soon. New collaboration under the
+                            Santo Sonido OS umbrella — watch this space.
+                        </p>
+                        <ul class="track-features">
+                            <li>Original Music</li>
+                            <li>Artist Development</li>
+                            <li>Live Performance</li>
+                            <li>Sync Licensing</li>
+                        </ul>
+                        <span class="track-link" style="opacity:0.4; pointer-events: none;">Details Coming Soon</span>
+                    </div>
+                </div>
+                <!-- Click navigation -->
+                <div class="ar-nav">
+                    <button class="carousel-arrow" id="arPrev" aria-label="Previous artist">←</button>
+                    <span class="carousel-counter" id="arCounter">1 / 3</span>
+                    <button class="carousel-arrow" id="arNext" aria-label="Next artist">→</button>
+                </div>
+            </div>
+        </a>
+    </div>
+</section>
+
+<!-- IMAGE BREAK -->
+<div class="image-break">
+    <div class="image-break-cell">
+        <img src="https://pub-629428d185ca4960a0a73c850d32294b.r2.dev/company_104094/images/bba3fd68-7fd1-4617-9777-ef4a6349563b.jpg" alt="Santo Sonido OS" loading="lazy">
+        <div class="caption">Studio · Production · Performance</div>
+    </div>
+    <div class="image-break-cell">
+        <img src="https://pub-629428d185ca4960a0a73c850d32294b.r2.dev/company_104094/images/5f92d375-22a5-44eb-aca1-69660be6e87a.jpg" alt="Santo Sonido OS" loading="lazy">
+        <div class="caption">LATAM · Venezuela · Colombia · Mexico · Argentina · Spain</div>
+    </div>
+    <div class="image-break-cell">
+        <img src="https://pub-629428d185ca4960a0a73c850d32294b.r2.dev/company_104094/images/0c5db1fa-1548-48e4-a171-d7fce4de9d23.jpeg" alt="Santo Sonido OS" loading="lazy">
+        <div class="caption">Sound is Business.</div>
+    </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- CHAMBA MENTALITY VOL. 1 — ARTIST CAROUSEL -->
+<section class="album-section" id="album">
+    <div class="section-label" style="margin-bottom: 20px;">Chamba Mentality Vol. 1</div>
+    <div class="chamba-carousel" id="chambaCarousel">
+        <!-- SLIDE 1: Faker -->
+        <a href="/artists" class="chamba-slide chamba-active" style="text-decoration: none; color: inherit;">
+            <div class="album-inner">
+                <div class="album-visual">
+                    <div class="album-art">
+                        <img src="https://pub-629428d185ca4960a0a73c850d32294b.r2.dev/company_104094/images/c2505f37-2d4b-4316-9cf9-a2c94a3c2abb.jpg" alt="Faker — Chamba Mentality Vol. 1" loading="lazy">
+                        <div class="album-corner-tag">July 2026</div>
+                    </div>
+                </div>
+                <div class="album-info">
+                    <div class="album-coming">
+                        <span class="dot"></span>
+                        Coming July 2026
+                    </div>
+                    <h2>Chamba<br>Mentality<br>Vol. 1</h2>
+                    <div class="artist-name">Javier <span>"Faker"</span></div>
+                    <p>
+                        The debut album. Built in the studio, tested in the street.
+                        Chamba Mentality documents the grind — the work ethic,
+                        the LATAM hustle, the sound of a generation that doesn't wait
+                        for permission.
+                    </p>
+                    <ul class="album-meta-list">
+                        <li><span class="label">Release</span><span class="val">July 2026</span></li>
+                        <li><span class="label">Format</span><span class="val">Album — all platforms</span></li>
+                        <li><span class="label">Sync</span><span class="val">Available for licensing</span></li>
+                    </ul>
+                    <span class="btn-secondary" style="pointer-events: none;">Meet the Artists →</span>
+                </div>
+            </div>
+        </a>
+        <!-- SLIDE 2: Apache -->
+        <a href="/artists" class="chamba-slide" style="text-decoration: none; color: inherit;">
+            <div class="album-inner">
+                <div class="album-visual">
+                    <div class="album-art" style="background: linear-gradient(135deg, #1a0d0a 0%, #2d1510 30%, #1c1008 60%, #0f0a0f 100%);">
+                        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative;">
+                            <span style="font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,8vw,8rem);letter-spacing:0.12em;color:rgba(201,85,58,0.12);position:absolute;">APACHE</span>
+                            <span style="font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,3vw,3rem);letter-spacing:0.1em;color:rgba(201,85,58,0.5);position:relative;z-index:1;">◆</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="album-info">
+                    <div class="album-coming" style="border-color: rgba(201,85,58,0.2); background: rgba(201,85,58,0.06);">
+                        <span class="dot"></span>
+                        Coming Soon
+                    </div>
+                    <h2>Apache</h2>
+                    <div class="artist-name">Santo Sonido OS <span>Roster</span></div>
+                    <p>
+                        New artist under the Santo Sonido OS roster.
+                        More details dropping soon — watch this space.
+                        The chamba mentality runs through the whole roster.
+                    </p>
+                    <ul class="album-meta-list">
+                        <li><span class="label">Status</span><span class="val">Details Coming Soon</span></li>
+                        <li><span class="label">Roster</span><span class="val">Santo Sonido OS</span></li>
+                    </ul>
+                    <span class="btn-secondary" style="pointer-events: none;">Meet the Artists →</span>
+                </div>
+            </div>
+        </a>
+        <!-- SLIDE 3: Ryan Castro -->
+        <a href="/artists" class="chamba-slide" style="text-decoration: none; color: inherit;">
+            <div class="album-inner">
+                <div class="album-visual">
+                    <div class="album-art" style="background: linear-gradient(135deg, #0d0d1a 0%, #141428 35%, #0a0a18 65%, #050510 100%);">
+                        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative;">
+                            <span style="font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,8vw,8rem);letter-spacing:0.12em;color:rgba(212,168,71,0.08);position:absolute;">RYAN</span>
+                            <span style="font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,3vw,3rem);letter-spacing:0.1em;color:rgba(212,168,71,0.35);position:relative;z-index:1;">◆</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="album-info">
+                    <div class="album-coming" style="border-color: rgba(212,168,71,0.2); background: rgba(212,168,71,0.06);">
+                        <span class="dot"></span>
+                        Coming Soon
+                    </div>
+                    <h2>Ryan<br>Castro</h2>
+                    <div class="artist-name">Santo Sonido OS <span>Roster</span></div>
+                    <p>
+                        New collaboration under the Santo Sonido OS umbrella.
+                        Details coming soon — the roster is growing and the chamba
+                        mentality extends to every artist we develop.
+                    </p>
+                    <ul class="album-meta-list">
+                        <li><span class="label">Status</span><span class="val">Details Coming Soon</span></li>
+                        <li><span class="label">Roster</span><span class="val">Santo Sonido OS</span></li>
+                    </ul>
+                    <span class="btn-secondary" style="pointer-events: none;">Meet the Artists →</span>
+                </div>
+            </div>
+        </a>
+        <!-- Carousel navigation -->
+        <div class="carousel-nav">
+            <button class="carousel-arrow" id="chambaPrev" aria-label="Previous slide">←</button>
+            <span class="carousel-counter" id="chambaCounter">1 / 3</span>
+            <button class="carousel-arrow" id="chambaNext" aria-label="Next slide">→</button>
+        </div>
+    </div>
+</section>
+
+<!-- LATAM -->
+<section class="latam-section" id="latam">
+    <div class="section-label">Where We Move</div>
+    <div class="latam-grid">
+        <div class="latam-left">
+            <h2>LATAM<br>&amp; Beyond.</h2>
+            <p>
+                Rooted in Caracas. Present across Latin America and Spain.
+                <a href="/studio" style="color:var(--gold);text-decoration:underline;text-underline-offset:3px;">Full-service production studio</a> with a global workflow — remote or in-studio.
+            </p>
+            <p>
+                International clients welcome. We move where the music moves.
+                <a href="/work" style="color:var(--gold);text-decoration:underline;text-underline-offset:3px;">See our work →</a>
+            </p>
+            <a href="#contact" class="btn-primary" style="margin-top: 8px;">
+                Inquire Now <span class="arrow">→</span>
+            </a>
+        </div>
+        <div class="latam-right">
+            <div class="country-block">
+                <div class="country-name">Venezuela 🇻🇪</div>
+                <div class="city-tags">
+                    <span class="city-tag">Caracas</span>
+                </div>
+            </div>
+            <div class="country-block">
+                <div class="country-name">Mexico 🇲🇽</div>
+                <div class="city-tags">
+                    <span class="city-tag">Mexico City</span>
+                </div>
+            </div>
+            <div class="country-block">
+                <div class="country-name">Colombia 🇨🇴</div>
+                <div class="city-tags">
+                    <span class="city-tag">Medellín</span>
+                    <span class="city-tag">Bogotá</span>
+                </div>
+            </div>
+            <div class="country-block">
+                <div class="country-name">Argentina 🇦🇷</div>
+                <div class="city-tags">
+                    <span class="city-tag">Buenos Aires</span>
+                </div>
+            </div>
+            <div class="country-block">
+                <div class="country-name">Spain 🇪🇸</div>
+                <div class="city-tags">
+                    <span class="city-tag">Madrid</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT / BOOKING -->
+<section class="contact-section" id="contact">
+    <div class="section-label">Booking</div>
+    <div class="contact-inner">
+        <div class="contact-left">
+            <h2>Ready to<br>make something<br>real?</h2>
+            <p>
+                Tell us what you're building. We'll tell you what it takes
+                and how fast we can move.
+            </p>
+            <div class="contact-channels">
+                <a href="https://www.instagram.com/santosonidostudio/" target="_blank" rel="noopener" class="contact-channel">
+                    <span class="contact-channel-icon">📷</span>
+                    <div class="contact-channel-info">
+                        <div class="label">Instagram</div>
+                        <div class="value">@santosonidostudio</div>
+                    </div>
+                </a>
+                <a href="mailto:santosonidostudio@gmail.com" class="contact-channel">
+                    <span class="contact-channel-icon">✉️</span>
+                    <div class="contact-channel-info">
+                        <div class="label">Email</div>
+                        <div class="value">santosonidostudio@gmail.com</div>
+                    </div>
+                </a>
+                <div class="contact-channel" style="cursor: default;">
+                    <span class="contact-channel-icon">📍</span>
+                    <div class="contact-channel-info">
+                        <div class="label">Location</div>
+                        <div class="value">Caracas, Venezuela</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="contact-form" id="bookingForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" placeholder="Your name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="your@email.com">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="service">I need</label>
+                    <select id="service">
+                        <option value="" disabled selected>Select a service…</option>
+                        <option>Music Production</option>
+                        <option>Mix &amp; Master</option>
+                        <option>Recording Session</option>
+                        <option>Studio Rental</option>
+                        <option>Music Video</option>
+                        <option>Visualizer</option>
+                        <option>Photoshoot</option>
+                        <option>Content Editing</option>
+                        <option>Sync / Publishing</option>
+                        <option>Faker — Sync Licensing (Album)</option>
+                        <option>General Inquiry</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="city">Your City</label>
+                    <input type="text" id="city" placeholder="Caracas, Miami, LA…">
+                </div>
+                <div class="form-group">
+                    <label for="message">Tell us about the project</label>
+                    <textarea id="message" placeholder="What are you working on? Genre, timeline, vision…"></textarea>
+                </div>
+                <div class="form-submit">
+                    <p>We reply within 24h.</p>
+                    <button type="button" class="btn-primary" onclick="submitForm()" style="border: none; cursor: pointer;">
+                        Send Inquiry <span class="arrow">→</span>
+                    </button>
+                </div>
+            </div>
+            <div class="form-success" id="formSuccess">
+                <h3>Inquiry received. ✓</h3>
+                <p>We'll get back to you within 24 hours. Check your inbox — and follow us on Instagram for updates.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-top">
+        <div class="footer-brand-block">
+            <img src="https://pub-629428d185ca4960a0a73c850d32294b.r2.dev/company_104094/images/5c790cf3-90bd-48ec-a19e-db96255854f2.jpg" alt="Santo Sonido OS" class="brand-logo">
+            <p>Music production studio + recording artist. Caracas · Mexico City · Medellín · Bogotá · Buenos Aires · Madrid. We build records and careers.</p>
+        </div>
+        <div class="footer-col">
+            <h4>Production</h4>
+            <ul>
+                <li><a href="#services">Music Production</a></li>
+                <li><a href="#services">Mix &amp; Master</a></li>
+                <li><a href="#services">Recording Engineering</a></li>
+                <li><a href="/studio">Studio Rental</a></li>
+                <li><a href="#services">Video &amp; Visuals</a></li>
+                <li><a href="#services">Sync &amp; Publishing</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Connect</h4>
+            <ul>
+                <li><a href="https://www.instagram.com/santosonidostudio/" target="_blank" rel="noopener">Instagram</a></li>
+                <li><a href="mailto:santosonidostudio@gmail.com">Email Us</a></li>
+                <li><a href="#album">Faker — July 2026</a></li>
+                <li><a href="/work">Our Work</a></li>
+                <li><a href="/studio">Book the Studio</a></li>
+                <li><a href="#contact">Book a Session</a></li>
+                <li><a href="#latam">LATAM Markets</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 Santo Sonido OS — Caracas · CDMX · Medellín · Bogotá · Buenos Aires · Madrid &nbsp;·&nbsp;
+            <a href="https://www.instagram.com/santosonidostudio/" target="_blank" rel="noopener">@santosonidostudio</a>
+        </p>
+        <div class="social-links">
+            <a href="https://www.instagram.com/santosonidostudio/" class="social-link" target="_blank" rel="noopener">Instagram ↗</a>
+            <a href="mailto:santosonidostudio@gmail.com" class="social-link">Email</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+function submitForm() {
+    var name = document.getElementById('name').value.trim();
+    var email = document.getElementById('email').value.trim();
+    var service = document.getElementById('service').value;
+    var city = document.getElementById('city').value.trim();
+    var message = document.getElementById('message').value.trim();
+
+    if (!name || !email || !service || !message) {
+        alert('Please fill in your name, email, service, and project details.');
+        return;
+    }
+
+    var btn = document.querySelector('#bookingForm .btn-primary');
+    if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+
+    fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name, email: email, service: service, city: city, message: message })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.success) {
+            document.getElementById('bookingForm').style.display = 'none';
+            document.getElementById('formSuccess').style.display = 'block';
+            if (typeof plausible !== 'undefined') plausible('Contact Form Submit');
+        } else {
+            alert(data.error || 'Something went wrong. Please try again.');
+            if (btn) { btn.disabled = false; btn.innerHTML = 'Send Inquiry <span class="arrow">→</span>'; }
+        }
+    })
+    .catch(function() {
+        alert('Could not send your inquiry. Please WhatsApp us directly: wa.me/573148824744');
+        if (btn) { btn.disabled = false; btn.innerHTML = 'Send Inquiry <span class="arrow">→</span>'; }
+    });
+}
+
+// Smooth scroll for nav links on same page
+document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+    anchor.addEventListener('click', function(e) {
+        var target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+});
+
+// Nav background on scroll
+var nav = document.querySelector('nav');
+window.addEventListener('scroll', function() {
+    if (window.scrollY > 60) {
+        nav.style.background = 'rgba(10,10,10,0.97)';
+        nav.style.borderBottom = '1px solid #2a2a2a';
+    } else {
+        nav.style.background = 'linear-gradient(180deg, rgba(10,10,10,0.95) 0%, transparent 100%)';
+        nav.style.borderBottom = 'none';
+    }
+});
+
+// Artist carousel (Two Tracks section) — click-to-scroll only
+(function() {
+    var slideEls = document.querySelectorAll('.ar-slide');
+    var current = 0;
+    var total = slideEls.length;
+    if (!total) return;
+
+    var counter = document.getElementById('arCounter');
+    var prevBtn = document.getElementById('arPrev');
+    var nextBtn = document.getElementById('arNext');
+    var container = document.getElementById('artistAutoRotate');
+
+    function updateCounter() {
+        if (counter) counter.textContent = (current + 1) + ' / ' + total;
+    }
+
+    function goTo(idx) {
+        slideEls[current].classList.remove('ar-active');
+        current = ((idx % total) + total) % total;
+        slideEls[current].classList.add('ar-active');
+        updateCounter();
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); goTo(current - 1); });
+    if (nextBtn) nextBtn.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); goTo(current + 1); });
+
+    // Swipe support
+    var startX = 0;
+    if (container) {
+        container.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; }, { passive: true });
+        container.addEventListener('touchend', function(e) {
+            var diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) { goTo(diff > 0 ? current + 1 : current - 1); }
+        }, { passive: true });
+    }
+})();
+
+// Chamba Mentality carousel — click-to-scroll only
+(function() {
+    var slides = document.querySelectorAll('.chamba-slide');
+    var current = 0;
+    var total = slides.length;
+    if (!total) return;
+
+    var counter = document.getElementById('chambaCounter');
+    var prevBtn = document.getElementById('chambaPrev');
+    var nextBtn = document.getElementById('chambaNext');
+    var container = document.getElementById('chambaCarousel');
+
+    function updateCounter() {
+        if (counter) counter.textContent = (current + 1) + ' / ' + total;
+    }
+
+    function goTo(idx) {
+        slides[current].classList.remove('chamba-active');
+        current = ((idx % total) + total) % total;
+        slides[current].classList.add('chamba-active');
+        updateCounter();
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', function(e) { e.preventDefault(); goTo(current - 1); });
+    if (nextBtn) nextBtn.addEventListener('click', function(e) { e.preventDefault(); goTo(current + 1); });
+
+    // Swipe support
+    var startX = 0;
+    if (container) {
+        container.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; }, { passive: true });
+        container.addEventListener('touchend', function(e) {
+            var diff = startX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) { goTo(diff > 0 ? current + 1 : current - 1); }
+        }, { passive: true });
+    }
+})();
+</script>
+
+<!-- Polsia Analytics -->
+<script>
+(function() {
+    var slug = 'santosonidoos';
+    if (!slug) return;
+    var vid = localStorage.getItem('polsia_vid');
+    if (!vid) {
+        vid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0;
+            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+        localStorage.setItem('polsia_vid', vid);
+    }
+    new Image().src = 'https://polsia.com/api/beacon/pixel?s=' + encodeURIComponent(slug) + '&v=' + encodeURIComponent(vid);
+})();
+</script>
+
+<!-- WhatsApp Floating CTA -->
+<style>
+#wa-float{position:fixed;z-index:9999;text-decoration:none;display:flex;align-items:center;gap:10px;background:#25D366;color:#fff;font-weight:700;transition:transform .2s ease,box-shadow .2s ease;}
+@media(min-width:768px){#wa-float{bottom:28px;right:28px;width:60px;height:60px;border-radius:50%;justify-content:center;box-shadow:0 4px 24px rgba(37,211,102,.35);}#wa-float .wa-lbl{display:none;}#wa-float:hover{transform:scale(1.1);box-shadow:0 6px 32px rgba(37,211,102,.55);}#wa-float::after{content:'Reserva tu sesión';position:absolute;right:72px;background:#111;color:#fff;padding:6px 12px;border-radius:6px;font-size:.78rem;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s;font-family:'Space Grotesk',sans-serif;border:1px solid #333;letter-spacing:.06em;}#wa-float:hover::after{opacity:1;}}
+@media(max-width:767px){#wa-float{bottom:0;left:0;right:0;width:100%;border-radius:0;padding:14px 20px;justify-content:center;font-size:.9rem;letter-spacing:.1em;font-family:'Space Grotesk',sans-serif;text-transform:uppercase;box-shadow:0 -2px 20px rgba(37,211,102,.25);}body{padding-bottom:56px;}}
+@keyframes wa-pulse{0%,100%{box-shadow:0 4px 24px rgba(37,211,102,.35);}50%{box-shadow:0 4px 40px rgba(37,211,102,.7),0 0 0 10px rgba(37,211,102,.12);}}
+#wa-float.pulsing{animation:wa-pulse 1s ease-in-out 3;}
+</style>
+<a id="wa-float" href="https://wa.me/573148824744?text=Hola%2C%20me%20interesa%20una%20sesi%C3%B3n%20en%20Santo%20Sonido" target="_blank" rel="noopener" aria-label="Reserva tu sesión por WhatsApp">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" fill="white"/></svg>
+  <span class="wa-lbl">Reserva tu sesión</span>
+</a>
+<script>
+(function(){var b=document.getElementById('wa-float');if(!b)return;setTimeout(function(){b.classList.add('pulsing');setTimeout(function(){b.classList.remove('pulsing');},3100);},1500);})();
+</script>
+<script>
+// Analytics event tracking
+(function() {
+  // WhatsApp CTA click
+  var wa = document.getElementById('wa-float');
+  if (wa) wa.addEventListener('click', function() {
+    if (typeof plausible !== 'undefined') plausible('WhatsApp Click', {props: {page: 'homepage'}});
+  });
+  // Nav link clicks
+  document.querySelectorAll('nav a').forEach(function(link) {
+    link.addEventListener('click', function() {
+      if (typeof plausible !== 'undefined') plausible('Nav Click', {props: {destination: link.getAttribute('href') || link.textContent.trim()}});
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SantoCRM — Únete a la red</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #0a0a0a;
+      color: #e0e0e0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+
+    .logo {
+      font-size: 13px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #d4a847;
+      margin-bottom: 8px;
+    }
+
+    .headline {
+      font-size: 28px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .subhead {
+      color: #888;
+      font-size: 14px;
+      text-align: center;
+      margin-bottom: 36px;
+      max-width: 400px;
+      line-height: 1.6;
+    }
+
+    .card {
+      background: #141414;
+      border: 1px solid #2a2a2a;
+      border-radius: 12px;
+      padding: 32px;
+      width: 100%;
+      max-width: 440px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 8px;
+    }
+
+    input, select {
+      width: 100%;
+      background: #1e1e1e;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #e0e0e0;
+      font-size: 15px;
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus, select:focus {
+      border-color: #d4a847;
+    }
+
+    select option {
+      background: #1e1e1e;
+    }
+
+    .btn {
+      width: 100%;
+      background: #d4a847;
+      color: #000;
+      font-size: 15px;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      padding: 14px;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: background 0.2s, opacity 0.2s;
+      margin-top: 4px;
+    }
+
+    .btn:hover { background: #e0b84f; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .hint {
+      font-size: 12px;
+      color: #555;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
+    .error {
+      background: #3a0f0f;
+      border: 1px solid #7a1f1f;
+      color: #ff8080;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .success-card {
+      text-align: center;
+      display: none;
+    }
+
+    .success-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .success-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+
+    .success-body {
+      color: #888;
+      font-size: 14px;
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    .wa-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #25D366;
+      color: #fff;
+      font-weight: 700;
+      font-size: 15px;
+      padding: 13px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .wa-btn:hover { background: #1db954; }
+
+    .step-indicator {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 28px;
+      justify-content: center;
+    }
+
+    .step {
+      width: 28px;
+      height: 4px;
+      border-radius: 2px;
+      background: #2a2a2a;
+      transition: background 0.3s;
+    }
+
+    .step.active { background: #d4a847; }
+    .step.done { background: #5a7a3a; }
+
+    /* Verification step */
+    #step-verify { display: none; }
+    #step-register { display: block; }
+
+    .code-hint {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 16px;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .wa-icon { font-size: 18px; }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #222;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="logo">Santo Sonido OS</div>
+  <h1 class="headline">Únete a SantoCRM</h1>
+  <p class="subhead">Agrega leads al CRM directamente desde tu WhatsApp personal. Sin cuenta de empresa.</p>
+
+  <div class="card">
+    <div class="step-indicator">
+      <div class="step active" id="dot-1"></div>
+      <div class="step" id="dot-2"></div>
+    </div>
+
+    <!-- Step 1: Register -->
+    <div id="step-register">
+      <div class="error" id="reg-error"></div>
+
+      <div class="form-group">
+        <label for="name">Tu nombre</label>
+        <input type="text" id="name" placeholder="Juan García" autocomplete="name" />
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Tu WhatsApp</label>
+        <input type="tel" id="phone" placeholder="+57 300 000 0000" autocomplete="tel" />
+        <p class="hint">Enviaremos un código de verificación a este número.</p>
+      </div>
+
+      <div class="form-group">
+        <label for="role">Tu rol</label>
+        <select id="role">
+          <option value="">Selecciona tu rol...</option>
+          <option value="Producer">Productor</option>
+          <option value="Engineer">Ingeniero de sonido</option>
+          <option value="Videographer / Camera">Videógrafo / Cámara</option>
+          <option value="Photographer">Fotógrafo</option>
+          <option value="Content Creator / Influencer">Creador de contenido / Influencer</option>
+          <option value="Manager">Manager</option>
+          <option value="Other">Otro</option>
+        </select>
+      </div>
+
+      <button class="btn" id="reg-btn" onclick="register()">Conectar — Enviar código</button>
+    </div>
+
+    <!-- Step 2: Verify -->
+    <div id="step-verify">
+      <p class="code-hint" id="code-hint">Ingresa el código de 6 dígitos enviado a tu WhatsApp.</p>
+
+      <div class="error" id="ver-error"></div>
+
+      <div class="form-group">
+        <label for="code">Código de verificación</label>
+        <input type="text" id="code" placeholder="123456" maxlength="6" pattern="\d{6}"
+          inputmode="numeric" autocomplete="one-time-code"
+          onkeydown="if(event.key==='Enter') verify()" />
+      </div>
+
+      <button class="btn" id="ver-btn" onclick="verify()">Verificar y entrar</button>
+
+      <hr class="divider" />
+      <p class="hint" style="text-align:center">
+        ¿No llegó el código?
+        <a href="#" onclick="resend(event)" style="color:#d4a847;text-decoration:none;">Reenviar</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Success -->
+  <div class="card success-card" id="success-card">
+    <div class="success-icon">✅</div>
+    <h2 class="success-title" id="success-title">¡Listo!</h2>
+    <p class="success-body" id="success-body">
+      Ya estás conectado a SantoCRM.<br />
+      Guarda el número del bot como <strong>Santo Sonido CRM</strong> en tus contactos.
+    </p>
+    <a class="wa-btn" id="wa-link" href="#" target="_blank">
+      <span class="wa-icon">💬</span> Abrir chat con el bot
+    </a>
+  </div>
+
+  <script>
+    let registeredPhone = '';
+    let registeredName = '';
+    let botNumber = '';
+
+    // Load bot number from env via a light check (will be injected server-side if available)
+    const BOT_NUMBER = '__WA_BOT_NUMBER__'; // replaced server-side
+
+    async function register() {
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const role = document.getElementById('role').value;
+      const errEl = document.getElementById('reg-error');
+      const btn = document.getElementById('reg-btn');
+
+      errEl.style.display = 'none';
+      if (!name) return showError(errEl, 'Ingresa tu nombre.');
+      if (!phone) return showError(errEl, 'Ingresa tu número de WhatsApp.');
+      if (!role) return showError(errEl, 'Selecciona tu rol.');
+
+      btn.disabled = true;
+      btn.textContent = 'Enviando...';
+
+      try {
+        const res = await fetch('/api/whatsapp/sellers/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, phone, role }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Error al registrar');
+
+        registeredPhone = phone;
+        registeredName = name;
+
+        // Transition to step 2
+        document.getElementById('step-register').style.display = 'none';
+        document.getElementById('step-verify').style.display = 'block';
+        document.getElementById('dot-1').className = 'step done';
+        document.getElementById('dot-2').className = 'step active';
+        document.getElementById('code-hint').textContent =
+          `Código enviado a ${phone}. Revisa tu WhatsApp.`;
+        document.getElementById('code').focus();
+      } catch (err) {
+        showError(errEl, err.message);
+        btn.disabled = false;
+        btn.textContent = 'Conectar — Enviar código';
+      }
+    }
+
+    async function verify() {
+      const code = document.getElementById('code').value.trim();
+      const errEl = document.getElementById('ver-error');
+      const btn = document.getElementById('ver-btn');
+
+      errEl.style.display = 'none';
+      if (!code || code.length !== 6) return showError(errEl, 'Ingresa el código de 6 dígitos.');
+
+      btn.disabled = true;
+      btn.textContent = 'Verificando...';
+
+      try {
+        const res = await fetch('/api/whatsapp/sellers/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: registeredPhone, code }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Código inválido');
+
+        // Show success
+        document.querySelector('.card').style.display = 'none';
+        const sc = document.getElementById('success-card');
+        sc.style.display = 'block';
+        document.getElementById('success-title').textContent = `¡Bienvenido, ${registeredName}!`;
+
+        // Bot wa.me link
+        const waNum = BOT_NUMBER && BOT_NUMBER !== '__WA_BOT_NUMBER__'
+          ? BOT_NUMBER.replace(/\D/g, '')
+          : '';
+        const waLink = document.getElementById('wa-link');
+        if (waNum) {
+          waLink.href = `https://wa.me/${waNum}?text=Hola%2C%20soy%20${encodeURIComponent(registeredName)}`;
+        } else {
+          waLink.style.display = 'none';
+          document.getElementById('success-body').textContent =
+            '¡Estás verificado! El equipo de Santo Sonido te compartirá el número del bot pronto.';
+        }
+      } catch (err) {
+        showError(errEl, err.message);
+        btn.disabled = false;
+        btn.textContent = 'Verificar y entrar';
+      }
+    }
+
+    async function resend(e) {
+      e.preventDefault();
+      if (!registeredPhone) return;
+      const errEl = document.getElementById('ver-error');
+      errEl.style.display = 'none';
+      try {
+        await fetch('/api/whatsapp/sellers/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: registeredName,
+            phone: registeredPhone,
+            role: document.getElementById('role')?.value || 'Other',
+          }),
+        });
+        document.getElementById('code-hint').textContent = `Código reenviado a ${registeredPhone}.`;
+      } catch { showError(errEl, 'No se pudo reenviar. Intenta de nuevo.'); }
+    }
+
+    function showError(el, msg) {
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+  </script>
+</body>
+</html>

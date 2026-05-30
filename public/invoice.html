@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cotización / Factura — Santo Sonido OS</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0d0d0d; color: #e0e0e0; font-family: 'Helvetica Neue', Arial, sans-serif; min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 32px 16px; }
+    .card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; max-width: 560px; width: 100%; padding: 40px 36px; }
+    .logo { color: #d4a847; font-size: 22px; font-weight: 700; letter-spacing: 1px; margin-bottom: 4px; }
+    .subtitle { color: #666; font-size: 13px; margin-bottom: 32px; }
+    .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 24px; }
+    .badge-quote { background: #1a3a5c; color: #5b9bd5; }
+    .badge-invoice { background: #1a2a1a; color: #5bd55b; }
+    .badge-paid { background: #1a3a1a; color: #4CAF50; }
+    .badge-cancelled { background: #3a1a1a; color: #e57373; }
+    .inv-number { color: #d4a847; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+    h1 { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .client-sub { color: #888; font-size: 14px; margin-bottom: 32px; }
+    .amount-block { background: #111; border: 1px solid #2a2a2a; border-radius: 8px; padding: 20px 24px; margin-bottom: 28px; text-align: center; }
+    .amount-label { color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .amount-value { color: #d4a847; font-size: 36px; font-weight: 800; }
+    .amount-usd { color: #666; font-size: 14px; margin-top: 4px; }
+    .desc-section { margin-bottom: 28px; }
+    .desc-label { color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .desc-value { color: #e0e0e0; font-size: 15px; line-height: 1.5; }
+    .meta-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #222; font-size: 13px; }
+    .meta-row:last-child { border-bottom: none; }
+    .meta-key { color: #666; }
+    .meta-val { color: #ccc; text-align: right; }
+    .status-paid { color: #4CAF50; font-weight: 600; }
+    .status-sent { color: #5b9bd5; font-weight: 600; }
+    .status-draft { color: #888; }
+    .cta { margin-top: 32px; text-align: center; }
+    .wa-btn { display: inline-flex; align-items: center; gap: 8px; background: #25D366; color: #fff; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 15px; }
+    .wa-btn:hover { background: #1db954; }
+    .footer { margin-top: 32px; text-align: center; color: #444; font-size: 12px; }
+    .error-state { text-align: center; padding: 60px 20px; color: #666; }
+    .loading { text-align: center; padding: 60px 20px; color: #666; }
+    .items-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+    .items-table th { text-align: left; color: #666; font-size: 12px; text-transform: uppercase; padding: 8px 0; border-bottom: 1px solid #222; }
+    .items-table td { padding: 10px 0; border-bottom: 1px solid #1a1a1a; font-size: 14px; color: #ccc; }
+    .items-table td:last-child { text-align: right; color: #d4a847; }
+  </style>
+</head>
+<body>
+  <div class="card" id="card">
+    <div class="loading">Cargando...</div>
+  </div>
+
+  <script>
+    const token = location.pathname.split('/').pop();
+
+    async function load() {
+      try {
+        const res = await fetch(`/api/invoices/view/${token}`);
+        if (!res.ok) throw new Error('not found');
+        const inv = await res.json();
+        render(inv);
+      } catch {
+        document.getElementById('card').innerHTML = `<div class="error-state"><p style="font-size:48px;margin-bottom:16px;">🔍</p><p>Cotización no encontrada.</p></div>`;
+      }
+    }
+
+    function fmt(n) {
+      return Number(n).toLocaleString('es-CO');
+    }
+
+    function statusLabel(s) {
+      const map = { draft: 'Borrador', sent: 'Enviada', paid: 'Pagada', cancelled: 'Cancelada' };
+      const cls = { draft: 'status-draft', sent: 'status-sent', paid: 'status-paid', cancelled: '' };
+      return `<span class="${cls[s] || ''}">${map[s] || s}</span>`;
+    }
+
+    function render(inv) {
+      const isQuote = inv.type === 'quote';
+      const waPhone = '573148824744';
+      const waText = encodeURIComponent(`Hola, estoy viendo la ${isQuote ? 'cotización' : 'factura'} ${inv.invoice_number}. Quiero confirmar.`);
+      const items = Array.isArray(inv.items) ? inv.items : (typeof inv.items === 'string' ? JSON.parse(inv.items || '[]') : []);
+
+      const badgeClass = inv.status === 'paid' ? 'badge-paid' : inv.status === 'cancelled' ? 'badge-cancelled' : isQuote ? 'badge-quote' : 'badge-invoice';
+      const typeLabel = isQuote ? 'Cotización' : 'Factura';
+
+      let itemsHtml = '';
+      if (items.length > 0) {
+        itemsHtml = `
+          <table class="items-table">
+            <thead><tr><th>Descripción</th><th style="text-align:right">Monto COP</th></tr></thead>
+            <tbody>
+              ${items.map(it => `<tr><td>${it.description || it.name || ''}</td><td>$${fmt(it.amount_cop || it.amount || 0)}</td></tr>`).join('')}
+            </tbody>
+          </table>`;
+      }
+
+      document.getElementById('card').innerHTML = `
+        <div class="logo">🎵 Santo Sonido OS</div>
+        <div class="subtitle">Medellín, Colombia</div>
+
+        <span class="badge ${badgeClass}">${typeLabel}</span>
+
+        <div class="inv-number">${inv.invoice_number}</div>
+        <h1>${inv.client_name}</h1>
+        ${inv.client_email ? `<div class="client-sub">${inv.client_email}</div>` : `<div class="client-sub" style="margin-bottom:32px"></div>`}
+
+        <div class="amount-block">
+          <div class="amount-label">Total</div>
+          <div class="amount-value">$${fmt(inv.amount_cop)} COP</div>
+          ${inv.amount_usd ? `<div class="amount-usd">≈ USD $${fmt(inv.amount_usd)}</div>` : ''}
+        </div>
+
+        <div class="desc-section">
+          <div class="desc-label">Descripción</div>
+          <div class="desc-value">${inv.description}</div>
+        </div>
+
+        ${itemsHtml}
+
+        <div>
+          <div class="meta-row"><span class="meta-key">Estado</span><span class="meta-val">${statusLabel(inv.status)}</span></div>
+          <div class="meta-row"><span class="meta-key">Número</span><span class="meta-val">${inv.invoice_number}</span></div>
+          ${inv.due_date ? `<div class="meta-row"><span class="meta-key">Vence</span><span class="meta-val">${inv.due_date}</span></div>` : ''}
+          ${inv.sent_at ? `<div class="meta-row"><span class="meta-key">Enviada</span><span class="meta-val">${new Date(inv.sent_at).toLocaleDateString('es-CO')}</span></div>` : ''}
+          ${inv.paid_at ? `<div class="meta-row"><span class="meta-key">Pagada</span><span class="meta-val">${new Date(inv.paid_at).toLocaleDateString('es-CO')}</span></div>` : ''}
+        </div>
+
+        <div class="cta">
+          <a class="wa-btn" href="https://wa.me/${waPhone}?text=${waText}" target="_blank">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Confirmar por WhatsApp
+          </a>
+        </div>
+
+        <div class="footer">Santo Sonido OS · Medellín, Colombia<br>${inv.invoice_number} · ${new Date(inv.created_at).toLocaleDateString('es-CO')}</div>
+      `;
+    }
+
+    load();
+  </script>
+</body>
+</html>

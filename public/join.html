@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Join SantoCRM Beta</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #0a0a0a;
+      --deep: #111111;
+      --surface: #1a1a1a;
+      --surface-2: #222222;
+      --border: #2a2a2a;
+      --border-light: #333333;
+      --muted: #888888;
+      --text: #d0d0d0;
+      --white: #f5f5f5;
+      --gold: #D4AF37;
+      --gold-dim: #b89a2a;
+      --gold-bright: #f0cc50;
+      --gold-bg: rgba(212,175,55,0.08);
+      --gold-border: rgba(212,175,55,0.25);
+      --error: #e05050;
+      --success: #4caf78;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--black);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 40px 20px 60px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* grain */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999;
+    }
+
+    .back-link {
+      align-self: flex-start;
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--text); }
+
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      margin-bottom: 28px;
+      text-align: center;
+    }
+    .logo span { color: var(--white); }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 36px 32px;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .card-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 32px;
+      letter-spacing: 0.04em;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+    .card-sub {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 28px;
+    }
+
+    /* ── STEPS ── */
+    .step-indicator {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 28px;
+    }
+    .step-dot {
+      height: 3px;
+      flex: 1;
+      background: var(--border-light);
+      border-radius: 2px;
+      transition: background 0.3s;
+    }
+    .step-dot.active { background: var(--gold); }
+
+    /* ── FORM ── */
+    .form-group { margin-bottom: 18px; }
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 7px;
+    }
+    input, select {
+      width: 100%;
+      background: var(--surface-2);
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      padding: 12px 14px;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      color: var(--white);
+      outline: none;
+      transition: border-color 0.2s;
+      appearance: none;
+    }
+    input:focus, select:focus { border-color: var(--gold); }
+    input::placeholder { color: var(--muted); }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      cursor: pointer;
+    }
+    select option { background: var(--surface-2); }
+
+    .btn {
+      width: 100%;
+      background: var(--gold);
+      color: var(--black);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      margin-top: 8px;
+    }
+    .btn:hover { background: var(--gold-bright); transform: translateY(-1px); }
+    .btn:disabled { background: var(--border-light); color: var(--muted); cursor: not-allowed; transform: none; }
+
+    .error-msg {
+      background: rgba(224,80,80,0.1);
+      border: 1px solid rgba(224,80,80,0.3);
+      color: var(--error);
+      font-size: 13px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      display: none;
+      line-height: 1.5;
+    }
+    .error-msg.show { display: block; }
+
+    .success-msg {
+      background: rgba(76,175,120,0.1);
+      border: 1px solid rgba(76,175,120,0.3);
+      color: var(--success);
+      font-size: 13px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      display: none;
+      line-height: 1.5;
+    }
+    .success-msg.show { display: block; }
+
+    .hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 5px;
+      line-height: 1.4;
+    }
+    .resend-link {
+      font-size: 13px;
+      color: var(--gold);
+      text-decoration: none;
+      cursor: pointer;
+      margin-top: 10px;
+      display: inline-block;
+    }
+    .resend-link:hover { color: var(--gold-bright); }
+
+    /* hide/show panels */
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* loader */
+    .btn-loading { position: relative; }
+    .btn-loading::after {
+      content: '';
+      position: absolute;
+      right: 16px; top: 50%;
+      transform: translateY(-50%);
+      width: 16px; height: 16px;
+      border: 2px solid rgba(0,0,0,0.3);
+      border-top-color: var(--black);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
+
+    @media (max-width: 520px) {
+      .card { padding: 28px 20px; border-radius: 10px; }
+      body { padding: 24px 16px 48px; }
+    }
+  </style>
+</head>
+<body>
+
+<a href="/santocrm" class="back-link">← Back to SantoCRM</a>
+<div class="logo">Santo<span>CRM</span></div>
+
+<div class="card">
+
+  <!-- STEP INDICATOR -->
+  <div class="step-indicator">
+    <div class="step-dot active" id="dot-1"></div>
+    <div class="step-dot" id="dot-2"></div>
+    <div class="step-dot" id="dot-3"></div>
+  </div>
+
+  <!-- ── PANEL 1: INVITE CODE ── -->
+  <div class="panel active" id="panel-invite">
+    <div class="card-title">Enter Invite Code</div>
+    <p class="card-sub">SantoCRM is network-only during beta. You need an invite code from Santo Sonido OS to continue.</p>
+    <div class="error-msg" id="invite-error"></div>
+    <div class="form-group">
+      <label for="invite-code">Invite Code</label>
+      <input type="text" id="invite-code" placeholder="e.g. SS-XXXX" autocomplete="off" autocapitalize="characters" maxlength="20">
+    </div>
+    <button class="btn" id="invite-btn" onclick="validateInvite()">Continue →</button>
+    <p class="hint" style="margin-top:14px; text-align:center;">Don't have a code? <a href="https://wa.me/573148824744?text=Hola%2C%20quiero%20un%20invite%20code%20para%20SantoCRM" style="color:var(--gold);text-decoration:none;" target="_blank" rel="noopener">Request one via WhatsApp</a></p>
+  </div>
+
+  <!-- ── PANEL 2: SIGNUP ── -->
+  <div class="panel" id="panel-signup">
+    <div class="card-title">Create Your Account</div>
+    <p class="card-sub">Almost there. Tell us who you are.</p>
+    <div class="error-msg" id="signup-error"></div>
+    <div class="form-group">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" placeholder="Your name" autocomplete="name">
+    </div>
+    <div class="form-group">
+      <label for="whatsapp">WhatsApp Number</label>
+      <input type="tel" id="whatsapp" placeholder="+57 300 000 0000" autocomplete="tel">
+      <p class="hint">Include country code. This is how you'll talk to the bot.</p>
+    </div>
+    <div class="form-group">
+      <label for="role">Your Role</label>
+      <select id="role">
+        <option value="" disabled selected>Select your role</option>
+        <option value="Producer">Producer</option>
+        <option value="Engineer">Engineer</option>
+        <option value="Videographer">Videographer</option>
+        <option value="Photographer">Photographer</option>
+        <option value="Content Creator">Content Creator</option>
+        <option value="Manager">Manager</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <button class="btn" id="signup-btn" onclick="submitSignup()">Send Verification Code →</button>
+  </div>
+
+  <!-- ── PANEL 3: VERIFY ── -->
+  <div class="panel" id="panel-verify">
+    <div class="card-title">Verify WhatsApp</div>
+    <p class="card-sub" id="verify-sub">We sent a 6-digit code to your WhatsApp. Enter it below.</p>
+    <div class="error-msg" id="verify-error"></div>
+    <div class="success-msg" id="verify-success"></div>
+    <div class="form-group">
+      <label for="otp">Verification Code</label>
+      <input type="text" id="otp" placeholder="000000" autocomplete="one-time-code" inputmode="numeric" maxlength="6" pattern="[0-9]{6}">
+    </div>
+    <button class="btn" id="verify-btn" onclick="verifyOtp()">Confirm &amp; Enter Dashboard →</button>
+    <a class="resend-link" onclick="resendOtp()">Resend code</a>
+  </div>
+
+</div>
+
+<script>
+  let inviteCode = '';
+  let signupData = {};
+
+  // ── Helpers ──
+  function setLoading(btn, loading) {
+    if (loading) {
+      btn.disabled = true;
+      btn.classList.add('btn-loading');
+    } else {
+      btn.disabled = false;
+      btn.classList.remove('btn-loading');
+    }
+  }
+
+  function showError(id, msg) {
+    const el = document.getElementById(id);
+    el.textContent = msg;
+    el.classList.add('show');
+  }
+  function clearError(id) {
+    const el = document.getElementById(id);
+    el.textContent = '';
+    el.classList.remove('show');
+  }
+  function showSuccess(id, msg) {
+    const el = document.getElementById(id);
+    el.textContent = msg;
+    el.classList.add('show');
+  }
+
+  function goToPanel(num) {
+    ['invite','signup','verify'].forEach((name, i) => {
+      document.getElementById('panel-' + name).classList.toggle('active', i + 1 === num);
+      document.getElementById('dot-' + (i+1)).classList.toggle('active', i + 1 <= num);
+    });
+  }
+
+  // ── STEP 1: Validate Invite Code ──
+  async function validateInvite() {
+    clearError('invite-error');
+    const code = document.getElementById('invite-code').value.trim();
+    if (!code) { showError('invite-error', 'Please enter your invite code.'); return; }
+
+    const btn = document.getElementById('invite-btn');
+    setLoading(btn, true);
+    try {
+      const res = await fetch('/api/santocrm/validate-invite', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code })
+      });
+      const data = await res.json();
+      if (res.ok && data.valid) {
+        inviteCode = code;
+        goToPanel(2);
+      } else {
+        showError('invite-error', data.error || "This invite code isn't valid — request one from Santo Sonido OS.");
+      }
+    } catch (e) {
+      showError('invite-error', 'Network error. Please try again.');
+    }
+    setLoading(btn, false);
+  }
+
+  // ── STEP 2: Signup ──
+  async function submitSignup() {
+    clearError('signup-error');
+    const name = document.getElementById('name').value.trim();
+    const whatsapp = document.getElementById('whatsapp').value.trim();
+    const role = document.getElementById('role').value;
+
+    if (!name) { showError('signup-error', 'Name is required.'); return; }
+    if (!whatsapp) { showError('signup-error', 'WhatsApp number is required.'); return; }
+    if (!role) { showError('signup-error', 'Please select your role.'); return; }
+
+    const btn = document.getElementById('signup-btn');
+    setLoading(btn, true);
+    try {
+      const res = await fetch('/api/santocrm/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, whatsapp, role, invite_code: inviteCode })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        signupData = { name, whatsapp, role };
+        document.getElementById('verify-sub').textContent =
+          `We sent a 6-digit code to ${whatsapp}. Enter it below.`;
+        goToPanel(3);
+      } else {
+        showError('signup-error', data.error || 'Signup failed. Please try again.');
+      }
+    } catch (e) {
+      showError('signup-error', 'Network error. Please try again.');
+    }
+    setLoading(btn, false);
+  }
+
+  // ── STEP 3: Verify OTP ──
+  async function verifyOtp() {
+    clearError('verify-error');
+    const otp = document.getElementById('otp').value.trim();
+    if (!otp || otp.length !== 6) { showError('verify-error', 'Please enter the 6-digit code.'); return; }
+
+    const btn = document.getElementById('verify-btn');
+    setLoading(btn, true);
+    try {
+      const res = await fetch('/api/santocrm/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ whatsapp: signupData.whatsapp, otp })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        showSuccess('verify-success', '✓ Verified! Taking you to your dashboard…');
+        setTimeout(() => { window.location.href = '/dashboard'; }, 1200);
+      } else {
+        showError('verify-error', data.error || 'Invalid code. Please try again.');
+      }
+    } catch (e) {
+      showError('verify-error', 'Network error. Please try again.');
+    }
+    setLoading(btn, false);
+  }
+
+  // ── Resend OTP ──
+  async function resendOtp() {
+    clearError('verify-error');
+    try {
+      await fetch('/api/santocrm/resend-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ whatsapp: signupData.whatsapp })
+      });
+      showSuccess('verify-success', 'New code sent to your WhatsApp.');
+    } catch(e) { /* silent */ }
+  }
+
+  // allow Enter key submission
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter') return;
+    if (document.getElementById('panel-invite').classList.contains('active')) validateInvite();
+    else if (document.getElementById('panel-signup').classList.contains('active')) submitSignup();
+    else if (document.getElementById('panel-verify').classList.contains('active')) verifyOtp();
+  });
+</script>
+</body>
+</html>

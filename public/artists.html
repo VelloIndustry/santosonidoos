@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artists — Santo Sonido OS</title>
+    <meta name="description" content="The Santo Sonido OS roster. Three artists. One operation. Built in the studio, tested in the street.">
+    <link rel="canonical" href="https://santosonidoos.polsia.app/artists">
+    <link rel="alternate" hreflang="es" href="https://santosonidoos.polsia.app/artists">
+    <link rel="alternate" hreflang="en" href="https://santosonidoos.polsia.app/artists">
+    <link rel="alternate" hreflang="x-default" href="https://santosonidoos.polsia.app/artists">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://www.youtube.com">
+    <link rel="preconnect" href="https://open.spotify.com">
+    <link rel="preconnect" href="https://plausible.io">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --black: #0a0a0a;
+            --gold: #d4a847;
+            --accent: #c9553a;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--black);
+            color: var(--text-primary);
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: overlay;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease, backdrop-filter 0.3s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            color: var(--gold);
+            text-decoration: none;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--gold);
+        }
+
+        .nav-cta {
+            background: var(--accent);
+            color: #fff !important;
+            padding: 0.6rem 1.5rem;
+            border-radius: 4px;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .nav-cta:hover {
+            background: #d4613f;
+            transform: translateY(-2px);
+        }
+
+        /* Page Hero */
+        .page-hero {
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 150px 10% 100px;
+            position: relative;
+            background: radial-gradient(ellipse at center top, #1a1510 0%, #0a0a0a 60%);
+            overflow: hidden;
+        }
+
+        .page-hero::before {
+            content: 'ROSTER';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(8rem, 20vw, 18rem);
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(212, 168, 71, 0.08);
+            text-stroke: 1px rgba(212, 168, 71, 0.08);
+            letter-spacing: 10px;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+        }
+
+        .hero-eyebrow {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .hero-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(4rem, 12vw, 9rem);
+            line-height: 0.9;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            letter-spacing: 4px;
+        }
+
+        .hero-subtitle {
+            font-family: 'DM Sans', sans-serif;
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            line-height: 1.6;
+            color: var(--text-secondary);
+            max-width: 700px;
+        }
+
+        /* Artists Section */
+        .artists-section {
+            padding: 100px 5% 150px;
+        }
+
+        .artist-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 120px;
+            align-items: center;
+            position: relative;
+        }
+
+        .artist-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .artist-card.reverse {
+            direction: rtl;
+        }
+
+        .artist-card.reverse > * {
+            direction: ltr;
+        }
+
+        .artist-image-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4/5;
+            overflow: hidden;
+            border-radius: 8px;
+            transition: transform 0.5s ease;
+        }
+
+        .artist-card:hover .artist-image-container {
+            transform: scale(1.02);
+        }
+
+        .artist-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .artist-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            border: 1px solid rgba(212, 168, 71, 0.1);
+        }
+
+        .artist-placeholder.gradient-gold {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a1a 100%);
+        }
+
+        .artist-placeholder.gradient-rust {
+            background: linear-gradient(135deg, #1a1a1a 0%, #1a1015 100%);
+        }
+
+        .artist-placeholder .diamond {
+            font-size: 4rem;
+            color: rgba(212, 168, 71, 0.15);
+        }
+
+        .artist-content {
+            padding: 20px 0;
+        }
+
+        .artist-number {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 5rem;
+            color: rgba(212, 168, 71, 0.2);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+        }
+
+        .artist-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3.5rem;
+            line-height: 1;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            letter-spacing: 2px;
+        }
+
+        .artist-badge {
+            display: inline-block;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .artist-badge.active {
+            background: rgba(212, 168, 71, 0.15);
+            color: var(--gold);
+            border: 1px solid var(--gold);
+        }
+
+        .artist-badge.coming-soon {
+            background: rgba(160, 160, 160, 0.1);
+            color: var(--text-secondary);
+            border: 1px solid rgba(160, 160, 160, 0.2);
+        }
+
+        .artist-bio {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .artist-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .artist-tag {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            padding: 0.4rem 1rem;
+            border: 1px solid rgba(160, 160, 160, 0.2);
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        .artist-album-note {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .artist-cta {
+            display: inline-block;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+            color: var(--gold);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 4px;
+            transition: color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .artist-cta:hover {
+            color: #e5b94f;
+            border-color: #e5b94f;
+        }
+
+        .artist-status {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        /* CTA Footer */
+        .cta-footer {
+            padding: 100px 10%;
+            text-align: center;
+            background: linear-gradient(to bottom, var(--black) 0%, #111 100%);
+        }
+
+        .cta-footer-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            letter-spacing: 2px;
+        }
+
+        .cta-footer-subtitle {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 1rem 2.5rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .cta-button.primary {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .cta-button.primary:hover {
+            background: #d4613f;
+            transform: translateY(-2px);
+        }
+
+        .cta-button.secondary {
+            background: transparent;
+            color: var(--gold);
+            border: 2px solid var(--gold);
+        }
+
+        .cta-button.secondary:hover {
+            background: rgba(212, 168, 71, 0.1);
+        }
+
+        /* Footer */
+        footer {
+            padding: 80px 10% 40px;
+            background: #050505;
+            border-top: 1px solid rgba(212, 168, 71, 0.1);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+
+        .footer-brand h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+        }
+
+        .footer-brand p {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .footer-links h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--gold);
+        }
+
+        .footer-bottom {
+            padding-top: 30px;
+            border-top: 1px solid rgba(160, 160, 160, 0.1);
+            text-align: center;
+        }
+
+        .footer-bottom p {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 5%;
+            }
+
+            .nav-links {
+                gap: 1rem;
+                font-size: 0.75rem;
+            }
+
+            .nav-cta {
+                padding: 0.5rem 1rem;
+                font-size: 0.75rem;
+            }
+
+            .page-hero {
+                padding: 120px 5% 80px;
+                min-height: 50vh;
+            }
+
+            .page-hero::before {
+                font-size: 6rem;
+            }
+
+            .hero-eyebrow {
+                font-size: 0.8rem;
+            }
+
+            .artist-card {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                margin-bottom: 80px;
+            }
+
+            .artist-card.reverse {
+                direction: ltr;
+            }
+
+            .artist-number {
+                font-size: 3.5rem;
+            }
+
+            .artist-name {
+                font-size: 2.5rem;
+            }
+
+            .artist-bio {
+                font-size: 0.95rem;
+            }
+
+            .artists-section {
+                padding: 60px 5% 80px;
+            }
+
+            .cta-footer {
+                padding: 60px 5%;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .cta-button {
+                width: 100%;
+                text-align: center;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            footer {
+                padding: 60px 5% 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-links {
+                gap: 0.7rem;
+            }
+
+            .nav-links a {
+                font-size: 0.65rem;
+            }
+
+            .nav-cta {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.65rem;
+            }
+        }
+    </style>
+    <!-- Plausible Analytics -->
+    <script defer data-domain="santosonidoos.polsia.app" src="https://plausible.io/js/script.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <a href="/" class="nav-logo"><img src="https://pub-629428d185ca4960a0a73c850d32294b.r2.dev/company_104094/images/5c790cf3-90bd-48ec-a19e-db96255854f2.jpg" alt="Santo Sonido OS" style="height:40px;width:auto;display:block;"></a>
+        <ul class="nav-links">
+            <li><a href="/producer">Producer</a></li>
+            <li><a href="/artists" class="active">Artists</a></li>
+            <li><a href="/work">Work</a></li>
+            <li><a href="/studio">Studio</a></li>
+            <li><a href="/#contact" class="nav-cta">Book Now</a></li>
+        </ul>
+    </nav>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <div class="hero-content">
+            <div class="hero-eyebrow">The Roster</div>
+            <h1 class="hero-title">Artists.</h1>
+            <p class="hero-subtitle">Three artists. One operation. Built in <a href="/studio" style="color:var(--gold);text-decoration:underline;text-underline-offset:3px;">the studio</a>, tested in the street. <a href="/work" style="color:var(--gold);text-decoration:underline;text-underline-offset:3px;">Hear their music</a>.</p>
+        </div>
+    </section>
+
+    <!-- Artists Section -->
+    <section class="artists-section">
+        <!-- Artist 1: Faker -->
+        <div class="artist-card">
+            <div class="artist-image-container">
+                <img src="https://pub-629428d185ca4960a0a73c850d32294b.r2.dev/company_104094/images/c2505f37-2d4b-4316-9cf9-a2c94a3c2abb.jpg" alt="Javier Faker" class="artist-image" loading="lazy">
+            </div>
+            <div class="artist-content">
+                <div class="artist-number">01</div>
+                <h2 class="artist-name">Javier "Faker"</h2>
+                <span class="artist-badge active">Active</span>
+                <p class="artist-bio">Recording artist from the Santo Sonido OS roster. Debut album Chamba Mentality Vol. 1 drops July 2026 — built in the studio, tested in the street. LATAM-rooted, globally ambitious. 2025 Latin Grammy affiliate through the <a href="/studio" style="color:var(--gold);text-decoration:underline;text-underline-offset:3px;">Santo Sonido OS production studio</a>. <a href="/work" style="color:var(--gold);text-decoration:underline;text-underline-offset:3px;">Hear the results</a>.</p>
+                <div class="artist-tags">
+                    <span class="artist-tag">Original Music</span>
+                    <span class="artist-tag">Artist Development</span>
+                    <span class="artist-tag">Live Performance</span>
+                    <span class="artist-tag">Sync Licensing</span>
+                </div>
+                <div class="artist-album-note">Chamba Mentality Vol. 1 — Coming July 2026</div>
+                <a href="https://www.instagram.com/faker.flp/" target="_blank" class="artist-cta">Follow @faker.flp ↗</a>
+            </div>
+        </div>
+
+        <!-- Artist 2: Apache -->
+        <div class="artist-card reverse">
+            <div class="artist-image-container">
+                <div class="artist-placeholder gradient-gold">
+                    <span class="diamond">◆</span>
+                </div>
+            </div>
+            <div class="artist-content">
+                <div class="artist-number">02</div>
+                <h2 class="artist-name">Apache</h2>
+                <span class="artist-badge coming-soon">Coming Soon</span>
+                <p class="artist-bio">New artist under the Santo Sonido OS roster. More details dropping soon.</p>
+                <div class="artist-status">Details Coming Soon</div>
+            </div>
+        </div>
+
+        <!-- Artist 3: Ryan Castro -->
+        <div class="artist-card">
+            <div class="artist-image-container">
+                <div class="artist-placeholder gradient-rust">
+                    <span class="diamond">◆</span>
+                </div>
+            </div>
+            <div class="artist-content">
+                <div class="artist-number">03</div>
+                <h2 class="artist-name">Ryan Castro</h2>
+                <span class="artist-badge coming-soon">Coming Soon</span>
+                <p class="artist-bio">New collaboration under the Santo Sonido OS umbrella. Details coming soon — watch this space.</p>
+                <div class="artist-status">Details Coming Soon</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Footer -->
+    <section class="cta-footer">
+        <h2 class="cta-footer-title">The roster is growing.</h2>
+        <p class="cta-footer-subtitle">Work with <a href="/producer" style="color:var(--gold);text-decoration:underline;text-underline-offset:3px;">our producer</a> or <a href="/studio" style="color:var(--gold);text-decoration:underline;text-underline-offset:3px;">book studio time</a>. Stay close.</p>
+        <div class="cta-buttons">
+            <a href="/#contact" class="cta-button primary">Book a Session →</a>
+            <a href="https://www.instagram.com/santosonidostudio/" target="_blank" class="cta-button secondary">Follow @santosonidostudio ↗</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h2>SANTO SONIDO</h2>
+                <p>Production house. Recording studio. Artist development operation. Built in Miami, heard everywhere.</p>
+            </div>
+            <div class="footer-links">
+                <h3>Navigate</h3>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/producer">Producer</a></li>
+                    <li><a href="/artists">Artists</a></li>
+                    <li><a href="/work">Work</a></li>
+                    <li><a href="/studio">Studio</a></li>
+                    <li><a href="/#contact">Book Now</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Santo Sonido OS. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Nav scroll effect
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Polsia Analytics
+        (function() {
+            var slug = 'santosonidoos';
+            if (!slug) return;
+            var vid = localStorage.getItem('polsia_vid');
+            if (!vid) {
+                vid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                    var r = Math.random() * 16 | 0;
+                    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+                });
+                localStorage.setItem('polsia_vid', vid);
+            }
+            new Image().src = 'https://polsia.com/api/beacon/pixel?s=' + encodeURIComponent(slug) + '&v=' + encodeURIComponent(vid);
+        })();
+    </script>
+
+<!-- WhatsApp Floating CTA -->
+<style>
+#wa-float{position:fixed;z-index:9999;text-decoration:none;display:flex;align-items:center;gap:10px;background:#25D366;color:#fff;font-weight:700;transition:transform .2s ease,box-shadow .2s ease;}
+@media(min-width:768px){#wa-float{bottom:28px;right:28px;width:60px;height:60px;border-radius:50%;justify-content:center;box-shadow:0 4px 24px rgba(37,211,102,.35);}#wa-float .wa-lbl{display:none;}#wa-float:hover{transform:scale(1.1);box-shadow:0 6px 32px rgba(37,211,102,.55);}#wa-float::after{content:'Reserva tu sesión';position:absolute;right:72px;background:#111;color:#fff;padding:6px 12px;border-radius:6px;font-size:.78rem;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s;font-family:'Space Grotesk',sans-serif;border:1px solid #333;letter-spacing:.06em;}#wa-float:hover::after{opacity:1;}}
+@media(max-width:767px){#wa-float{bottom:0;left:0;right:0;width:100%;border-radius:0;padding:14px 20px;justify-content:center;font-size:.9rem;letter-spacing:.1em;font-family:'Space Grotesk',sans-serif;text-transform:uppercase;box-shadow:0 -2px 20px rgba(37,211,102,.25);}body{padding-bottom:56px;}}
+@keyframes wa-pulse{0%,100%{box-shadow:0 4px 24px rgba(37,211,102,.35);}50%{box-shadow:0 4px 40px rgba(37,211,102,.7),0 0 0 10px rgba(37,211,102,.12);}}
+#wa-float.pulsing{animation:wa-pulse 1s ease-in-out 3;}
+</style>
+<a id="wa-float" href="https://wa.me/573148824744?text=Hola%2C%20me%20interesa%20una%20sesi%C3%B3n%20en%20Santo%20Sonido" target="_blank" rel="noopener" aria-label="Reserva tu sesión por WhatsApp">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" fill="white"/></svg>
+  <span class="wa-lbl">Reserva tu sesión</span>
+</a>
+<script>
+(function(){var b=document.getElementById('wa-float');if(!b)return;setTimeout(function(){b.classList.add('pulsing');setTimeout(function(){b.classList.remove('pulsing');},3100);},1500);})();
+</script>
+<script>
+// Analytics event tracking
+(function() {
+  var wa = document.getElementById('wa-float');
+  if (wa) wa.addEventListener('click', function() {
+    if (typeof plausible !== 'undefined') plausible('WhatsApp Click', {props: {page: 'artists'}});
+  });
+  document.querySelectorAll('nav a').forEach(function(link) {
+    link.addEventListener('click', function() {
+      if (typeof plausible !== 'undefined') plausible('Nav Click', {props: {destination: link.getAttribute('href') || link.textContent.trim()}});
+    });
+  });
+})();
+</script>
+</body>
+</html>

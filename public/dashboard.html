@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SantoCRM — Dashboard</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #0a0a0a;
+      --deep: #111111;
+      --surface: #1a1a1a;
+      --surface-2: #222222;
+      --border: #2a2a2a;
+      --border-light: #333333;
+      --muted: #888888;
+      --text: #d0d0d0;
+      --white: #f5f5f5;
+      --gold: #D4AF37;
+      --gold-bg: rgba(212,175,55,0.08);
+      --gold-border: rgba(212,175,55,0.25);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--black);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999;
+    }
+
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      margin-bottom: 40px;
+      text-align: center;
+    }
+    .logo span { color: var(--white); }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 48px 36px;
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--gold-bg);
+      border: 1px solid var(--gold-border);
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 48px;
+      letter-spacing: 0.04em;
+      color: var(--white);
+      margin-bottom: 12px;
+      line-height: 1;
+    }
+
+    p {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 10px;
+    }
+
+    .divider {
+      width: 40px;
+      height: 2px;
+      background: var(--gold);
+      border-radius: 1px;
+      margin: 24px auto;
+    }
+
+    .coming-list {
+      list-style: none;
+      text-align: left;
+      margin: 20px 0 28px;
+    }
+    .coming-list li {
+      font-size: 14px;
+      color: var(--text);
+      padding: 9px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .coming-list li:last-child { border-bottom: none; }
+    .coming-list .icon { font-size: 16px; }
+
+    .wa-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #25D366;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 13px 24px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+      margin-top: 8px;
+    }
+    .wa-btn:hover { opacity: 0.88; }
+  </style>
+</head>
+<body>
+
+<div class="logo">Santo<span>CRM</span></div>
+
+<div class="card">
+  <div class="badge">Beta Dashboard</div>
+  <h1>You're In.</h1>
+  <p>Your account is active. The full dashboard is being built right now — you'll get notified on WhatsApp when it's ready.</p>
+
+  <div class="divider"></div>
+
+  <p style="font-size:13px;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);font-weight:600;margin-bottom:4px;">Coming to your dashboard</p>
+  <ul class="coming-list">
+    <li><span class="icon">📋</span> Lead pipeline with stage tracking</li>
+    <li><span class="icon">💰</span> Income &amp; expense log</li>
+    <li><span class="icon">📱</span> WhatsApp receipt capture</li>
+    <li><span class="icon">📊</span> Monthly P&amp;L summary</li>
+    <li><span class="icon">👥</span> Client directory</li>
+  </ul>
+
+  <p>In the meantime, reach us on WhatsApp if you have questions.</p>
+  <a href="https://wa.me/573148824744?text=Hola%2C%20acabo%20de%20registrarme%20en%20SantoCRM" class="wa-btn" target="_blank" rel="noopener">
+    <span>💬</span> WhatsApp us
+  </a>
+</div>
+
+</body>
+</html>
