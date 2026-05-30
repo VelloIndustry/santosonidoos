@@ -9,6 +9,8 @@ const db = require('../db/crm');
 
 // Internal-only guard
 function requireSecret(req, res, next) {
+  const { getSession } = require('../middleware/auth');
+  if (getSession(req.cookies?.session)) return next();
   const secret = process.env.BUDGET_SECRET;
   if (!secret) return next();
   const provided = req.headers['x-budget-secret'] || req.query._secret;
