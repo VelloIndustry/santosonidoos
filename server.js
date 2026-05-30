@@ -12,6 +12,7 @@ if (!process.env.DATABASE_URL) {
 }
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(require('cookie-parser')());
 
 // Health check endpoint (required for Render)
