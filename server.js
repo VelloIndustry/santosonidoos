@@ -20,6 +20,17 @@ app.get('/health', (req, res) => {
   res.json({ status: 'healthy' });
 });
 
+// Temporary debug — remove after login is working
+app.get('/debug-auth', (req, res) => {
+  res.json({
+    RYAN_EMAIL_SET: !!process.env.ADMIN_RYAN_EMAIL,
+    RYAN_EMAIL_VALUE: process.env.ADMIN_RYAN_EMAIL || 'NOT SET',
+    RYAN_PASSWORD_SET: !!process.env.ADMIN_RYAN_PASSWORD,
+    JAVIER_EMAIL_SET: !!process.env.ADMIN_JAVIER_EMAIL,
+    JAVIER_PASSWORD_SET: !!process.env.ADMIN_JAVIER_PASSWORD,
+  });
+});
+
 // Auth routes (login/logout pages — no auth required)
 app.use('/', require('./routes/auth'));
 
