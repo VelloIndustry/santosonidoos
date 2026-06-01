@@ -27,6 +27,8 @@ async function createEntry(entry) {
 async function getEntries({ track, mode, payment_source, date_from, date_to, limit = 200, offset = 0 } = {}) {
   const conditions = [];
   const params = [];
+  const safeLimit = Math.min(Math.max(Number(limit) || 200, 1), 500);
+  const safeOffset = Math.max(Number(offset) || 0, 0);
 
   if (track) { params.push(track); conditions.push(`track = $${params.length}`); }
   if (mode) { params.push(mode); conditions.push(`mode = $${params.length}`); }
@@ -35,7 +37,7 @@ async function getEntries({ track, mode, payment_source, date_from, date_to, lim
   if (date_to) { params.push(date_to); conditions.push(`date <= $${params.length}`); }
 
   const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
-  params.push(limit, offset);
+  params.push(safeLimit, safeOffset);
 
   const { rows } = await pool.query(
     `SELECT * FROM budget_entries ${where} ORDER BY date DESC, id DESC LIMIT $${params.length - 1} OFFSET $${params.length}`,
@@ -82,6 +84,7 @@ async function updateEntry(id, fields) {
  * Returns rows: { track, month (YYYY-MM), type, mode, total }
  */
 async function getMonthlySummary({ months = 4 } = {}) {
+  const safeMonths = Math.min(Math.max(Number(months) || 4, 1), 24);
   const { rows } = await pool.query(`
     SELECT
       track,
@@ -90,10 +93,10 @@ async function getMonthlySummary({ months = 4 } = {}) {
       mode,
       SUM(amount_cop) AS total_cop
     FROM budget_entries
-    WHERE date >= DATE_TRUNC('month', NOW()) - INTERVAL '${months - 1} months'
+    WHERE date >= DATE_TRUNC('month', NOW()) - (($1::int - 1) * INTERVAL '1 month')
     GROUP BY track, month, type, mode
     ORDER BY track, month DESC, type, mode
-  `);
+  `, [safeMonths]);
   return rows;
 }
 
@@ -102,6 +105,7 @@ async function getMonthlySummary({ months = 4 } = {}) {
  * Returns variance (actual - planned) per track per month.
  */
 async function getPlanVsActual({ months = 4 } = {}) {
+  const safeMonths = Math.min(Math.max(Number(months) || 4, 1), 24);
   const { rows } = await pool.query(`
     SELECT
       track,
@@ -110,10 +114,10 @@ async function getPlanVsActual({ months = 4 } = {}) {
       SUM(CASE WHEN mode = 'Actual'  THEN amount_cop ELSE 0 END) AS actual_cop,
       SUM(CASE WHEN mode = 'Planned' THEN amount_cop ELSE 0 END) AS planned_cop
     FROM budget_entries
-    WHERE date >= DATE_TRUNC('month', NOW()) - INTERVAL '${months - 1} months'
+    WHERE date >= DATE_TRUNC('month', NOW()) - (($1::int - 1) * INTERVAL '1 month')
     GROUP BY track, month, type
     ORDER BY track, month DESC, type
-  `);
+  `, [safeMonths]);
   return rows;
 }
 

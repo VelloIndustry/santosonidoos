@@ -16,6 +16,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/whatsapp');
 const dbInvoices = require('../db/invoices');
+const { requireInternalAccess } = require('../middleware/auth');
 
 // --- WhatsApp Cloud API helpers ---
 
@@ -667,17 +668,7 @@ router.post('/sellers/verify', async (req, res) => {
 
 // --- Admin seller management (protected) ---
 
-function requireSecret(req, res, next) {
-  const { getSession } = require('../middleware/auth');
-  if (getSession(req.cookies?.session)) return next();
-  const secret = process.env.BUDGET_SECRET;
-  if (!secret) return next();
-  const provided = req.headers['x-budget-secret'] || req.query._secret;
-  if (provided !== secret) return res.status(401).json({ error: 'Unauthorized' });
-  next();
-}
-
-router.get('/sellers', requireSecret, async (req, res) => {
+router.get('/sellers', requireInternalAccess, async (req, res) => {
   try {
     const { status, search } = req.query;
     const sellers = await db.getSellers({ status, search });
@@ -688,7 +679,7 @@ router.get('/sellers', requireSecret, async (req, res) => {
   }
 });
 
-router.post('/sellers', requireSecret, async (req, res) => {
+router.post('/sellers', requireInternalAccess, async (req, res) => {
   try {
     const { name, phone, role } = req.body;
     if (!name || !phone) return res.status(400).json({ error: 'name and phone are required' });
@@ -700,7 +691,7 @@ router.post('/sellers', requireSecret, async (req, res) => {
   }
 });
 
-router.delete('/sellers/:id', requireSecret, async (req, res) => {
+router.delete('/sellers/:id', requireInternalAccess, async (req, res) => {
   try {
     const seller = await db.revokeSeller(Number(req.params.id));
     if (!seller) return res.status(404).json({ error: 'Seller not found' });
@@ -711,7 +702,7 @@ router.delete('/sellers/:id', requireSecret, async (req, res) => {
   }
 });
 
-router.get('/status', requireSecret, async (req, res) => {
+router.get('/status', requireInternalAccess, async (req, res) => {
   try {
     const sellers = await db.getSellers();
     const verified = sellers.filter(s => s.status === 'verified').length;

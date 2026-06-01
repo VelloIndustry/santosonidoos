@@ -11,7 +11,7 @@ const crypto = require('crypto');
 async function validateInviteCode(code) {
   const { rows } = await pool.query(
     `SELECT * FROM santocrm_invite_codes
-     WHERE code = $1 AND active = TRUE AND used_count < max_uses`,
+     WHERE code = $1 AND active = TRUE AND uses < max_uses`,
     [code.trim().toUpperCase()]
   );
   return rows[0] || null;
@@ -19,7 +19,7 @@ async function validateInviteCode(code) {
 
 async function incrementInviteUsage(code) {
   await pool.query(
-    `UPDATE santocrm_invite_codes SET used_count = used_count + 1 WHERE code = $1`,
+    `UPDATE santocrm_invite_codes SET uses = uses + 1 WHERE code = $1`,
     [code.trim().toUpperCase()]
   );
 }
@@ -73,7 +73,7 @@ async function createOtp(whatsapp) {
   // expires in 10 minutes
   const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
   await pool.query(
-    `INSERT INTO santocrm_otp (whatsapp, otp, expires_at)
+    `INSERT INTO santocrm_otp (phone, otp, expires_at)
      VALUES ($1, $2, $3)`,
     [normalizeWhatsapp(whatsapp), otp, expiresAt]
   );
@@ -83,7 +83,7 @@ async function createOtp(whatsapp) {
 async function verifyOtp(whatsapp, otp) {
   const { rows } = await pool.query(
     `SELECT * FROM santocrm_otp
-     WHERE whatsapp = $1 AND otp = $2
+     WHERE phone = $1 AND otp = $2
        AND expires_at > NOW() AND used = FALSE
      ORDER BY created_at DESC
      LIMIT 1`,

@@ -69,4 +69,21 @@ function requireAuthApi(req, res, next) {
   next();
 }
 
-module.exports = { login, logout, getSession, requireAuth, requireAuthApi };
+// Internal APIs may be called from the logged-in admin UI, or by trusted
+// integrations that know BUDGET_SECRET. If neither credential is present,
+// keep the endpoint closed.
+function requireInternalAccess(req, res, next) {
+  const session = getSession(req.cookies?.session);
+  if (session) {
+    req.user = session;
+    return next();
+  }
+
+  const secret = process.env.BUDGET_SECRET;
+  const provided = req.headers['x-budget-secret'] || req.query._secret;
+  if (secret && provided === secret) return next();
+
+  return res.status(401).json({ error: 'Unauthorized' });
+}
+
+module.exports = { login, logout, getSession, requireAuth, requireAuthApi, requireInternalAccess };

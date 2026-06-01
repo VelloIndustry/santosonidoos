@@ -6,19 +6,10 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db/invoices');
-
-function requireSecret(req, res, next) {
-  const { getSession } = require('../middleware/auth');
-  if (getSession(req.cookies?.session)) return next();
-  const secret = process.env.BUDGET_SECRET;
-  if (!secret) return next();
-  const provided = req.headers['x-budget-secret'] || req.query._secret;
-  if (provided !== secret) return res.status(401).json({ error: 'Unauthorized' });
-  next();
-}
+const { requireInternalAccess } = require('../middleware/auth');
 
 // GET /api/invoices — list (protected)
-router.get('/', requireSecret, async (req, res) => {
+router.get('/', requireInternalAccess, async (req, res) => {
   try {
     const { status, client_id, type } = req.query;
     const invoices = await db.getInvoices({ status, client_id: client_id ? Number(client_id) : undefined, type });
@@ -30,7 +21,7 @@ router.get('/', requireSecret, async (req, res) => {
 });
 
 // POST /api/invoices — create (protected)
-router.post('/', requireSecret, async (req, res) => {
+router.post('/', requireInternalAccess, async (req, res) => {
   try {
     const { type, client_id, deal_id, client_name, client_phone, client_email, track, amount_cop, amount_usd, description, items, due_date, added_by_phone, notes } = req.body;
     if (!client_name || !amount_cop || !description) {
@@ -45,7 +36,7 @@ router.post('/', requireSecret, async (req, res) => {
 });
 
 // PUT /api/invoices/:id — update fields (protected)
-router.put('/:id', requireSecret, async (req, res) => {
+router.put('/:id', requireInternalAccess, async (req, res) => {
   try {
     const updated = await db.updateInvoice(Number(req.params.id), req.body);
     if (!updated) return res.status(404).json({ error: 'Invoice not found' });
@@ -57,7 +48,7 @@ router.put('/:id', requireSecret, async (req, res) => {
 });
 
 // PUT /api/invoices/:id/status — update status (protected)
-router.put('/:id/status', requireSecret, async (req, res) => {
+router.put('/:id/status', requireInternalAccess, async (req, res) => {
   try {
     const { status, notes } = req.body;
     const valid = ['draft', 'sent', 'paid', 'cancelled'];

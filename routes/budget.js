@@ -7,19 +7,9 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/budget');
 const Anthropic = require('@anthropic-ai/sdk');
+const { requireInternalAccess } = require('../middleware/auth');
 
-// Accept either a valid session cookie (login) or the BUDGET_SECRET header (API access)
-function requireSecret(req, res, next) {
-  const { getSession } = require('../middleware/auth');
-  if (getSession(req.cookies?.session)) return next();
-  const secret = process.env.BUDGET_SECRET;
-  if (!secret) return next();
-  const provided = req.headers['x-budget-secret'] || req.query._secret;
-  if (provided !== secret) return res.status(401).json({ error: 'Unauthorized' });
-  next();
-}
-
-router.use(requireSecret);
+router.use(requireInternalAccess);
 
 // GET /api/budget/entries — list with optional filters
 router.get('/entries', async (req, res) => {
