@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CRM — Santo Sonido OS</title>
+  <title>Sales — Santo Sonido OS</title>
   <meta name="robots" content="noindex, nofollow">
   <style>
     :root {
@@ -380,12 +380,15 @@
 <header class="header">
   <div class="header-left">
     <span class="logo">Santo Sonido OS</span>
-    <span class="badge">CRM</span>
+    <span class="badge">Sales</span>
   </div>
   <div class="header-right">
-    <a href="/budget" class="nav-link">Budget</a>
+    <a href="/dashboard" class="nav-link">Dashboard</a>
+    <a href="/sales" class="nav-link gold">Sales</a>
     <a href="/invoices" class="nav-link">Invoices</a>
-    <a href="#" class="nav-link" onclick="toggleSellersPanel();return false;" id="sellers-nav-link" style="position:relative;">🤖 Bot Sellers</a>
+    <a href="/money" class="nav-link">Money</a>
+    <a href="/bot" class="nav-link">Bot</a>
+    <a href="#" class="nav-link" onclick="toggleSellersPanel();return false;" id="sellers-nav-link" style="position:relative;">Sellers</a>
     <form method="POST" action="/logout" style="margin:0"><button class="nav-link" style="background:none;border:none;cursor:pointer;color:#666;" onmouseover="this.style.color='#e57373'" onmouseout="this.style.color='#666'">Logout</button></form>
     <button class="btn btn-gold btn-sm" onclick="openAddClientModal()">+ Add Client</button>
   </div>
@@ -397,7 +400,7 @@
     <div style="padding:20px 24px;border-bottom:1px solid #2a2a2a;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#111;z-index:1;">
       <div>
         <span style="font-size:18px;font-weight:700;color:#d4a847;">🤖 Bot Sellers</span>
-        <span style="font-size:12px;color:#555;margin-left:8px;">WhatsApp CRM Network</span>
+        <span style="font-size:12px;color:#555;margin-left:8px;">WhatsApp Sales Network</span>
       </div>
       <div style="display:flex;gap:8px;align-items:center;">
         <a href="/crm/join" target="_blank" class="btn btn-sm" style="background:rgba(212,168,71,0.1);color:#d4a847;border:1px solid #d4a847;text-decoration:none;font-size:12px;padding:5px 12px;">Share Join Link ↗</a>
@@ -846,7 +849,7 @@
         </div>
         <div style="text-align:right;">
           <div style="font-size:12px;color:var(--green);">${wonDeals.length} deal${wonDeals.length !== 1 ? 's' : ''} closed</div>
-          <a href="/budget" class="btn btn-sm" style="background:rgba(34,197,94,0.1);color:var(--green);border:1px solid var(--green);margin-top:4px;text-decoration:none;display:inline-block;">Log in Budget →</a>
+          <a href="/money" class="btn btn-sm" style="background:rgba(34,197,94,0.1);color:var(--green);border:1px solid var(--green);margin-top:4px;text-decoration:none;display:inline-block;">Log in Money -></a>
         </div>
       </div>`;
     }
@@ -991,7 +994,7 @@
         toast('Client updated');
       } else {
         await api('/api/crm/clients', { method: 'POST', body: JSON.stringify(body), headers: {} });
-        toast('Client added to CRM');
+        toast('Client added to Sales');
       }
       closeModal('clientModal');
       await loadClients();

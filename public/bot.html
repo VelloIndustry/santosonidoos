@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bot — Santo Sonido OS</title>
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    :root { --bg:#0a0a0a; --surface:#111; --surface2:#1a1a1a; --border:#242424; --gold:#d4a847; --text:#e8e8e8; --muted:#888; --dim:#555; --green:#22c55e; --red:#ef4444; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; min-height: 100vh; }
+    .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 24px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:20; }
+    .header-left { display:flex; align-items:center; gap:12px; }
+    .logo { color:var(--gold); font-size:18px; font-weight:700; }
+    .badge { background:var(--surface2); border:1px solid var(--border); color:var(--muted); font-size:11px; padding:2px 8px; border-radius:4px; text-transform:uppercase; letter-spacing:.5px; }
+    .nav { display:flex; align-items:center; gap:8px; }
+    .nav a, .nav button { color:var(--muted); background:transparent; border:1px solid transparent; text-decoration:none; font:inherit; font-size:13px; padding:6px 12px; border-radius:6px; cursor:pointer; }
+    .nav a:hover, .nav button:hover { color:var(--text); background:var(--surface2); }
+    .nav a.active { color:var(--gold); border-color:rgba(212,168,71,.25); background:rgba(212,168,71,.08); }
+    main { max-width:1180px; margin:0 auto; padding:28px 24px 48px; }
+    h1 { font-size:26px; margin-bottom:6px; }
+    .sub { color:var(--muted); font-size:13px; margin-bottom:24px; }
+    .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; margin-bottom:16px; }
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+    .pad { padding:18px; }
+    .label { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.6px; margin-bottom:8px; }
+    .value { font-size:25px; font-weight:750; }
+    .ok { color:var(--green); } .bad { color:var(--red); }
+    .head { padding:14px 16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+    .title { font-size:13px; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.6px; }
+    .btn { border:1px solid var(--border); background:var(--surface2); color:var(--text); border-radius:6px; padding:8px 12px; text-decoration:none; font-size:13px; font-weight:650; }
+    .btn.primary { background:var(--gold); border-color:var(--gold); color:#050505; }
+    .row { padding:13px 16px; border-bottom:1px solid var(--border); display:grid; grid-template-columns:1fr auto; gap:12px; align-items:center; }
+    .row:last-child { border-bottom:none; }
+    .name { font-weight:650; margin-bottom:3px; }
+    .meta { color:var(--muted); font-size:12px; }
+    .pill { border-radius:999px; padding:2px 8px; background:var(--surface2); color:var(--muted); font-size:11px; font-weight:650; }
+    .pill.verified { background:rgba(34,197,94,.12); color:var(--green); }
+    .pill.revoked { background:rgba(239,68,68,.12); color:var(--red); }
+    .empty { color:var(--dim); padding:28px 16px; text-align:center; font-size:13px; }
+    @media (max-width: 900px) { .header { flex-direction:column; align-items:flex-start; gap:12px; } .nav { flex-wrap:wrap; } .grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-left"><div class="logo">Santo Sonido OS</div><span class="badge">Bot</span></div>
+    <nav class="nav">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/sales">Sales</a>
+      <a href="/invoices">Invoices</a>
+      <a href="/money">Money</a>
+      <a href="/bot" class="active">Bot</a>
+      <form method="POST" action="/logout" style="margin:0"><button>Logout</button></form>
+    </nav>
+  </header>
+  <main>
+    <h1>WhatsApp bot operations</h1>
+    <p class="sub">Sellers, setup status, and the WhatsApp sales network.</p>
+
+    <section class="grid">
+      <div class="card pad"><div class="label">Bot Status</div><div class="value" id="bot-status">--</div></div>
+      <div class="card pad"><div class="label">Verified Sellers</div><div class="value" id="verified">--</div></div>
+      <div class="card pad"><div class="label">Pending Sellers</div><div class="value" id="pending">--</div></div>
+    </section>
+
+    <section class="card">
+      <div class="head">
+        <div class="title">Seller Network</div>
+        <a class="btn primary" href="/crm/join" target="_blank" rel="noopener">Share Join Link</a>
+      </div>
+      <div id="seller-list"><div class="empty">Loading...</div></div>
+    </section>
+  </main>
+  <script>
+    function escapeHtml(value) {
+      return String(value || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+    async function loadBot() {
+      try {
+        const res = await fetch('/api/whatsapp/status');
+        if (!res.ok) throw new Error('status failed');
+        const data = await res.json();
+        document.getElementById('bot-status').textContent = data.bot_configured ? 'Configured' : 'Needs Setup';
+        document.getElementById('bot-status').className = 'value ' + (data.bot_configured ? 'ok' : 'bad');
+        document.getElementById('verified').textContent = data.sellers?.verified || 0;
+        document.getElementById('pending').textContent = data.sellers?.pending || 0;
+        renderSellers(data.recent || []);
+      } catch (err) {
+        console.error(err);
+        document.getElementById('seller-list').innerHTML = '<div class="empty">Could not load bot status.</div>';
+      }
+    }
+    function renderSellers(items) {
+      if (!items.length) {
+        document.getElementById('seller-list').innerHTML = '<div class="empty">No sellers yet.</div>';
+        return;
+      }
+      document.getElementById('seller-list').innerHTML = items.map(s => `
+        <div class="row">
+          <div><div class="name">${escapeHtml(s.name)}</div><div class="meta">${escapeHtml(s.phone)} · ${escapeHtml(s.role || 'seller')}</div></div>
+          <span class="pill ${escapeHtml(s.status)}">${escapeHtml(s.status)}</span>
+        </div>
+      `).join('');
+    }
+    loadBot();
+  </script>
+</body>
+</html>

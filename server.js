@@ -29,12 +29,12 @@ async function requireSantoCrmSession(req, res, next) {
   try {
     const token = req.cookies?.santocrm_session;
     const user = token ? await santoCrmDb.getUserBySessionToken(token) : null;
-    if (!user) return res.redirect('/join');
+    if (!user) return res.redirect('/santocrm/join');
     req.santocrmUser = user;
     next();
   } catch (err) {
     console.error('SantoCRM session check error:', err);
-    res.redirect('/join');
+    res.redirect('/santocrm/join');
   }
 }
 
@@ -150,8 +150,8 @@ app.post('/api/contact', async (req, res) => {
   }
 });
 
-// Serve static files from public folder
-app.use(express.static(path.join(__dirname, 'public')));
+// Serve static assets, but keep page routes explicit so / can be authenticated.
+app.use(express.static(path.join(__dirname, 'public'), { index: false }));
 
 // Serve HTML page with analytics slug injection
 function serveHtmlPage(res, filename) {
@@ -167,13 +167,17 @@ function serveHtmlPage(res, filename) {
   }
 }
 
-app.get('/', requireAuth, (req, res) => res.redirect('/budget'));
+app.get('/', requireAuth, (req, res) => res.redirect('/dashboard'));
 app.get('/work', (req, res) => serveHtmlPage(res, 'work.html'));
 app.get('/studio', (req, res) => serveHtmlPage(res, 'studio.html'));
 app.get('/producer', (req, res) => serveHtmlPage(res, 'producer.html'));
 app.get('/artists', (req, res) => serveHtmlPage(res, 'artists.html'));
-app.get('/budget', requireAuth, (req, res) => serveHtmlPage(res, 'budget.html'));
-app.get('/crm', requireAuth, (req, res) => serveHtmlPage(res, 'crm.html'));
+app.get('/dashboard', requireAuth, (req, res) => serveHtmlPage(res, 'admin-dashboard.html'));
+app.get('/money', requireAuth, (req, res) => serveHtmlPage(res, 'budget.html'));
+app.get('/budget', requireAuth, (req, res) => res.redirect('/money'));
+app.get('/sales', requireAuth, (req, res) => serveHtmlPage(res, 'crm.html'));
+app.get('/crm', requireAuth, (req, res) => res.redirect('/sales'));
+app.get('/bot', requireAuth, (req, res) => serveHtmlPage(res, 'bot.html'));
 app.get('/crm/join', (req, res) => {
   // Inject bot WhatsApp number for wa.me link on success screen
   const htmlPath = path.join(__dirname, 'public', 'crm-join.html');
@@ -189,8 +193,9 @@ app.get('/crm/join', (req, res) => {
 
 // SantoCRM pages
 app.get('/santocrm', (req, res) => serveHtmlPage(res, 'santocrm.html'));
-app.get('/join', (req, res) => serveHtmlPage(res, 'join.html'));
-app.get('/dashboard', requireSantoCrmSession, (req, res) => serveHtmlPage(res, 'dashboard.html'));
+app.get('/santocrm/join', (req, res) => serveHtmlPage(res, 'join.html'));
+app.get('/join', (req, res) => res.redirect('/santocrm/join'));
+app.get('/santocrm/dashboard', requireSantoCrmSession, (req, res) => serveHtmlPage(res, 'dashboard.html'));
 app.get('/privacy', (req, res) => serveHtmlPage(res, 'privacy.html'));
 app.get('/terms', (req, res) => serveHtmlPage(res, 'terms.html'));
 app.get('/invoice/:token', (req, res) => serveHtmlPage(res, 'invoice.html')); // public

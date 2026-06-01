@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cotizaciones & Facturas — Santo Sonido OS</title>
+  <title>Invoices — Santo Sonido OS</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: #0d0d0d; color: #e0e0e0; font-family: 'Helvetica Neue', Arial, sans-serif; min-height: 100vh; }
@@ -64,9 +64,11 @@
   <header>
     <div class="logo">🎵 Santo Sonido OS</div>
     <div class="nav-links">
-      <a href="/budget">Budget</a>
-      <a href="/crm">CRM</a>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/sales">Sales</a>
       <a href="/invoices" class="active">Invoices</a>
+      <a href="/money">Money</a>
+      <a href="/bot">Bot</a>
       <form method="POST" action="/logout" style="margin:0"><button style="background:none;border:none;color:#555;font-size:13px;cursor:pointer;padding:0" onmouseover="this.style.color='#e57373'" onmouseout="this.style.color='#555'">Logout</button></form>
     </div>
   </header>
@@ -164,9 +166,7 @@
   </div>
 
   <script>
-    const SECRET = localStorage.getItem('budgetSecret') || prompt('Ingresa el secret de acceso:') || '';
-    if (SECRET) localStorage.setItem('budgetSecret', SECRET);
-    const HEADERS = { 'Content-Type': 'application/json', 'x-budget-secret': SECRET };
+    const HEADERS = { 'Content-Type': 'application/json' };
 
     function fmt(n) { return Number(n).toLocaleString('es-CO'); }
     function fmtDate(d) { return d ? new Date(d).toLocaleDateString('es-CO') : '—'; }
@@ -256,7 +256,7 @@
         alert('Completa los campos obligatorios.'); return;
       }
       const res = await fetch('/api/invoices', { method: 'POST', headers: HEADERS, body: JSON.stringify(body) });
-      if (!res.ok) { alert('Error al crear. Intenta de nuevo.'); return; }
+      if (!res.ok) { alert('Could not create this. Please try again.'); return; }
       closeModal();
       load();
     }

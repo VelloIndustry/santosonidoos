@@ -422,7 +422,7 @@
       const data = await res.json();
       if (res.ok && data.success) {
         showSuccess('verify-success', '✓ Verified! Taking you to your dashboard…');
-        setTimeout(() => { window.location.href = '/dashboard'; }, 1200);
+        setTimeout(() => { window.location.href = '/santocrm/dashboard'; }, 1200);
       } else {
         showError('verify-error', data.error || 'Invalid code. Please try again.');
       }

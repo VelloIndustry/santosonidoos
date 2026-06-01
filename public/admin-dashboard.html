@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Santo Sonido OS</title>
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111;
+      --surface2: #1a1a1a;
+      --border: #242424;
+      --gold: #d4a847;
+      --text: #e8e8e8;
+      --muted: #888;
+      --dim: #555;
+      --green: #22c55e;
+      --red: #ef4444;
+      --blue: #60a5fa;
+      --orange: #fb923c;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; min-height: 100vh; }
+    .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 20; }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .logo { color: var(--gold); font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
+    .badge { background: var(--surface2); border: 1px solid var(--border); color: var(--muted); font-size: 11px; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .nav { display: flex; align-items: center; gap: 8px; }
+    .nav a, .nav button { color: var(--muted); background: transparent; border: 1px solid transparent; text-decoration: none; font: inherit; font-size: 13px; padding: 6px 12px; border-radius: 6px; cursor: pointer; }
+    .nav a:hover, .nav button:hover { color: var(--text); background: var(--surface2); }
+    .nav a.active { color: var(--gold); border-color: rgba(212,168,71,0.25); background: rgba(212,168,71,0.08); }
+    .main { max-width: 1360px; margin: 0 auto; padding: 28px 24px 48px; }
+    .page-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; margin-bottom: 24px; }
+    h1 { font-size: 26px; line-height: 1.15; letter-spacing: 0; margin-bottom: 6px; }
+    .sub { color: var(--muted); font-size: 13px; }
+    .quick { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .btn { border: 1px solid var(--border); background: var(--surface2); color: var(--text); border-radius: 6px; padding: 9px 13px; text-decoration: none; font-size: 13px; font-weight: 600; }
+    .btn.primary { background: var(--gold); color: #050505; border-color: var(--gold); }
+    .grid { display: grid; gap: 16px; }
+    .metrics { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: 16px; }
+    .content { grid-template-columns: 1.1fr 0.9fr; align-items: start; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .card-pad { padding: 18px; }
+    .metric-label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px; }
+    .metric-value { font-size: 25px; font-weight: 750; font-variant-numeric: tabular-nums; }
+    .metric-sub { color: var(--dim); font-size: 12px; margin-top: 4px; }
+    .section-head { padding: 14px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .section-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); }
+    .section-link { color: var(--gold); text-decoration: none; font-size: 12px; }
+    .list { display: flex; flex-direction: column; }
+    .row { padding: 13px 16px; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; }
+    .row:last-child { border-bottom: none; }
+    .row-title { font-weight: 650; margin-bottom: 3px; }
+    .row-meta { color: var(--muted); font-size: 12px; }
+    .amount { color: var(--gold); font-weight: 750; font-variant-numeric: tabular-nums; }
+    .pill { display: inline-block; border-radius: 999px; padding: 2px 8px; font-size: 11px; font-weight: 650; background: var(--surface2); color: var(--muted); }
+    .pill.green { background: rgba(34,197,94,0.12); color: var(--green); }
+    .pill.red { background: rgba(239,68,68,0.12); color: var(--red); }
+    .pill.blue { background: rgba(96,165,250,0.12); color: var(--blue); }
+    .empty { color: var(--dim); padding: 28px 16px; text-align: center; font-size: 13px; }
+    .stack { display: grid; gap: 16px; }
+    @media (max-width: 900px) {
+      .header { align-items: flex-start; gap: 12px; flex-direction: column; }
+      .nav { flex-wrap: wrap; }
+      .page-top { flex-direction: column; }
+      .quick { justify-content: flex-start; }
+      .metrics, .content { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">Santo Sonido OS</div>
+      <span class="badge">Dashboard</span>
+    </div>
+    <nav class="nav">
+      <a href="/dashboard" class="active">Dashboard</a>
+      <a href="/sales">Sales</a>
+      <a href="/invoices">Invoices</a>
+      <a href="/money">Money</a>
+      <a href="/bot">Bot</a>
+      <form method="POST" action="/logout" style="margin:0"><button>Logout</button></form>
+    </nav>
+  </header>
+
+  <main class="main">
+    <div class="page-top">
+      <div>
+        <h1>Business command center</h1>
+        <p class="sub">Clients, invoices, payments, and money movement in one place.</p>
+      </div>
+      <div class="quick">
+        <a class="btn primary" href="/sales">+ Client</a>
+        <a class="btn" href="/invoices">+ Invoice</a>
+        <a class="btn" href="/money">+ Money Entry</a>
+      </div>
+    </div>
+
+    <section class="grid metrics">
+      <div class="card card-pad"><div class="metric-label">Month Income</div><div class="metric-value" id="m-income">--</div><div class="metric-sub">Actual entries</div></div>
+      <div class="card card-pad"><div class="metric-label">Month Expenses</div><div class="metric-value" id="m-expense">--</div><div class="metric-sub">Actual entries</div></div>
+      <div class="card card-pad"><div class="metric-label">Month Net</div><div class="metric-value" id="m-net">--</div><div class="metric-sub">Income minus expenses</div></div>
+      <div class="card card-pad"><div class="metric-label">Open Invoices</div><div class="metric-value" id="m-open">--</div><div class="metric-sub">Draft or sent</div></div>
+    </section>
+
+    <section class="grid content">
+      <div class="stack">
+        <div class="card">
+          <div class="section-head"><div class="section-title">Needs Attention</div><a class="section-link" href="/invoices">View invoices</a></div>
+          <div class="list" id="attention-list"><div class="empty">Loading...</div></div>
+        </div>
+        <div class="card">
+          <div class="section-head"><div class="section-title">Recent Clients</div><a class="section-link" href="/sales">Open Sales</a></div>
+          <div class="list" id="clients-list"><div class="empty">Loading...</div></div>
+        </div>
+      </div>
+
+      <div class="stack">
+        <div class="card">
+          <div class="section-head"><div class="section-title">Sales Pipeline</div><a class="section-link" href="/sales">Manage deals</a></div>
+          <div class="list" id="pipeline-list"><div class="empty">Loading...</div></div>
+        </div>
+        <div class="card">
+          <div class="section-head"><div class="section-title">Recent Money Entries</div><a class="section-link" href="/money">Open Money</a></div>
+          <div class="list" id="entries-list"><div class="empty">Loading...</div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function money(n) { return '$' + Number(n || 0).toLocaleString('es-CO'); }
+    function shortDate(d) { return d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '--'; }
+    function escapeHtml(value) {
+      return String(value || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+    async function getJson(url) {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(url + ' failed');
+      return res.json();
+    }
+    function setEmpty(id, text) { document.getElementById(id).innerHTML = `<div class="empty">${text}</div>`; }
+
+    async function loadDashboard() {
+      try {
+        const [summary, entries, clients, invoices] = await Promise.all([
+          getJson('/api/budget/summary?months=1'),
+          getJson('/api/budget/entries?limit=5'),
+          getJson('/api/crm/clients'),
+          getJson('/api/invoices')
+        ]);
+
+        let income = 0;
+        let expense = 0;
+        summary.forEach(row => {
+          if (row.mode !== 'Actual') return;
+          if (row.type === 'Income') income += Number(row.total_cop || 0);
+          if (row.type === 'Expense') expense += Number(row.total_cop || 0);
+        });
+
+        const openInvoices = invoices.filter(i => ['draft', 'sent'].includes(i.status));
+        document.getElementById('m-income').textContent = money(income);
+        document.getElementById('m-expense').textContent = money(expense);
+        document.getElementById('m-net').textContent = money(income - expense);
+        document.getElementById('m-open').textContent = openInvoices.length;
+
+        renderAttention(openInvoices);
+        renderClients(clients.slice(0, 6));
+        renderPipeline(clients);
+        renderEntries(entries);
+      } catch (err) {
+        console.error(err);
+        ['attention-list', 'clients-list', 'pipeline-list', 'entries-list'].forEach(id => setEmpty(id, 'Could not load this section.'));
+      }
+    }
+
+    function renderAttention(items) {
+      if (!items.length) return setEmpty('attention-list', 'Nothing needs attention right now.');
+      document.getElementById('attention-list').innerHTML = items.slice(0, 6).map(inv => `
+        <div class="row">
+          <div><div class="row-title">${escapeHtml(inv.invoice_number)} · ${escapeHtml(inv.client_name)}</div><div class="row-meta">${escapeHtml(inv.description)} · ${shortDate(inv.created_at)}</div></div>
+          <div><span class="pill ${inv.status === 'sent' ? 'blue' : ''}">${escapeHtml(inv.status)}</span> <span class="amount">${money(inv.amount_cop)}</span></div>
+        </div>
+      `).join('');
+    }
+
+    function renderClients(items) {
+      if (!items.length) return setEmpty('clients-list', 'No clients yet.');
+      document.getElementById('clients-list').innerHTML = items.map(c => `
+        <div class="row">
+          <div><div class="row-title">${escapeHtml(c.name)}</div><div class="row-meta">${escapeHtml(c.phone || c.email || 'No contact info')} · ${escapeHtml(c.stage || 'contact')}</div></div>
+          <span class="pill">${(c.deals || []).length} deals</span>
+        </div>
+      `).join('');
+    }
+
+    function renderPipeline(clients) {
+      const deals = clients.flatMap(c => (c.deals || []).map(d => ({ ...d, client: c.name }))).filter(d => !['won', 'lost'].includes(d.stage));
+      if (!deals.length) return setEmpty('pipeline-list', 'No active deals.');
+      document.getElementById('pipeline-list').innerHTML = deals.slice(0, 6).map(d => `
+        <div class="row">
+          <div><div class="row-title">${escapeHtml(d.name)}</div><div class="row-meta">${escapeHtml(d.client)} · ${escapeHtml(d.stage || 'contact')}</div></div>
+          <span class="amount">${money(d.value_cop)}</span>
+        </div>
+      `).join('');
+    }
+
+    function renderEntries(items) {
+      if (!items.length) return setEmpty('entries-list', 'No money entries yet.');
+      document.getElementById('entries-list').innerHTML = items.map(e => `
+        <div class="row">
+          <div><div class="row-title">${escapeHtml(e.description)}</div><div class="row-meta">${shortDate(e.date)} · ${escapeHtml(e.track)} · ${escapeHtml(e.category || 'Uncategorized')}</div></div>
+          <span class="pill ${e.type === 'Income' ? 'green' : 'red'}">${e.type === 'Income' ? '+' : '-'} ${money(e.amount_cop)}</span>
+        </div>
+      `).join('');
+    }
+
+    loadDashboard();
+  </script>
+</body>
+</html>

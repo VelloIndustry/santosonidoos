@@ -15,7 +15,7 @@
     .welcome { text-align: center; margin-bottom: 48px; }
     .welcome h1 { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 8px; }
     .welcome p { color: #666; font-size: 15px; }
-    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; max-width: 700px; width: 100%; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; max-width: 900px; width: 100%; }
     .card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 28px 24px; text-decoration: none; color: inherit; transition: border-color 0.2s, transform 0.1s; display: flex; flex-direction: column; gap: 10px; }
     .card:hover { border-color: #d4a847; transform: translateY(-2px); }
     .card-icon { font-size: 28px; }
@@ -40,15 +40,15 @@
     </div>
 
     <div class="cards">
-      <a href="/budget" class="card">
+      <a href="/money" class="card">
         <div class="card-icon">💰</div>
-        <div class="card-title">Budget</div>
+        <div class="card-title">Money</div>
         <div class="card-desc">Track income & expenses across all 4 business tracks</div>
         <div class="card-arrow">→</div>
       </a>
-      <a href="/crm" class="card">
+      <a href="/sales" class="card">
         <div class="card-icon">👥</div>
-        <div class="card-title">CRM</div>
+        <div class="card-title">Sales</div>
         <div class="card-desc">Client pipeline, deals, and activity log</div>
         <div class="card-arrow">→</div>
       </a>
@@ -56,6 +56,12 @@
         <div class="card-icon">🧾</div>
         <div class="card-title">Invoices</div>
         <div class="card-desc">Quotes, invoices, and payment tracking</div>
+        <div class="card-arrow">→</div>
+      </a>
+      <a href="/bot" class="card">
+        <div class="card-icon">◎</div>
+        <div class="card-title">Bot</div>
+        <div class="card-desc">WhatsApp sellers, setup status, and network activity</div>
         <div class="card-arrow">→</div>
       </a>
     </div>

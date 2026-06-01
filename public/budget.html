@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Budget Tracker — Santo Sonido OS</title>
+  <title>Money — Santo Sonido OS</title>
   <meta name="robots" content="noindex, nofollow">
   <style>
     :root {
@@ -601,36 +601,38 @@
 <div class="header">
   <div class="header-left">
     <span class="logo">Santo Sonido OS</span>
-    <span class="badge">Budget — Internal</span>
+    <span class="badge">Money</span>
   </div>
   <div style="display:flex;align-items:center;gap:12px;">
-    <a href="/crm" style="color:#888;font-size:13px;text-decoration:none;">CRM</a>
+    <a href="/dashboard" style="color:#888;font-size:13px;text-decoration:none;">Dashboard</a>
+    <a href="/sales" style="color:#888;font-size:13px;text-decoration:none;">Sales</a>
     <a href="/invoices" style="color:#888;font-size:13px;text-decoration:none;">Invoices</a>
+    <a href="/bot" style="color:#888;font-size:13px;text-decoration:none;">Bot</a>
     <form method="POST" action="/logout" style="margin:0"><button style="background:none;border:none;color:#555;font-size:13px;cursor:pointer;padding:0" onmouseover="this.style.color='#e57373'" onmouseout="this.style.color='#555'">Logout</button></form>
-    <button class="btn btn-primary" onclick="openModal()">+ Entrada</button>
+    <button class="btn btn-primary" onclick="openModal()">+ Money Entry</button>
   </div>
 </div>
 
 <div class="main">
   <!-- Tabs -->
   <div class="tabs">
-    <div class="tab active" onclick="switchTab('dashboard')">Dashboard</div>
-    <div class="tab" onclick="switchTab('entries')">Entradas</div>
-    <div class="tab" onclick="switchTab('planvsactual')">Plan vs Real</div>
-    <div class="tab" onclick="switchTab('payback')">⚡ Payback</div>
+    <div class="tab active" onclick="switchTab('dashboard')">Overview</div>
+    <div class="tab" onclick="switchTab('entries')">Entries</div>
+    <div class="tab" onclick="switchTab('planvsactual')">Plan vs Actual</div>
+    <div class="tab" onclick="switchTab('payback')">Payback</div>
   </div>
 
   <!-- DASHBOARD TAB -->
   <div id="tab-dashboard">
     <div id="summary-cards" class="summary-grid">
-      <div class="loading">Cargando resumen…</div>
+      <div class="loading">Loading overview...</div>
     </div>
 
     <div class="section-header">
-      <div class="section-title">Resumen por Track (últimos 4 meses)</div>
+      <div class="section-title">Track Summary (last 4 months)</div>
     </div>
     <div id="monthly-grid" class="monthly-grid">
-      <div class="loading">Cargando datos mensuales…</div>
+      <div class="loading">Loading monthly data...</div>
     </div>
   </div>
 
@@ -638,19 +640,19 @@
   <div id="tab-entries" style="display:none">
     <div class="filters">
       <select id="filter-track" onchange="loadEntries()">
-        <option value="">Todos los tracks</option>
+        <option value="">All tracks</option>
         <option value="Studio">Studio</option>
         <option value="Artist">Artist</option>
         <option value="Producer">Producer</option>
         <option value="Camera">Camera</option>
       </select>
       <select id="filter-mode" onchange="loadEntries()">
-        <option value="">Actual + Planeado</option>
+        <option value="">Actual + Planned</option>
         <option value="Actual">Actual</option>
-        <option value="Planned">Planeado</option>
+        <option value="Planned">Planned</option>
       </select>
       <select id="filter-source" onchange="loadEntries()">
-        <option value="">Todas las fuentes</option>
+        <option value="">All sources</option>
         <option value="Cash">Cash</option>
         <option value="Bancolombia">Bancolombia</option>
         <option value="OneRPM">OneRPM</option>
@@ -664,21 +666,21 @@
       <table class="entry-table" id="entries-table">
         <thead>
           <tr>
-            <th>Fecha</th>
+            <th>Date</th>
             <th>Track</th>
-            <th>Tipo</th>
-            <th>Modo</th>
-            <th>Monto COP</th>
+            <th>Type</th>
+            <th>Mode</th>
+            <th>Amount COP</th>
             <th>USD</th>
-            <th>Fuente</th>
-            <th>Categoría</th>
-            <th>Descripción</th>
-            <th>Proyecto</th>
+            <th>Source</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>Project</th>
             <th></th>
           </tr>
         </thead>
         <tbody id="entries-body">
-          <tr><td colspan="11" class="loading">Cargando…</td></tr>
+          <tr><td colspan="11" class="loading">Loading...</td></tr>
         </tbody>
       </table>
     </div>
@@ -688,22 +690,22 @@
   <div id="tab-planvsactual" style="display:none">
     <!-- Sub-tabs: Plan vs Actual | Scenario Forecast -->
     <div class="tabs" style="margin-bottom:20px; border-bottom-color:var(--border);">
-      <div class="tab active" id="subtab-pva-btn" onclick="switchPlanSubtab('pva')">Plan vs Real</div>
-      <div class="tab" id="subtab-scenario-btn" onclick="switchPlanSubtab('scenario')">🎯 Escenarios</div>
+      <div class="tab active" id="subtab-pva-btn" onclick="switchPlanSubtab('pva')">Plan vs Actual</div>
+      <div class="tab" id="subtab-scenario-btn" onclick="switchPlanSubtab('scenario')">Scenarios</div>
     </div>
 
     <!-- Plan vs Actual section -->
     <div id="subtab-pva">
       <div class="filters">
-        <label style="color:var(--text-dim); font-size:12px;">Meses:</label>
+        <label style="color:var(--text-dim); font-size:12px;">Months:</label>
         <select id="pva-months" onchange="loadPlanVsActual()">
-          <option value="3">3 meses</option>
-          <option value="4" selected>4 meses</option>
-          <option value="6">6 meses</option>
-          <option value="12">12 meses</option>
+          <option value="3">3 months</option>
+          <option value="4" selected>4 months</option>
+          <option value="6">6 months</option>
+          <option value="12">12 months</option>
         </select>
       </div>
-      <div id="pva-content"><div class="loading">Cargando…</div></div>
+      <div id="pva-content"><div class="loading">Loading...</div></div>
     </div>
 
     <!-- Scenario Forecast section -->
@@ -765,11 +767,11 @@
             <span class="payback-info-value" id="payback-cumulative-usd">$0 USD</span>
           </div>
           <div class="payback-info-row">
-            <span class="payback-info-label">Ingresos totales</span>
+            <span class="payback-info-label">Total income</span>
             <span class="payback-info-value" id="payback-total-income">$0 COP</span>
           </div>
           <div class="payback-info-row">
-            <span class="payback-info-label">Gastos totales</span>
+            <span class="payback-info-label">Total expenses</span>
             <span class="payback-info-value" id="payback-total-expense">$0 COP</span>
           </div>
           <div class="payback-info-row">
@@ -872,7 +874,7 @@
 
         <!-- Note on operating costs -->
         <div class="payback-phase-info" style="margin-top:16px;">
-          <p style="font-size:11px;color:var(--text-dim);"><strong>Costos operativos:</strong> $1,375/mes (~$6,050,000 COP/mes) se deducen antes del split de ganancia.</p>
+          <p style="font-size:11px;color:var(--text-dim);"><strong>Operating costs:</strong> $1,375/month (~$6,050,000 COP/month) is deducted before profit split.</p>
           <p style="font-size:11px;color:var(--text-dim);margin-top:4px;"><strong>Salario Javier:</strong> $625/mes fijo, independiente de rentabilidad.</p>
         </div>
       </div>
@@ -883,7 +885,7 @@
 <!-- Add Entry Modal -->
 <div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
   <div class="modal">
-    <div class="modal-title" id="modal-title">Nueva Entrada</div>
+    <div class="modal-title" id="modal-title">New Money Entry</div>
 
     <!-- OCR Toggle -->
     <div class="ocr-toggle">
@@ -921,21 +923,21 @@
 
       <!-- Results review -->
       <div id="ocr-results" class="ocr-results" style="display:none">
-        <div class="ocr-results-title">📋 Datos extraídos — revisa antes de continuar</div>
+        <div class="ocr-results-title">Extracted data - review before continuing</div>
         <div class="ocr-field-row">
-          <div class="ocr-field-label">Fecha</div>
+          <div class="ocr-field-label">Date</div>
           <div><input type="date" id="ocr-date" class="ocr-editable"></div>
         </div>
         <div class="ocr-field-row">
-          <div class="ocr-field-label">Monto (COP)</div>
+          <div class="ocr-field-label">Amount (COP)</div>
           <div><input type="number" id="ocr-amount" class="ocr-editable" min="0" step="1000" placeholder="0"></div>
         </div>
         <div class="ocr-field-row">
           <div class="ocr-field-label">Vendedor</div>
-          <div><input type="text" id="ocr-vendor" class="ocr-editable" placeholder="Nombre del comercio"></div>
+          <div><input type="text" id="ocr-vendor" class="ocr-editable" placeholder="Vendor name"></div>
         </div>
         <div class="ocr-field-row">
-          <div class="ocr-field-label">Fuente</div>
+          <div class="ocr-field-label">Source</div>
           <div>
             <select id="ocr-source" class="ocr-editable" style="padding:6px 10px;">
               <option value="Cash">Cash</option>
@@ -967,7 +969,7 @@
         <div class="form-row">
           <label class="form-label">Track *</label>
           <select id="f-track" required>
-            <option value="">Seleccionar…</option>
+            <option value="">Select...</option>
             <option value="Studio">Studio</option>
             <option value="Artist">Artist (Faker)</option>
             <option value="Producer">Producer</option>
@@ -975,43 +977,43 @@
           </select>
         </div>
         <div class="form-row">
-          <label class="form-label">Tipo *</label>
+          <label class="form-label">Type *</label>
           <select id="f-type" required>
-            <option value="">Seleccionar…</option>
-            <option value="Income">Ingreso</option>
-            <option value="Expense">Gasto</option>
+            <option value="">Select...</option>
+            <option value="Income">Income</option>
+            <option value="Expense">Expense</option>
           </select>
         </div>
       </div>
 
       <div class="form-grid-2">
         <div class="form-row">
-          <label class="form-label">Modo *</label>
+          <label class="form-label">Mode *</label>
           <select id="f-mode" required>
-            <option value="Actual">Actual (ocurrido)</option>
-            <option value="Planned">Planeado (presupuesto)</option>
+            <option value="Actual">Actual</option>
+            <option value="Planned">Planned</option>
           </select>
         </div>
         <div class="form-row">
-          <label class="form-label">Fecha *</label>
+          <label class="form-label">Date *</label>
           <input type="date" id="f-date" required>
         </div>
       </div>
 
       <div class="form-grid-2">
         <div class="form-row">
-          <label class="form-label">Monto COP *</label>
+          <label class="form-label">Amount COP *</label>
           <input type="number" id="f-amount-cop" required min="0" step="1000" placeholder="0">
         </div>
         <div class="form-row">
-          <label class="form-label">Monto USD (opcional)</label>
+          <label class="form-label">Amount USD (optional)</label>
           <input type="number" id="f-amount-usd" min="0" step="0.01" placeholder="0.00">
         </div>
       </div>
 
       <div class="form-grid-2">
         <div class="form-row">
-          <label class="form-label">Fuente de pago</label>
+          <label class="form-label">Payment Source</label>
           <select id="f-source">
             <option value="Cash">Cash</option>
             <option value="Bancolombia">Bancolombia</option>
@@ -1020,26 +1022,26 @@
           </select>
         </div>
         <div class="form-row">
-          <label class="form-label">Categoría</label>
+          <label class="form-label">Category</label>
           <select id="f-category">
-            <option value="">Sin categoría</option>
+            <option value="">Uncategorized</option>
           </select>
         </div>
       </div>
 
       <div class="form-row">
-        <label class="form-label">Descripción *</label>
-        <input type="text" id="f-description" required placeholder="Ej: Sesión de grabación 4h — Cliente X">
+        <label class="form-label">Description *</label>
+        <input type="text" id="f-description" required placeholder="Example: 4-hour recording session - Client X">
       </div>
 
       <div class="form-row">
-        <label class="form-label">Cliente / Proyecto</label>
-        <input type="text" id="f-project" placeholder="Nombre del proyecto o cliente">
+        <label class="form-label">Client / Project</label>
+        <input type="text" id="f-project" placeholder="Project or client name">
       </div>
 
       <div class="modal-actions">
-        <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
-        <button type="submit" class="btn btn-primary" id="submit-btn">Guardar</button>
+        <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="submit-btn">Save</button>
       </div>
     </form>
   </div>
@@ -1274,17 +1276,17 @@ function renderSummaryCards(summary, entries) {
 
   let html = `
     <div class="card">
-      <div class="card-label">Ingresos Totales (Actual)</div>
+      <div class="card-label">Total Income (Actual)</div>
       <div class="card-value positive">${formatCOP(totalIncome)}</div>
-      <div class="card-sub">Todos los tracks</div>
+      <div class="card-sub">All tracks</div>
     </div>
     <div class="card">
-      <div class="card-label">Gastos Totales (Actual)</div>
+      <div class="card-label">Total Expenses (Actual)</div>
       <div class="card-value negative">${formatCOP(totalExpense)}</div>
-      <div class="card-sub">Todos los tracks</div>
+      <div class="card-sub">All tracks</div>
     </div>
     <div class="card">
-      <div class="card-label">Neto Total</div>
+      <div class="card-label">Total Net</div>
       <div class="card-value ${net >= 0 ? 'positive' : 'negative'}">${formatCOP(net)}</div>
       <div class="card-sub">${net >= 0 ? 'Ganancia' : 'Pérdida'}</div>
     </div>
@@ -1332,7 +1334,7 @@ function renderMonthlyGrid(summary) {
         </tr>
       `;
     }
-    if (!tableRows) tableRows = `<tr><td colspan="4" style="color:var(--text-dim);padding:16px;">Sin datos</td></tr>`;
+    if (!tableRows) tableRows = `<tr><td colspan="4" style="color:var(--text-dim);padding:16px;">No data</td></tr>`;
 
     html += `
       <div class="track-card">
@@ -1341,14 +1343,14 @@ function renderMonthlyGrid(summary) {
           ${track}
         </div>
         <table>
-          <thead><tr><th>Mes</th><th>Ingresos</th><th>Gastos</th><th>Neto</th></tr></thead>
+          <thead><tr><th>Month</th><th>Income</th><th>Expenses</th><th>Net</th></tr></thead>
           <tbody>${tableRows}</tbody>
         </table>
       </div>
     `;
   }
 
-  document.getElementById('monthly-grid').innerHTML = html || '<div class="empty"><div class="empty-icon">📊</div>Sin datos aún. Agrega tu primera entrada.</div>';
+  document.getElementById('monthly-grid').innerHTML = html || '<div class="empty"><div class="empty-icon">📊</div>No data yet. Add your first money entry.</div>';
 }
 
 // ---- Entries ----
@@ -1365,7 +1367,7 @@ async function loadEntries() {
   if (from) params.set('date_from', from);
   if (to) params.set('date_to', to);
 
-  document.getElementById('entries-body').innerHTML = '<tr><td colspan="11" class="loading">Cargando…</td></tr>';
+  document.getElementById('entries-body').innerHTML = '<tr><td colspan="11" class="loading">Loading...</td></tr>';
   try {
     const entries = await apiFetch('/entries?' + params.toString());
     allEntries = entries;
@@ -1377,13 +1379,13 @@ async function loadEntries() {
 
 function renderEntries(entries) {
   if (!entries.length) {
-    document.getElementById('entries-body').innerHTML = '<tr><td colspan="11" class="empty">Sin entradas. Usa el botón "+ Entrada" para comenzar.</td></tr>';
+    document.getElementById('entries-body').innerHTML = '<tr><td colspan="11" class="empty">No entries yet. Use "+ Money Entry" to start.</td></tr>';
     return;
   }
   document.getElementById('entries-body').innerHTML = entries.map(e => {
     const isWhatsApp = e.source === 'whatsapp';
     const sourceTag = isWhatsApp
-      ? `<span title="Agregado via WhatsApp Bot${e.added_by_phone ? ' por ' + e.added_by_phone : ''}" style="font-size:10px;background:#1a3a1a;color:#25D366;border:1px solid #25D36655;padding:1px 5px;border-radius:3px;cursor:default;">📱 WA</span>`
+      ? `<span title="Added via WhatsApp Bot${e.added_by_phone ? ' by ' + e.added_by_phone : ''}" style="font-size:10px;background:#1a3a1a;color:#25D366;border:1px solid #25D36655;padding:1px 5px;border-radius:3px;cursor:default;">📱 WA</span>`
       : '';
     const receiptImg = e.receipt_image_url
       ? `<a href="${e.receipt_image_url}" target="_blank" title="Ver recibo" style="font-size:16px;text-decoration:none;">🧾</a>`
@@ -1392,8 +1394,8 @@ function renderEntries(entries) {
     <tr>
       <td>${e.date ? e.date.slice(0,10) : ''}</td>
       <td><span class="pill pill-${e.track.toLowerCase()}">${e.track}</span></td>
-      <td><span class="pill ${e.type === 'Income' ? 'pill-income' : 'pill-expense'}">${e.type === 'Income' ? 'Ingreso' : 'Gasto'}</span></td>
-      <td><span class="pill ${e.mode === 'Actual' ? 'pill-actual' : 'pill-planned'}">${e.mode === 'Actual' ? 'Actual' : 'Planeado'}</span></td>
+      <td><span class="pill ${e.type === 'Income' ? 'pill-income' : 'pill-expense'}">${e.type === 'Income' ? 'Income' : 'Expense'}</span></td>
+      <td><span class="pill ${e.mode === 'Actual' ? 'pill-actual' : 'pill-planned'}">${e.mode === 'Actual' ? 'Actual' : 'Planned'}</span></td>
       <td class="${e.type === 'Income' ? 'positive' : 'negative'}">${formatCOP(e.amount_cop)}</td>
       <td>${e.amount_usd ? '$' + Number(e.amount_usd).toFixed(2) + ' USD' : '—'}</td>
       <td>${e.payment_source} ${sourceTag}</td>
@@ -1421,7 +1423,7 @@ function clearFilters() {
 // ---- Plan vs Actual ----
 async function loadPlanVsActual() {
   const months = document.getElementById('pva-months').value;
-  document.getElementById('pva-content').innerHTML = '<div class="loading">Cargando…</div>';
+  document.getElementById('pva-content').innerHTML = '<div class="loading">Loading...</div>';
   try {
     const rows = await apiFetch(`/plan-vs-actual?months=${months}`);
     renderPlanVsActual(rows);
@@ -1432,7 +1434,7 @@ async function loadPlanVsActual() {
 
 function renderPlanVsActual(rows) {
   if (!rows.length) {
-    document.getElementById('pva-content').innerHTML = '<div class="empty"><div class="empty-icon">📋</div>Sin datos. Agrega entradas tanto Actual como Planeado para ver la comparación.</div>';
+    document.getElementById('pva-content').innerHTML = '<div class="empty"><div class="empty-icon">📋</div>No data. Add both Actual and Planned entries to compare.</div>';
     return;
   }
 
@@ -1482,13 +1484,13 @@ function renderPlanVsActual(rows) {
           <table class="pva-table">
             <thead>
               <tr>
-                <th>Mes</th>
+                <th>Month</th>
                 <th>Ing. Real</th>
                 <th>Ing. Plan</th>
                 <th>Gas. Real</th>
                 <th>Gas. Plan</th>
-                <th>Neto Real</th>
-                <th>Neto Plan</th>
+                <th>Actual Net</th>
+                <th>Planned Net</th>
                 <th>Variación</th>
               </tr>
             </thead>
@@ -1504,8 +1506,8 @@ function renderPlanVsActual(rows) {
 
 // ---- Modal ----
 function openModal(prefill = null) {
-  document.getElementById('modal-title').textContent = prefill ? 'Editar Entrada' : 'Nueva Entrada';
-  document.getElementById('submit-btn').textContent = prefill ? 'Guardar cambios' : 'Guardar';
+  document.getElementById('modal-title').textContent = prefill ? 'Edit Money Entry' : 'New Money Entry';
+  document.getElementById('submit-btn').textContent = prefill ? 'Save Changes' : 'Save';
   document.getElementById('edit-id').value = prefill?.id || '';
   document.getElementById('f-track').value = prefill?.track || '';
   document.getElementById('f-type').value = prefill?.type || '';
@@ -1535,7 +1537,7 @@ function updateCategories() {
   const track = document.getElementById('f-track').value;
   const cats = CATEGORIES[track] || [];
   const sel = document.getElementById('f-category');
-  sel.innerHTML = '<option value="">Sin categoría</option>' + cats.map(c => `<option value="${c}">${c}</option>`).join('');
+  sel.innerHTML = '<option value="">Uncategorized</option>' + cats.map(c => `<option value="${c}">${c}</option>`).join('');
 }
 
 async function submitEntry(e) {
@@ -1558,10 +1560,10 @@ async function submitEntry(e) {
   try {
     if (id) {
       await apiFetch(`/entries/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
-      showToast('Entrada actualizada', 'success');
+      showToast('Entry updated', 'success');
     } else {
       await apiFetch('/entries', { method: 'POST', body: JSON.stringify(payload) });
-      showToast('Entrada guardada', 'success');
+      showToast('Entry saved', 'success');
     }
     closeModal();
     // Refresh current tab data
@@ -1580,10 +1582,10 @@ function editEntry(id) {
 }
 
 async function deleteEntry(id) {
-  if (!confirm('¿Eliminar esta entrada?')) return;
+  if (!confirm('Delete this entry?')) return;
   try {
     await apiFetch(`/entries/${id}`, { method: 'DELETE' });
-    showToast('Entrada eliminada', 'success');
+    showToast('Entry deleted', 'success');
     loadEntries();
     if (currentTab === 'dashboard') loadDashboard();
   } catch (err) {
@@ -1792,7 +1794,7 @@ function renderScenario(s) {
           <div class="forecast-card-total positive">${formatUSD(td.total)}</div>
         </div>
         <table>
-          <thead><tr><th>Categoría</th><th style="text-align:right">Anual (USD)</th></tr></thead>
+          <thead><tr><th>Category</th><th style="text-align:right">Annual (USD)</th></tr></thead>
           <tbody>${rows}</tbody>
         </table>
       </div>
@@ -1899,13 +1901,13 @@ async function runOcr(imageDataUrl) {
     }
 
     const conf = res.confidence || 'baja';
-    document.getElementById('ocr-confidence').textContent = `Confianza: ${conf} — revisa los campos antes de continuar`;
+    document.getElementById('ocr-confidence').textContent = `Confidence: ${conf} - review fields before continuing`;
 
     document.getElementById('ocr-results').style.display = '';
   } catch (err) {
     document.getElementById('ocr-processing').style.display = 'none';
     document.getElementById('ocr-preview-wrap').style.display = '';
-    document.getElementById('ocr-error-msg').textContent = err.message || 'No se pudo leer el recibo. Puedes llenar manualmente.';
+    document.getElementById('ocr-error-msg').textContent = err.message || 'Could not read the receipt. You can fill it manually.';
     document.getElementById('ocr-error').style.display = '';
   }
 }
@@ -1925,7 +1927,7 @@ function applyOcrToForm() {
   // Switch back to manual form view
   switchFormMode('manual');
   document.getElementById('f-description').focus();
-  showToast('Datos aplicados — revisa y guarda', 'success');
+  showToast('Data applied - review and save', 'success');
 }
 
 function clearOcrState() {

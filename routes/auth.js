@@ -16,12 +16,12 @@ function escapeHtml(value = '') {
 }
 
 function safeNextPath(next) {
-  if (typeof next !== 'string' || !next.startsWith('/') || next.startsWith('//')) return '/budget';
+  if (typeof next !== 'string' || !next.startsWith('/') || next.startsWith('//')) return '/dashboard';
   try {
     const parsed = new URL(next, 'https://santosonido.local');
-    return parsed.origin === 'https://santosonido.local' ? `${parsed.pathname}${parsed.search}${parsed.hash}` : '/budget';
+    return parsed.origin === 'https://santosonido.local' ? `${parsed.pathname}${parsed.search}${parsed.hash}` : '/dashboard';
   } catch {
-    return '/budget';
+    return '/dashboard';
   }
 }
 
