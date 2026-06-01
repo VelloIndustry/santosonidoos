@@ -138,8 +138,7 @@ function serveHtmlPage(res, filename) {
   }
 }
 
-app.get('/', requireAuth, (req, res) => serveHtmlPage(res, 'home.html'));
-app.get('/home', requireAuth, (req, res) => serveHtmlPage(res, 'home.html'));
+app.get('/', requireAuth, (req, res) => res.redirect('/budget'));
 app.get('/work', (req, res) => serveHtmlPage(res, 'work.html'));
 app.get('/studio', (req, res) => serveHtmlPage(res, 'studio.html'));
 app.get('/producer', (req, res) => serveHtmlPage(res, 'producer.html'));
