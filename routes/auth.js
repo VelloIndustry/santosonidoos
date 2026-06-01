@@ -23,12 +23,12 @@ router.post('/login', (req, res) => {
   const redirectTo = next || '/budget';
 
   if (!email || !password) {
-    return res.send(loginPage(redirectTo, 'Por favor ingresa email y contraseña.'));
+    return res.send(loginPage(redirectTo, 'Please enter your email and password.'));
   }
 
   const result = login(email.trim(), password);
   if (!result) {
-    return res.send(loginPage(redirectTo, 'Email o contraseña incorrectos.'));
+    return res.send(loginPage(redirectTo, 'Incorrect email or password.'));
   }
 
   res.cookie('session', result.token, {
@@ -62,6 +62,7 @@ function loginPage(next, error) {
     .card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; width: 100%; max-width: 380px; padding: 40px 36px; }
     .logo { color: #d4a847; font-size: 22px; font-weight: 700; letter-spacing: 1px; margin-bottom: 4px; text-align: center; }
     .subtitle { color: #555; font-size: 13px; text-align: center; margin-bottom: 36px; }
+    .error-msg { background: #2a1a1a; border: 1px solid #c0392b44; color: #e57373; padding: 10px 14px; border-radius: 6px; font-size: 13px; margin-bottom: 16px; }
     label { display: block; color: #888; font-size: 12px; margin-bottom: 5px; }
     input { width: 100%; background: #111; border: 1px solid #2a2a2a; color: #e0e0e0; padding: 11px 14px; border-radius: 6px; font-size: 14px; margin-bottom: 16px; outline: none; transition: border-color 0.2s; }
     input:focus { border-color: #d4a847; }
@@ -73,15 +74,15 @@ function loginPage(next, error) {
 <body>
   <div class="card">
     <div class="logo">🎵 Santo Sonido OS</div>
-    <div class="subtitle">Admin — acceso interno</div>
+    <div class="subtitle">Admin — internal access</div>
     ${error ? `<div class="error">${error}</div>` : ''}
     <form method="POST" action="/login">
       <input type="hidden" name="next" value="${next}" />
       <label>Email</label>
-      <input type="email" name="email" placeholder="tu@email.com" required autofocus />
-      <label>Contraseña</label>
+      <input type="email" name="email" placeholder="you@email.com" required autofocus />
+      <label>Password</label>
       <input type="password" name="password" placeholder="••••••••" required />
-      <button type="submit">Entrar</button>
+      <button type="submit">Sign In</button>
     </form>
   </div>
 </body>

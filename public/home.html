@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Santo Sonido OS</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0d0d0d; color: #e0e0e0; font-family: 'Helvetica Neue', Arial, sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+    header { background: #111; border-bottom: 1px solid #222; padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; }
+    .logo { color: #d4a847; font-size: 20px; font-weight: 700; letter-spacing: 1px; }
+    .logout-btn { background: none; border: none; color: #555; font-size: 13px; cursor: pointer; }
+    .logout-btn:hover { color: #e57373; }
+    main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; }
+    .welcome { text-align: center; margin-bottom: 48px; }
+    .welcome h1 { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    .welcome p { color: #666; font-size: 15px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; max-width: 700px; width: 100%; }
+    .card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 28px 24px; text-decoration: none; color: inherit; transition: border-color 0.2s, transform 0.1s; display: flex; flex-direction: column; gap: 10px; }
+    .card:hover { border-color: #d4a847; transform: translateY(-2px); }
+    .card-icon { font-size: 28px; }
+    .card-title { font-size: 17px; font-weight: 700; color: #fff; }
+    .card-desc { font-size: 13px; color: #666; line-height: 1.4; }
+    .card-arrow { color: #d4a847; font-size: 18px; margin-top: auto; }
+    footer { text-align: center; padding: 20px; color: #333; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">🎵 Santo Sonido OS</div>
+    <form method="POST" action="/logout">
+      <button class="logout-btn" type="submit">Logout</button>
+    </form>
+  </header>
+
+  <main>
+    <div class="welcome">
+      <h1>Welcome back</h1>
+      <p>Medellín · Studio · Artist · Camera</p>
+    </div>
+
+    <div class="cards">
+      <a href="/budget" class="card">
+        <div class="card-icon">💰</div>
+        <div class="card-title">Budget</div>
+        <div class="card-desc">Track income & expenses across all 4 business tracks</div>
+        <div class="card-arrow">→</div>
+      </a>
+      <a href="/crm" class="card">
+        <div class="card-icon">👥</div>
+        <div class="card-title">CRM</div>
+        <div class="card-desc">Client pipeline, deals, and activity log</div>
+        <div class="card-arrow">→</div>
+      </a>
+      <a href="/invoices" class="card">
+        <div class="card-icon">🧾</div>
+        <div class="card-title">Invoices</div>
+        <div class="card-desc">Quotes, invoices, and payment tracking</div>
+        <div class="card-arrow">→</div>
+      </a>
+    </div>
+  </main>
+
+  <footer>Santo Sonido OS · Internal Admin</footer>
+</body>
+</html>
