@@ -7,6 +7,15 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/santocrm');
 
+function escapeHtml(value = '') {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 // ── POST /api/santocrm/validate-invite ──
 // Checks that an invite code exists, is active, and has uses remaining.
 router.post('/validate-invite', async (req, res) => {
@@ -58,21 +67,28 @@ router.post('/signup', async (req, res) => {
     const POLSIA_API_KEY = process.env.POLSIA_API_KEY;
     if (POLSIA_API_KEY) {
       try {
+        const normalizedWhatsapp = db.normalizeWhatsapp(whatsapp);
+        const safeName = escapeHtml(name);
+        const safeWhatsapp = escapeHtml(normalizedWhatsapp);
+        const safeRole = escapeHtml(role);
+        const safeInviteCode = escapeHtml(invite_code);
+        const safeOtp = escapeHtml(otp);
+
         await fetch('https://polsia.com/api/proxy/email/send', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${POLSIA_API_KEY}` },
           body: JSON.stringify({
             to: 'santosonidostudio@gmail.com',
-            subject: `SantoCRM OTP — ${db.normalizeWhatsapp(whatsapp)}`,
-            body: `New SantoCRM signup\n\nName: ${name}\nWhatsApp: ${db.normalizeWhatsapp(whatsapp)}\nRole: ${role}\nInvite: ${invite_code}\n\nOTP: ${otp}\n\nForward this OTP to the user on WhatsApp.`,
+            subject: `SantoCRM OTP — ${normalizedWhatsapp}`,
+            body: `New SantoCRM signup\n\nName: ${name}\nWhatsApp: ${normalizedWhatsapp}\nRole: ${role}\nInvite: ${invite_code}\n\nOTP: ${otp}\n\nForward this OTP to the user on WhatsApp.`,
             html: `<div style="font-family:Arial;background:#111;color:#e0e0e0;padding:24px;border-radius:8px;max-width:500px">
               <h2 style="color:#D4AF37">SantoCRM — New Signup</h2>
-              <p><b>Name:</b> ${name}</p>
-              <p><b>WhatsApp:</b> ${db.normalizeWhatsapp(whatsapp)}</p>
-              <p><b>Role:</b> ${role}</p>
-              <p><b>Invite code:</b> ${invite_code}</p>
+              <p><b>Name:</b> ${safeName}</p>
+              <p><b>WhatsApp:</b> ${safeWhatsapp}</p>
+              <p><b>Role:</b> ${safeRole}</p>
+              <p><b>Invite code:</b> ${safeInviteCode}</p>
               <hr style="border-color:#333;margin:16px 0">
-              <p style="font-size:24px;font-weight:bold;color:#D4AF37;letter-spacing:.2em">OTP: ${otp}</p>
+              <p style="font-size:24px;font-weight:bold;color:#D4AF37;letter-spacing:.2em">OTP: ${safeOtp}</p>
               <p style="color:#888;font-size:12px">Send this code to the user on WhatsApp. Expires in 10 minutes.</p>
             </div>`
           })

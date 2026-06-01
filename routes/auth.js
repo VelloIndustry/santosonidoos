@@ -6,9 +6,28 @@ const express = require('express');
 const router = express.Router();
 const { login, logout } = require('../middleware/auth');
 
+function escapeHtml(value = '') {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function safeNextPath(next) {
+  if (typeof next !== 'string' || !next.startsWith('/') || next.startsWith('//')) return '/budget';
+  try {
+    const parsed = new URL(next, 'https://santosonido.local');
+    return parsed.origin === 'https://santosonido.local' ? `${parsed.pathname}${parsed.search}${parsed.hash}` : '/budget';
+  } catch {
+    return '/budget';
+  }
+}
+
 // GET /login — show login page
 router.get('/login', (req, res) => {
-  const next = req.query.next || '/budget';
+  const next = safeNextPath(req.query.next);
   // If already logged in, redirect
   const { getSession } = require('../middleware/auth');
   const session = getSession(req.cookies?.session);
@@ -20,7 +39,7 @@ router.get('/login', (req, res) => {
 // POST /login — handle login
 router.post('/login', (req, res) => {
   const { email, password, next } = req.body;
-  const redirectTo = next || '/budget';
+  const redirectTo = safeNextPath(next);
 
   if (!email || !password) {
     return res.send(loginPage(redirectTo, 'Please enter your email and password.'));
@@ -50,6 +69,8 @@ router.post('/logout', (req, res) => {
 });
 
 function loginPage(next, error) {
+  const safeNext = escapeHtml(safeNextPath(next));
+  const safeError = error ? escapeHtml(error) : '';
   return `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -75,9 +96,9 @@ function loginPage(next, error) {
   <div class="card">
     <div class="logo">🎵 Santo Sonido OS</div>
     <div class="subtitle">Admin — internal access</div>
-    ${error ? `<div class="error">${error}</div>` : ''}
+    ${safeError ? `<div class="error">${safeError}</div>` : ''}
     <form method="POST" action="/login">
-      <input type="hidden" name="next" value="${next}" />
+      <input type="hidden" name="next" value="${safeNext}" />
       <label>Email</label>
       <input type="email" name="email" placeholder="you@email.com" required autofocus />
       <label>Password</label>
