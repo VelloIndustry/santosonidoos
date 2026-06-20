@@ -1065,10 +1065,22 @@
 <script>
 // ---- Config ----
 const CATEGORIES = {
-  Studio:   ['Hourly studio rentals', 'Day-rate/block bookings', 'Monthly residencies', 'Equipment/gear rentals', 'Arriendo / Utilities', 'Mantenimiento', 'Personal', 'Otro'],
-  Artist:   ['Live shows/touring', 'Master royalties (streaming)', 'Merch sales', 'Brand deals', 'Sync/Publishing/Game/Movie placements', 'Promo / Marketing', 'Contenido', 'Otro'],
-  Producer: ['Beat fees', 'Mix & master', 'Recording engineering', 'Full producer fee (bundled)', 'Master royalties', 'Publishing/Sync/Games', 'Software / Plugins', 'Hardware', 'Otro'],
-  Camera:   ['Retainer clients', 'Music videos', 'Visualizers', 'Photoshoots', 'Other deliverables'],
+  Studio: {
+    Income:  ['Recording Session', 'Mix & Master', 'Beat Sale', 'Studio Rental', 'Podcast / Voice', 'Sound Design'],
+    Expense: ['Studio Rent', 'Equipment Purchase', 'Equipment Repair', 'Software & Plugins', 'Acoustic Treatment', 'Utilities', 'Marketing', 'Staff / Engineer'],
+  },
+  Artist: {
+    Income:  ['Streaming Royalties', 'Live Show / Performance', 'Merchandise', 'Sync Licensing', 'Brand Deal / Sponsorship', 'YouTube / Content'],
+    Expense: ['Studio Time', 'Music Video', 'Marketing & Promo', 'Distribution', 'Travel', 'Merchandise Production', 'Management Fee', 'PR / Press'],
+  },
+  Producer: {
+    Income:  ['Beat License Non-Exclusive', 'Beat License Exclusive', 'Custom Beat', 'Production Fee', 'Royalty Payment', 'Collaboration Fee'],
+    Expense: ['Sample Clearance', 'Software & Plugins', 'Marketing & Ads', 'Collaboration Payment', 'Equipment', 'Outsourced Mix / Master'],
+  },
+  Camera: {
+    Income:  ['Music Video', 'Photo Session', 'Visualizer / Lyric Video', 'Retainer Client', 'Event Coverage', 'Content Creation'],
+    Expense: ['Equipment Rental', 'Equipment Purchase', 'Editing Software', 'Location & Permits', 'Travel', 'Assistant / Crew', 'Storage & Backup'],
+  },
 };
 
 // ---- Scenario Forecast Data ----
@@ -1222,6 +1234,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Update categories when track changes
   document.getElementById('f-track').addEventListener('change', updateCategories);
+  document.getElementById('f-type').addEventListener('change', updateCategories);
 
   loadDashboard();
   // Pre-render scenario so it's ready when tab opens
@@ -1586,7 +1599,8 @@ function handleOverlayClick(e) {
 
 function updateCategories() {
   const track = document.getElementById('f-track').value;
-  const cats = CATEGORIES[track] || [];
+  const type = document.getElementById('f-type').value;
+  const cats = (CATEGORIES[track] && CATEGORIES[track][type]) || [];
   const sel = document.getElementById('f-category');
   sel.innerHTML = '<option value="">Uncategorized</option>' + cats.map(c => `<option value="${c}">${c}</option>`).join('');
 }
