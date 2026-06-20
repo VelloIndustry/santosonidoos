@@ -60,6 +60,15 @@
     .pill.blue { background: rgba(96,165,250,0.12); color: var(--blue); }
     .empty { color: var(--dim); padding: 28px 16px; text-align: center; font-size: 13px; }
     .stack { display: grid; gap: 16px; }
+    .chart-wrap { padding: 20px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+    .chart-legend { display: flex; flex-direction: column; gap: 10px; min-width: 140px; }
+    .legend-row { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .legend-label { color: var(--muted); font-size: 12px; }
+    .legend-val { font-weight: 700; font-variant-numeric: tabular-nums; margin-left: auto; }
+    .entries-scroll { max-height: 420px; overflow-y: auto; }
+    .entries-scroll::-webkit-scrollbar { width: 4px; }
+    .entries-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
     @media (max-width: 900px) {
       .header { align-items: flex-start; gap: 12px; flex-direction: column; }
       .nav { flex-wrap: wrap; }
@@ -100,11 +109,27 @@
     </section>
 
     <section class="grid content">
-      <div class="stack">
+      <div class="card">
+        <div class="section-head"><div class="section-title">All Money Entries</div><a class="section-link" href="/money">+ New Entry</a></div>
+        <div class="entries-scroll">
+          <div class="list" id="entries-list"><div class="empty">Loading...</div></div>
+        </div>
+      </div>
+
       <div class="stack">
         <div class="card">
-          <div class="section-head"><div class="section-title">Recent Money Entries</div><a class="section-link" href="/money">Open Money</a></div>
-          <div class="list" id="entries-list"><div class="empty">Loading...</div></div>
+          <div class="section-head"><div class="section-title">Income vs Expenses</div></div>
+          <div class="chart-wrap">
+            <svg id="pie-chart" width="120" height="120" viewBox="0 0 120 120"></svg>
+            <div class="chart-legend" id="pie-legend"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-head"><div class="section-title">Net Position</div></div>
+          <div class="chart-wrap">
+            <svg id="net-chart" width="120" height="120" viewBox="0 0 120 120"></svg>
+            <div class="chart-legend" id="net-legend"></div>
+          </div>
         </div>
       </div>
     </section>
@@ -126,11 +151,10 @@
     async function loadDashboard() {
       const [summary, entries] = await Promise.all([
         getJson('/api/budget/summary?months=1').catch(() => []),
-        getJson('/api/budget/entries?limit=5').catch(() => null),
+        getJson('/api/budget/entries?limit=500').catch(() => null),
       ]);
 
-      let income = 0;
-      let expense = 0;
+      let income = 0, expense = 0;
       summary.forEach(row => {
         if (row.mode !== 'Actual') return;
         if (row.type === 'Income') income += Number(row.total_cop || 0);
@@ -141,47 +165,81 @@
       document.getElementById('m-expense').textContent = money(expense);
       document.getElementById('m-net').textContent = money(income - expense);
 
-      if (entries === null) setEmpty('entries-list', 'Could not load entries.');
-      else renderEntries(entries);
+      if (entries === null) {
+        setEmpty('entries-list', 'Could not load entries.');
+      } else {
+        const actual = entries.filter(e => e.mode === 'Actual');
+        const totalIncome  = actual.filter(e => e.type === 'Income').reduce((s, e) => s + Number(e.amount_cop), 0);
+        const totalExpense = actual.filter(e => e.type === 'Expense').reduce((s, e) => s + Number(e.amount_cop), 0);
+        const net = totalIncome - totalExpense;
+
+        renderEntries(entries);
+        drawPie('pie-chart', 'pie-legend', [
+          { label: 'Income',   value: totalIncome,  color: '#22c55e' },
+          { label: 'Expenses', value: totalExpense, color: '#ef4444' },
+        ]);
+        drawPie('net-chart', 'net-legend', net >= 0
+          ? [
+              { label: 'Net Profit', value: net,          color: '#22c55e' },
+              { label: 'Costs',      value: totalExpense, color: '#333' },
+            ]
+          : [
+              { label: 'Net Loss',  value: Math.abs(net), color: '#ef4444' },
+              { label: 'Income',    value: totalIncome,   color: '#333' },
+            ]
+        );
+      }
     }
 
-    function renderAttention(items) {
-      if (!items.length) return setEmpty('attention-list', 'Nothing needs attention right now.');
-      document.getElementById('attention-list').innerHTML = items.slice(0, 6).map(inv => `
-        <div class="row">
-          <div><div class="row-title">${escapeHtml(inv.invoice_number)} · ${escapeHtml(inv.client_name)}</div><div class="row-meta">${escapeHtml(inv.description)} · ${shortDate(inv.created_at)}</div></div>
-          <div><span class="pill ${inv.status === 'sent' ? 'blue' : ''}">${escapeHtml(inv.status)}</span> <span class="amount">${money(inv.amount_cop)}</span></div>
-        </div>
-      `).join('');
-    }
+    function drawPie(svgId, legendId, slices) {
+      const total = slices.reduce((s, sl) => s + sl.value, 0);
+      const cx = 60, cy = 60, r = 52, inner = 30;
+      let angle = -Math.PI / 2;
+      let paths = '';
 
-    function renderClients(items) {
-      if (!items.length) return setEmpty('clients-list', 'No clients yet.');
-      document.getElementById('clients-list').innerHTML = items.map(c => `
-        <div class="row">
-          <div><div class="row-title">${escapeHtml(c.name)}</div><div class="row-meta">${escapeHtml(c.phone || c.email || 'No contact info')} · ${escapeHtml(c.stage || 'contact')}</div></div>
-          <span class="pill">${(c.deals || []).length} deals</span>
-        </div>
-      `).join('');
-    }
+      if (total === 0) {
+        paths = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#222"/>
+                 <circle cx="${cx}" cy="${cy}" r="${inner}" fill="#111"/>`;
+      } else {
+        slices.forEach(sl => {
+          if (sl.value === 0) return;
+          const sweep = (sl.value / total) * 2 * Math.PI;
+          const x1 = cx + r * Math.cos(angle);
+          const y1 = cy + r * Math.sin(angle);
+          angle += sweep;
+          const x2 = cx + r * Math.cos(angle);
+          const y2 = cy + r * Math.sin(angle);
+          const xi1 = cx + inner * Math.cos(angle);
+          const yi1 = cy + inner * Math.sin(angle);
+          const xi2 = cx + inner * Math.cos(angle - sweep);
+          const yi2 = cy + inner * Math.sin(angle - sweep);
+          const large = sweep > Math.PI ? 1 : 0;
+          paths += `<path d="M${x1},${y1} A${r},${r} 0 ${large},1 ${x2},${y2} L${xi1},${yi1} A${inner},${inner} 0 ${large},0 ${xi2},${yi2} Z" fill="${sl.color}"/>`;
+        });
+      }
 
-    function renderPipeline(clients) {
-      const deals = clients.flatMap(c => (c.deals || []).map(d => ({ ...d, client: c.name }))).filter(d => !['won', 'lost'].includes(d.stage));
-      if (!deals.length) return setEmpty('pipeline-list', 'No active deals.');
-      document.getElementById('pipeline-list').innerHTML = deals.slice(0, 6).map(d => `
-        <div class="row">
-          <div><div class="row-title">${escapeHtml(d.name)}</div><div class="row-meta">${escapeHtml(d.client)} · ${escapeHtml(d.stage || 'contact')}</div></div>
-          <span class="amount">${money(d.value_cop)}</span>
-        </div>
-      `).join('');
+      document.getElementById(svgId).innerHTML = paths;
+      document.getElementById(legendId).innerHTML = slices.map(sl => {
+        const pct = total > 0 ? Math.round((sl.value / total) * 100) : 0;
+        return `<div class="legend-row">
+          <div class="legend-dot" style="background:${sl.color}"></div>
+          <div>
+            <div style="font-weight:600">${escapeHtml(sl.label)}</div>
+            <div class="legend-label">${pct}% · ${money(sl.value)}</div>
+          </div>
+        </div>`;
+      }).join('');
     }
 
     function renderEntries(items) {
       if (!items.length) return setEmpty('entries-list', 'No money entries yet.');
       document.getElementById('entries-list').innerHTML = items.map(e => `
         <div class="row">
-          <div><div class="row-title">${escapeHtml(e.description)}</div><div class="row-meta">${shortDate(e.date)} · ${escapeHtml(e.track)} · ${escapeHtml(e.category || 'Uncategorized')}</div></div>
-          <span class="pill ${e.type === 'Income' ? 'green' : 'red'}">${e.type === 'Income' ? '+' : '-'} ${money(e.amount_cop)}</span>
+          <div>
+            <div class="row-title">${escapeHtml(e.description)}</div>
+            <div class="row-meta">${shortDate(e.date)} · ${escapeHtml(e.track)} · ${escapeHtml(e.category || 'Uncategorized')}</div>
+          </div>
+          <span class="pill ${e.type === 'Income' ? 'green' : 'red'}">${e.type === 'Income' ? '+' : '−'} ${money(e.amount_cop)}</span>
         </div>
       `).join('');
     }
