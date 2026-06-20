@@ -77,10 +77,8 @@
     </div>
     <nav class="nav">
       <a href="/dashboard" class="active">Dashboard</a>
-      <a href="/sales">Sales</a>
       <a href="/invoices">Invoices</a>
       <a href="/money">Money</a>
-      <a href="/bot">Bot</a>
       <form method="POST" action="/logout" style="margin:0"><button>Logout</button></form>
     </nav>
   </header>
@@ -92,7 +90,6 @@
         <p class="sub">Clients, invoices, payments, and money movement in one place.</p>
       </div>
       <div class="quick">
-        <a class="btn primary" href="/sales">+ Client</a>
         <a class="btn" href="/invoices">+ Invoice</a>
         <a class="btn" href="/money">+ Money Entry</a>
       </div>
@@ -111,17 +108,9 @@
           <div class="section-head"><div class="section-title">Needs Attention</div><a class="section-link" href="/invoices">View invoices</a></div>
           <div class="list" id="attention-list"><div class="empty">Loading...</div></div>
         </div>
-        <div class="card">
-          <div class="section-head"><div class="section-title">Recent Clients</div><a class="section-link" href="/sales">Open Sales</a></div>
-          <div class="list" id="clients-list"><div class="empty">Loading...</div></div>
-        </div>
       </div>
 
       <div class="stack">
-        <div class="card">
-          <div class="section-head"><div class="section-title">Sales Pipeline</div><a class="section-link" href="/sales">Manage deals</a></div>
-          <div class="list" id="pipeline-list"><div class="empty">Loading...</div></div>
-        </div>
         <div class="card">
           <div class="section-head"><div class="section-title">Recent Money Entries</div><a class="section-link" href="/money">Open Money</a></div>
           <div class="list" id="entries-list"><div class="empty">Loading...</div></div>
