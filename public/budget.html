@@ -1540,8 +1540,15 @@ function updateCategories() {
   sel.innerHTML = '<option value="">Uncategorized</option>' + cats.map(c => `<option value="${c}">${c}</option>`).join('');
 }
 
+let _submitting = false;
 async function submitEntry(e) {
   e.preventDefault();
+  if (_submitting) return;
+  _submitting = true;
+  const btn = document.getElementById('submit-btn');
+  const origText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
   const id = document.getElementById('edit-id').value;
   const payload = {
     track: document.getElementById('f-track').value,
@@ -1572,6 +1579,10 @@ async function submitEntry(e) {
     if (currentTab === 'planvsactual') loadPlanVsActual();
   } catch (err) {
     showToast(err.message, 'error');
+  } finally {
+    _submitting = false;
+    btn.disabled = false;
+    btn.textContent = origText;
   }
 }
 
