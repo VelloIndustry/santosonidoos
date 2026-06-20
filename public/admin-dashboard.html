@@ -77,7 +77,6 @@
     </div>
     <nav class="nav">
       <a href="/dashboard" class="active">Dashboard</a>
-      <a href="/invoices">Invoices</a>
       <a href="/money">Money</a>
       <form method="POST" action="/logout" style="margin:0"><button>Logout</button></form>
     </nav>
@@ -90,7 +89,6 @@
         <p class="sub">Clients, invoices, payments, and money movement in one place.</p>
       </div>
       <div class="quick">
-        <a class="btn" href="/invoices">+ Invoice</a>
         <a class="btn" href="/money">+ Money Entry</a>
       </div>
     </div>
@@ -99,17 +97,10 @@
       <div class="card card-pad"><div class="metric-label">Month Income</div><div class="metric-value" id="m-income">--</div><div class="metric-sub">Actual entries</div></div>
       <div class="card card-pad"><div class="metric-label">Month Expenses</div><div class="metric-value" id="m-expense">--</div><div class="metric-sub">Actual entries</div></div>
       <div class="card card-pad"><div class="metric-label">Month Net</div><div class="metric-value" id="m-net">--</div><div class="metric-sub">Income minus expenses</div></div>
-      <div class="card card-pad"><div class="metric-label">Open Invoices</div><div class="metric-value" id="m-open">--</div><div class="metric-sub">Draft or sent</div></div>
     </section>
 
     <section class="grid content">
       <div class="stack">
-        <div class="card">
-          <div class="section-head"><div class="section-title">Needs Attention</div><a class="section-link" href="/invoices">View invoices</a></div>
-          <div class="list" id="attention-list"><div class="empty">Loading...</div></div>
-        </div>
-      </div>
-
       <div class="stack">
         <div class="card">
           <div class="section-head"><div class="section-title">Recent Money Entries</div><a class="section-link" href="/money">Open Money</a></div>
@@ -133,10 +124,9 @@
     function setEmpty(id, text) { document.getElementById(id).innerHTML = `<div class="empty">${text}</div>`; }
 
     async function loadDashboard() {
-      const [summary, entries, invoices] = await Promise.all([
+      const [summary, entries] = await Promise.all([
         getJson('/api/budget/summary?months=1').catch(() => []),
         getJson('/api/budget/entries?limit=5').catch(() => null),
-        getJson('/api/invoices').catch(() => []),
       ]);
 
       let income = 0;
@@ -147,13 +137,10 @@
         if (row.type === 'Expense') expense += Number(row.total_cop || 0);
       });
 
-      const openInvoices = invoices.filter(i => ['draft', 'sent'].includes(i.status));
       document.getElementById('m-income').textContent = money(income);
       document.getElementById('m-expense').textContent = money(expense);
       document.getElementById('m-net').textContent = money(income - expense);
-      document.getElementById('m-open').textContent = openInvoices.length;
 
-      renderAttention(openInvoices);
       if (entries === null) setEmpty('entries-list', 'Could not load entries.');
       else renderEntries(entries);
     }
