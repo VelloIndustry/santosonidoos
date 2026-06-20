@@ -133,36 +133,29 @@
     function setEmpty(id, text) { document.getElementById(id).innerHTML = `<div class="empty">${text}</div>`; }
 
     async function loadDashboard() {
-      try {
-        const [summary, entries, clients, invoices] = await Promise.all([
-          getJson('/api/budget/summary?months=1'),
-          getJson('/api/budget/entries?limit=5'),
-          getJson('/api/crm/clients'),
-          getJson('/api/invoices')
-        ]);
+      const [summary, entries, invoices] = await Promise.all([
+        getJson('/api/budget/summary?months=1').catch(() => []),
+        getJson('/api/budget/entries?limit=5').catch(() => null),
+        getJson('/api/invoices').catch(() => []),
+      ]);
 
-        let income = 0;
-        let expense = 0;
-        summary.forEach(row => {
-          if (row.mode !== 'Actual') return;
-          if (row.type === 'Income') income += Number(row.total_cop || 0);
-          if (row.type === 'Expense') expense += Number(row.total_cop || 0);
-        });
+      let income = 0;
+      let expense = 0;
+      summary.forEach(row => {
+        if (row.mode !== 'Actual') return;
+        if (row.type === 'Income') income += Number(row.total_cop || 0);
+        if (row.type === 'Expense') expense += Number(row.total_cop || 0);
+      });
 
-        const openInvoices = invoices.filter(i => ['draft', 'sent'].includes(i.status));
-        document.getElementById('m-income').textContent = money(income);
-        document.getElementById('m-expense').textContent = money(expense);
-        document.getElementById('m-net').textContent = money(income - expense);
-        document.getElementById('m-open').textContent = openInvoices.length;
+      const openInvoices = invoices.filter(i => ['draft', 'sent'].includes(i.status));
+      document.getElementById('m-income').textContent = money(income);
+      document.getElementById('m-expense').textContent = money(expense);
+      document.getElementById('m-net').textContent = money(income - expense);
+      document.getElementById('m-open').textContent = openInvoices.length;
 
-        renderAttention(openInvoices);
-        renderClients(clients.slice(0, 6));
-        renderPipeline(clients);
-        renderEntries(entries);
-      } catch (err) {
-        console.error(err);
-        ['attention-list', 'clients-list', 'pipeline-list', 'entries-list'].forEach(id => setEmpty(id, 'Could not load this section.'));
-      }
+      renderAttention(openInvoices);
+      if (entries === null) setEmpty('entries-list', 'Could not load entries.');
+      else renderEntries(entries);
     }
 
     function renderAttention(items) {
