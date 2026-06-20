@@ -76,7 +76,21 @@
     .tab.active { color: var(--gold); border-bottom-color: var(--gold); }
 
     /* Summary cards */
-    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 28px; }
+    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px; }
+    /* Track flow bar */
+    .track-flow-bar { display: flex; height: 10px; border-radius: 6px; overflow: hidden; gap: 2px; margin: 16px 0 28px; }
+    .track-flow-bar .segment { border-radius: 3px; transition: width 0.4s ease; min-width: 2px; }
+    .flow-studio { background: var(--gold); }
+    .flow-artist { background: var(--purple); }
+    .flow-producer { background: var(--blue); }
+    .flow-camera { background: var(--orange); }
+    .track-flow-labels { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; margin-top: -20px; }
+    .flow-label { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-dim); }
+    .flow-label-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    /* Ratio bar inside track cards */
+    .ratio-bar { display: flex; height: 6px; border-radius: 3px; overflow: hidden; margin-top: 6px; background: var(--surface2); }
+    .ratio-inc { background: var(--green); border-radius: 3px 0 0 3px; }
+    .ratio-exp { background: var(--red); border-radius: 0 3px 3px 0; }
 
     .card {
       background: var(--surface);
@@ -625,6 +639,8 @@
     <div id="summary-cards" class="summary-grid">
       <div class="loading">Loading overview...</div>
     </div>
+    <div id="track-flow-bar" class="track-flow-bar"></div>
+    <div id="track-flow-labels" class="track-flow-labels"></div>
 
     <div class="section-header">
       <div class="section-title">Track Summary (last 4 months)</div>
@@ -1262,48 +1278,77 @@ function formatCOP(n) {
 }
 
 function renderSummaryCards(summary, entries) {
-  // Compute overall totals from Actual entries
   const actual = entries.filter(e => e.mode === 'Actual');
   const totalIncome = actual.filter(e => e.type === 'Income').reduce((s, e) => s + Number(e.amount_cop), 0);
   const totalExpense = actual.filter(e => e.type === 'Expense').reduce((s, e) => s + Number(e.amount_cop), 0);
   const net = totalIncome - totalExpense;
 
-  // Per-track net
   const tracks = ['Studio', 'Artist', 'Producer', 'Camera'];
   const trackColors = { Studio: 'track-studio', Artist: 'track-artist', Producer: 'track-producer', Camera: 'track-camera' };
+  const flowColors = { Studio: 'flow-studio', Artist: 'flow-artist', Producer: 'flow-producer', Camera: 'flow-camera' };
+  const dotColors = { Studio: 'var(--gold)', Artist: 'var(--purple)', Producer: 'var(--blue)', Camera: 'var(--orange)' };
 
-  let html = `
-    <div class="card">
-      <div class="card-label">Total Income (Actual)</div>
-      <div class="card-value positive">${formatCOP(totalIncome)}</div>
-      <div class="card-sub">All tracks</div>
-    </div>
-    <div class="card">
-      <div class="card-label">Total Expenses (Actual)</div>
-      <div class="card-value negative">${formatCOP(totalExpense)}</div>
-      <div class="card-sub">All tracks</div>
-    </div>
-    <div class="card">
-      <div class="card-label">Total Net</div>
-      <div class="card-value ${net >= 0 ? 'positive' : 'negative'}">${formatCOP(net)}</div>
-      <div class="card-sub">${net >= 0 ? 'Ganancia' : 'Pérdida'}</div>
-    </div>
-  `;
-
+  // Per-track totals
+  const trackData = {};
   for (const track of tracks) {
     const ti = actual.filter(e => e.track === track && e.type === 'Income').reduce((s, e) => s + Number(e.amount_cop), 0);
     const te = actual.filter(e => e.track === track && e.type === 'Expense').reduce((s, e) => s + Number(e.amount_cop), 0);
-    const tn = ti - te;
+    trackData[track] = { income: ti, expense: te, net: ti - te };
+  }
+
+  // Top 3 summary cards
+  let html = `
+    <div class="card">
+      <div class="card-label">Total Income</div>
+      <div class="card-value positive">${formatCOP(totalIncome)}</div>
+      <div class="card-sub">All tracks · Actual</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Total Expenses</div>
+      <div class="card-value negative">${formatCOP(totalExpense)}</div>
+      <div class="card-sub">All tracks · Actual</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Net</div>
+      <div class="card-value ${net >= 0 ? 'positive' : 'negative'}">${formatCOP(net)}</div>
+      <div class="card-sub">${net >= 0 ? 'Profit' : 'Loss'} · all time</div>
+    </div>
+  `;
+
+  // Per-track cards with ratio bar
+  for (const track of tracks) {
+    const { income: ti, expense: te, net: tn } = trackData[track];
+    const total = ti + te;
+    const incPct = total > 0 ? Math.round((ti / total) * 100) : 0;
+    const expPct = total > 0 ? 100 - incPct : 0;
     html += `
       <div class="card">
         <div class="card-label"><span class="${trackColors[track]}">${track}</span></div>
         <div class="card-value ${tn >= 0 ? 'positive' : 'negative'}">${formatCOP(tn)}</div>
         <div class="card-sub">↑ ${formatCOP(ti)} &nbsp; ↓ ${formatCOP(te)}</div>
+        <div class="ratio-bar" title="Income ${incPct}% · Expense ${expPct}%">
+          <div class="ratio-inc" style="width:${incPct}%"></div>
+          <div class="ratio-exp" style="width:${expPct}%"></div>
+        </div>
       </div>
     `;
   }
 
   document.getElementById('summary-cards').innerHTML = html;
+
+  // Track flow bar — proportional width by income per track
+  const totalAllIncome = tracks.reduce((s, t) => s + trackData[t].income, 0) || 1;
+  const barHtml = tracks.map(t => {
+    const pct = Math.max(((trackData[t].income / totalAllIncome) * 100).toFixed(1), 1);
+    return `<div class="segment ${flowColors[t]}" style="width:${pct}%" title="${t}: ${formatCOP(trackData[t].income)}"></div>`;
+  }).join('');
+  document.getElementById('track-flow-bar').innerHTML = barHtml;
+
+  const labelsHtml = tracks.map(t => {
+    const pct = totalAllIncome > 0 ? Math.round((trackData[t].income / totalAllIncome) * 100) : 0;
+    return `<div class="flow-label"><div class="flow-label-dot" style="background:${dotColors[t]}"></div>${t} ${pct}%</div>`;
+  }).join('');
+  document.getElementById('track-flow-labels').innerHTML = labelsHtml;
 }
 
 function renderMonthlyGrid(summary) {
@@ -1323,12 +1368,21 @@ function renderMonthlyGrid(summary) {
       const inc = Number(income?.total_cop || 0);
       const exp = Number(expense?.total_cop || 0);
       const net = inc - exp;
+      const total = inc + exp;
+      const incPct = total > 0 ? Math.round((inc / total) * 100) : 0;
+      const expPct = total > 0 ? 100 - incPct : 0;
       tableRows += `
         <tr>
           <td>${month}</td>
           <td class="positive">${formatCOP(inc)}</td>
           <td class="negative">${formatCOP(exp)}</td>
           <td class="${net >= 0 ? 'positive' : 'negative'}">${formatCOP(net)}</td>
+          <td style="width:90px;padding-right:16px;">
+            <div class="ratio-bar" title="Income ${incPct}% · Expense ${expPct}%">
+              <div class="ratio-inc" style="width:${incPct}%"></div>
+              <div class="ratio-exp" style="width:${expPct}%"></div>
+            </div>
+          </td>
         </tr>
       `;
     }
@@ -1341,7 +1395,7 @@ function renderMonthlyGrid(summary) {
           ${track}
         </div>
         <table>
-          <thead><tr><th>Month</th><th>Income</th><th>Expenses</th><th>Net</th></tr></thead>
+          <thead><tr><th>Month</th><th>Income</th><th>Expenses</th><th>Net</th><th>Flow</th></tr></thead>
           <tbody>${tableRows}</tbody>
         </table>
       </div>
