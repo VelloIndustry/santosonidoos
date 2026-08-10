@@ -272,12 +272,6 @@
     .loading { text-align: center; padding: 32px; color: var(--text-dim); }
 
     /* Plan vs actual table */
-    .pva-table { width: 100%; border-collapse: collapse; background: var(--surface); border-radius: 8px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 20px; }
-    .pva-table th { text-align: left; padding: 10px 14px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-dim); background: var(--surface2); }
-    .pva-table td { padding: 10px 14px; border-top: 1px solid var(--border); font-variant-numeric: tabular-nums; }
-    .pva-table tr:hover td { background: var(--surface2); }
-    .variance-positive { color: var(--green); }
-    .variance-negative { color: var(--red); }
 
     /* Toast */
     #toast {
@@ -380,41 +374,6 @@
     .scan-again-btn { margin-bottom: 16px; }
 
     /* Scenario switcher */
-    .scenario-bar {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
-      padding: 14px 18px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      flex-wrap: wrap;
-    }
-    .scenario-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-dim); font-weight: 600; }
-    .scenario-btns { display: flex; gap: 6px; }
-    .scenario-btn {
-      padding: 6px 16px;
-      border-radius: 6px;
-      border: 1px solid var(--border);
-      background: var(--surface2);
-      color: var(--text-dim);
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s;
-      letter-spacing: 0.3px;
-    }
-    .scenario-btn:hover { border-color: var(--gold-dim); color: var(--text); }
-    .scenario-btn.active-conservative { border-color: #60a5fa; color: #60a5fa; background: rgba(96,165,250,0.08); }
-    .scenario-btn.active-mid { border-color: var(--gold); color: var(--gold); background: rgba(212,168,71,0.08); }
-    .scenario-btn.active-homerun { border-color: #22c55e; color: #22c55e; background: rgba(34,197,94,0.08); }
-    .scenario-total {
-      margin-left: auto;
-      font-size: 13px;
-      font-weight: 700;
-    }
-    .scenario-desc { font-size: 11px; color: var(--text-dim); }
 
     /* Scenario forecast table */
     .forecast-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-bottom: 24px; }
@@ -454,151 +413,6 @@
     .forecast-grand-value { font-size: 22px; font-weight: 700; }
 
     /* Payback Tracker */
-    .payback-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 0; }
-    @media (max-width: 900px) { .payback-layout { grid-template-columns: 1fr; } }
-
-    .payback-progress-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 24px;
-    }
-    .payback-card-title {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: var(--text-dim);
-      font-weight: 600;
-      margin-bottom: 18px;
-    }
-    .phase-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      margin-bottom: 16px;
-    }
-    .phase-badge.p1 { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.2); }
-    .phase-badge.p2 { background: rgba(212,168,71,0.15); color: var(--gold); border: 1px solid rgba(212,168,71,0.2); }
-
-    .payback-target {
-      font-size: 11px;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 8px;
-    }
-    .payback-bar-wrap { margin-bottom: 6px; }
-    .payback-bar-bg {
-      height: 10px;
-      background: var(--surface2);
-      border-radius: 5px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-    }
-    .payback-bar-fill {
-      height: 100%;
-      border-radius: 5px;
-      transition: width 0.6s ease;
-      background: linear-gradient(90deg, var(--green), #4ade80);
-    }
-    .payback-bar-fill.phase2 { background: linear-gradient(90deg, var(--gold), #e0c064); }
-    .payback-bar-fill.almost { background: linear-gradient(90deg, var(--gold), #e0c064); }
-    .payback-bar-pct {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--green);
-      text-align: right;
-    }
-    .payback-bar-pct.phase2 { color: var(--gold); }
-    .payback-nums {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 20px;
-    }
-    .payback-ryans-earned {
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--gold);
-    }
-    .payback-remaining { font-size: 12px; color: var(--text-dim); }
-    .payback-remaining strong { color: var(--text); font-size: 14px; }
-
-    .payback-info-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 9px 0;
-      border-top: 1px solid var(--border);
-      font-size: 12px;
-    }
-    .payback-info-row:last-child { border-bottom: 1px solid var(--border); }
-    .payback-info-label { color: var(--text-dim); }
-    .payback-info-value { font-weight: 600; font-variant-numeric: tabular-nums; }
-
-    .payback-estimate-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      background: rgba(212,168,71,0.1);
-      border: 1px solid rgba(212,168,71,0.2);
-      color: var(--gold);
-      margin-top: 16px;
-    }
-
-    .payback-totals-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 24px;
-    }
-    .payback-totals-table { width: 100%; border-collapse: collapse; }
-    .payback-totals-table th {
-      text-align: left;
-      padding: 8px 4px;
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      color: var(--text-dim);
-      border-bottom: 1px solid var(--border);
-    }
-    .payback-totals-table td {
-      padding: 12px 4px;
-      border-bottom: 1px solid var(--border);
-      font-variant-numeric: tabular-nums;
-      font-size: 14px;
-    }
-    .payback-totals-table tr:last-child td { border-bottom: none; }
-    .payback-totals-table .sub-label { font-size: 11px; color: var(--text-dim); font-weight: 400; }
-    .payback-totals-table .total-row { font-weight: 700; font-size: 15px; }
-
-    .payback-phase-info {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 14px 16px;
-      margin-top: 16px;
-      font-size: 12px;
-    }
-    .payback-phase-info-title { font-weight: 600; color: var(--gold); margin-bottom: 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .payback-phase-info p { color: var(--text-dim); line-height: 1.5; }
-    .payback-phase-info .split-badge {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 11px;
-      font-weight: 600;
-      margin-top: 6px;
-    }
     .split-p1 { background: rgba(34,197,94,0.15); color: var(--green); }
     .split-p2 { background: rgba(212,168,71,0.15); color: var(--gold); }
 
@@ -630,8 +444,8 @@
   <div class="tabs">
     <div class="tab active" onclick="switchTab('dashboard')">Overview</div>
     <div class="tab" onclick="switchTab('entries')">Entries</div>
-    <div class="tab" onclick="switchTab('planvsactual')">Plan vs Actual</div>
-    <div class="tab" onclick="switchTab('payback')">Payback</div>
+    <div class="tab" onclick="switchTab('monthlypnl')">Monthly P&L</div>
+    <div class="tab" onclick="switchTab('bycategory')">By Category</div>
   </div>
 
   <!-- DASHBOARD TAB -->
@@ -700,201 +514,15 @@
     </div>
   </div>
 
-  <!-- PLAN VS ACTUAL TAB -->
-  <div id="tab-planvsactual" style="display:none">
-    <!-- Sub-tabs: Plan vs Actual | Scenario Forecast -->
-    <div class="tabs" style="margin-bottom:20px; border-bottom-color:var(--border);">
-      <div class="tab active" id="subtab-pva-btn" onclick="switchPlanSubtab('pva')">Plan vs Actual</div>
-      <div class="tab" id="subtab-scenario-btn" onclick="switchPlanSubtab('scenario')">Scenarios</div>
-    </div>
-
-    <!-- Plan vs Actual section -->
-    <div id="subtab-pva">
-      <div class="filters">
-        <label style="color:var(--text-dim); font-size:12px;">Months:</label>
-        <select id="pva-months" onchange="loadPlanVsActual()">
-          <option value="3">3 months</option>
-          <option value="4" selected>4 months</option>
-          <option value="6">6 months</option>
-          <option value="12">12 months</option>
-        </select>
-      </div>
-      <div id="pva-content"><div class="loading">Loading...</div></div>
-    </div>
-
-    <!-- Scenario Forecast section -->
-    <div id="subtab-scenario" style="display:none">
-      <div class="scenario-bar">
-        <span class="scenario-label">Escenario:</span>
-        <div class="scenario-btns">
-          <button class="scenario-btn active-conservative" id="btn-conservative" onclick="setScenario('conservative')">Conservador</button>
-          <button class="scenario-btn" id="btn-mid" onclick="setScenario('mid')">Medio</button>
-          <button class="scenario-btn" id="btn-homerun" onclick="setScenario('homerun')">Home Run</button>
-        </div>
-        <span class="scenario-desc" id="scenario-desc">Proyección anual base realista</span>
-        <span class="scenario-total" id="scenario-total-badge"></span>
-      </div>
-      <div id="scenario-content"></div>
-    </div>
+  <!-- MONTHLY P&L TAB -->
+  <div id="tab-monthlypnl" style="display:none">
+    <div id="pnl-content"><div class="loading">Loading...</div></div>
   </div>
 
-  <!-- PAYBACK TRACKER TAB -->
-  <div id="tab-payback" style="display:none">
-    <div class="payback-layout">
-      <!-- LEFT: Progress Card -->
-      <div class="payback-progress-card">
-        <div class="payback-card-title">Ryan — Retorno de Inversión</div>
-
-        <!-- Phase Badge -->
-        <div id="payback-phase-badge" class="phase-badge p1">
-          <span>⬡</span> <span id="payback-phase-label">Phase 1</span>
-        </div>
-
-        <!-- Progress Bar -->
-        <div class="payback-target">Objetivo: $70,000 USD (2x sobre inversión)</div>
-        <div class="payback-bar-wrap">
-          <div class="payback-bar-bg">
-            <div id="payback-bar-fill" class="payback-bar-fill" style="width:0%"></div>
-          </div>
-        </div>
-        <div class="payback-bar-pct" id="payback-pct-label">0%</div>
-
-        <!-- Cumulative numbers -->
-        <div class="payback-nums">
-          <div>
-            <div class="payback-ryans-earned" id="payback-ryan-earned">$0</div>
-            <div class="payback-remaining">Ganado por Ryan <span id="payback-needed">(faltan <strong>$70,000</strong>)</span></div>
-          </div>
-          <div style="text-align:right">
-            <div id="payback-phase2-label" style="font-size:11px;color:var(--text-dim);display:none">Phase 2 activo</div>
-          </div>
-        </div>
-
-        <!-- Phase 1 info -->
-        <div id="payback-phase1-info">
-          <div class="payback-info-row">
-            <span class="payback-info-label">Ganancia total requerida</span>
-            <span class="payback-info-value" id="payback-total-needed">$93,333 USD</span>
-          </div>
-          <div class="payback-info-row">
-            <span class="payback-info-label">Ganancia acumulada (COP → USD)</span>
-            <span class="payback-info-value" id="payback-cumulative-usd">$0 USD</span>
-          </div>
-          <div class="payback-info-row">
-            <span class="payback-info-label">Total income</span>
-            <span class="payback-info-value" id="payback-total-income">$0 COP</span>
-          </div>
-          <div class="payback-info-row">
-            <span class="payback-info-label">Total expenses</span>
-            <span class="payback-info-value" id="payback-total-expense">$0 COP</span>
-          </div>
-          <div class="payback-info-row">
-            <span class="payback-info-label">Ganancia neta</span>
-            <span class="payback-info-value" id="payback-net-profit">$0 COP</span>
-          </div>
-          <div class="payback-info-row">
-            <span class="payback-info-label">Tasa de cambio USD/COP</span>
-            <span class="payback-info-value">4,400</span>
-          </div>
-        </div>
-
-        <!-- Phase 2 info (hidden until threshold) -->
-        <div id="payback-phase2-info" style="display:none">
-          <div class="payback-info-row">
-            <span class="payback-info-label">Phase 2 split</span>
-            <span class="payback-info-value" style="color:var(--gold)">Ryan 20% / Javier 80%</span>
-          </div>
-          <div class="payback-info-row">
-            <span class="payback-info-label">Acumulado Phase 2</span>
-            <span class="payback-info-value" id="payback-phase2-earned">—</span>
-          </div>
-        </div>
-
-        <!-- Estimated date -->
-        <div id="payback-estimate-wrap" class="payback-estimate-badge" style="display:none">
-          <span>📅</span>
-          <span id="payback-estimate-text">Estimado: —</span>
-        </div>
-
-        <!-- Run rate info -->
-        <div class="payback-phase-info">
-          <div class="payback-phase-info-title">Cómo funciona</div>
-          <p>Phase 1: Ryan recibe 75% de la ganancia hasta recuperar $70K (requires ~$93K total profit). Phase 2: split 20/80 (Javier favorable).</p>
-          <span class="split-badge split-p1">75% Ryan / 25% Javier</span>
-          <span class="split-badge split-p2" style="margin-left:6px;display:none" id="p2-badge">20% Ryan / 80% Javier</span>
-        </div>
-      </div>
-
-      <!-- RIGHT: Running Totals -->
-      <div class="payback-totals-card">
-        <div class="payback-card-title">Running Totals</div>
-        <table class="payback-totals-table">
-          <thead>
-            <tr>
-              <th></th>
-              <th style="text-align:right">USD</th>
-              <th style="text-align:right">COP</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Ganancias acumuladas</td>
-              <td id="rt-total-usd" style="text-align:right">$0</td>
-              <td id="rt-total-cop" style="text-align:right">$0</td>
-            </tr>
-            <tr>
-              <td colspan="3" style="padding-top:14px;font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px;">Ryan</td>
-            </tr>
-            <tr>
-              <td class="sub-label">Phase 1 take (75%)</td>
-              <td id="rt-ryan-p1" style="text-align:right">$0</td>
-              <td id="rt-ryan-p1-cop" style="text-align:right">—</td>
-            </tr>
-            <tr>
-              <td class="sub-label">Phase 2 take (20%)</td>
-              <td id="rt-ryan-p2" style="text-align:right">$0</td>
-              <td id="rt-ryan-p2-cop" style="text-align:right">—</td>
-            </tr>
-            <tr class="total-row">
-              <td>Ryan total</td>
-              <td id="rt-ryan-total" style="text-align:right;color:var(--gold)">$0</td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <td colspan="3" style="padding-top:14px;font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px;">Javier</td>
-            </tr>
-            <tr>
-              <td class="sub-label">Phase 1 take (25%)</td>
-              <td id="rt-javier-p1" style="text-align:right">$0</td>
-              <td id="rt-javier-p1-cop" style="text-align:right">—</td>
-            </tr>
-            <tr>
-              <td class="sub-label">Phase 2 take (80%)</td>
-              <td id="rt-javier-p2" style="text-align:right">$0</td>
-              <td id="rt-javier-p2-cop" style="text-align:right">—</td>
-            </tr>
-            <tr>
-              <td class="sub-label">Salario mensual ($625/mo)</td>
-              <td id="rt-javier-salary" style="text-align:right">$625</td>
-              <td id="rt-javier-salary-cop" style="text-align:right">$2,750,000</td>
-            </tr>
-            <tr class="total-row">
-              <td>Javier total</td>
-              <td id="rt-javier-total" style="text-align:right;color:var(--gold)">$625</td>
-              <td id="rt-javier-total-cop" style="text-align:right">$2,750,000</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <!-- Note on operating costs -->
-        <div class="payback-phase-info" style="margin-top:16px;">
-          <p style="font-size:11px;color:var(--text-dim);"><strong>Operating costs:</strong> $1,375/month (~$6,050,000 COP/month) is deducted before profit split.</p>
-          <p style="font-size:11px;color:var(--text-dim);margin-top:4px;"><strong>Salario Javier:</strong> $625/mes fijo, independiente de rentabilidad.</p>
-        </div>
-      </div>
-    </div>
+  <!-- BY CATEGORY TAB -->
+  <div id="tab-bycategory" style="display:none">
+    <div id="cat-content"><div class="loading">Loading...</div></div>
   </div>
-</div>
 
 <!-- Add Entry Modal -->
 <div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
@@ -1084,9 +712,7 @@ const CATEGORIES = {
   },
 };
 
-// ---- Scenario Forecast Data ----
-// Annual USD figures per track/category per scenario
-const SCENARIOS = {
+const SCENARIOS_UNUSED = {
   conservative: {
     label: 'Conservador',
     desc: 'Proyección anual base realista',
@@ -1226,7 +852,6 @@ const SCENARIOS = {
 
 let currentTab = 'dashboard';
 let allEntries = [];
-let paybackData = null;
 
 // ---- Init ----
 document.addEventListener('DOMContentLoaded', () => {
@@ -1245,18 +870,18 @@ document.addEventListener('DOMContentLoaded', () => {
 // ---- Tab switching ----
 function switchTab(tab) {
   currentTab = tab;
-  const tabNames = ['dashboard', 'entries', 'planvsactual', 'payback'];
+  const tabNames = ['dashboard', 'entries', 'monthlypnl', 'bycategory'];
   document.querySelectorAll('.tab').forEach((el, i) => {
     el.classList.toggle('active', tabNames[i] === tab);
   });
   document.getElementById('tab-dashboard').style.display = tab === 'dashboard' ? '' : 'none';
   document.getElementById('tab-entries').style.display = tab === 'entries' ? '' : 'none';
-  document.getElementById('tab-planvsactual').style.display = tab === 'planvsactual' ? '' : 'none';
-  document.getElementById('tab-payback').style.display = tab === 'payback' ? '' : 'none';
+  document.getElementById('tab-monthlypnl').style.display = tab === 'monthlypnl' ? '' : 'none';
+  document.getElementById('tab-bycategory').style.display = tab === 'bycategory' ? '' : 'none';
 
   if (tab === 'entries') loadEntries();
-  if (tab === 'planvsactual') loadPlanVsActual();
-  if (tab === 'payback') loadPayback();
+  if (tab === 'monthlypnl') loadMonthlyPnl();
+  if (tab === 'bycategory') loadByCategory();
 }
 
 // ---- API helpers ----
@@ -1488,409 +1113,155 @@ function clearFilters() {
 }
 
 // ---- Plan vs Actual ----
-async function loadPlanVsActual() {
-  const months = document.getElementById('pva-months').value;
-  document.getElementById('pva-content').innerHTML = '<div class="loading">Loading...</div>';
+async function loadMonthlyPnl() {
+  document.getElementById('pnl-content').innerHTML = '<div class="loading">Loading...</div>';
   try {
-    const rows = await apiFetch(`/plan-vs-actual?months=${months}`);
-    renderPlanVsActual(rows);
+    const entries = await apiFetch('/entries?limit=500');
+    renderMonthlyPnl(entries.filter(e => e.mode === 'Actual'));
   } catch (err) {
-    document.getElementById('pva-content').innerHTML = `<div class="empty">${err.message}</div>`;
+    document.getElementById('pnl-content').innerHTML = `<div class="empty">${err.message}</div>`;
   }
 }
 
-function renderPlanVsActual(rows) {
-  if (!rows.length) {
-    document.getElementById('pva-content').innerHTML = '<div class="empty"><div class="empty-icon">📋</div>No data. Add both Actual and Planned entries to compare.</div>';
+function renderMonthlyPnl(entries) {
+  if (!entries.length) {
+    document.getElementById('pnl-content').innerHTML = '<div class="empty">No entries yet.</div>';
     return;
   }
 
   const tracks = ['Studio', 'Artist', 'Producer', 'Camera'];
-  const trackDots = { Studio: 'dot-studio', Artist: 'dot-artist', Producer: 'dot-producer', Camera: 'dot-camera' };
-  let html = '';
+  const trackColors = { Studio: 'var(--gold)', Artist: 'var(--purple)', Producer: 'var(--blue)', Camera: 'var(--orange)' };
+
+  // Get all unique months sorted descending
+  const months = [...new Set(entries.map(e => e.date?.slice(0,7)))].filter(Boolean).sort().reverse();
+
+  // Build totals row by month across all tracks
+  let summaryRows = '';
+  for (const m of months) {
+    const month = entries.filter(e => e.date?.startsWith(m));
+    const inc = month.filter(e => e.type === 'Income').reduce((s,e) => s + Number(e.amount_cop), 0);
+    const exp = month.filter(e => e.type === 'Expense').reduce((s,e) => s + Number(e.amount_cop), 0);
+    const net = inc - exp;
+    summaryRows += `<tr>
+      <td>${m}</td>
+      <td class="positive">${formatCOP(inc)}</td>
+      <td class="negative">${formatCOP(exp)}</td>
+      <td class="${net >= 0 ? 'positive' : 'negative'}">${formatCOP(net)}</td>
+    </tr>`;
+  }
+
+  // Per-track breakdown tables
+  let trackHtml = '';
+  for (const track of tracks) {
+    const trackEntries = entries.filter(e => e.track === track);
+    if (!trackEntries.length) continue;
+    const tMonths = [...new Set(trackEntries.map(e => e.date?.slice(0,7)))].filter(Boolean).sort().reverse();
+    let rows = '';
+    for (const m of tMonths) {
+      const me = trackEntries.filter(e => e.date?.startsWith(m));
+      const inc = me.filter(e => e.type === 'Income').reduce((s,e) => s + Number(e.amount_cop), 0);
+      const exp = me.filter(e => e.type === 'Expense').reduce((s,e) => s + Number(e.amount_cop), 0);
+      const net = inc - exp;
+      rows += `<tr>
+        <td>${m}</td>
+        <td class="positive">${formatCOP(inc)}</td>
+        <td class="negative">${formatCOP(exp)}</td>
+        <td class="${net >= 0 ? 'positive' : 'negative'}">${formatCOP(net)}</td>
+      </tr>`;
+    }
+    trackHtml += `<div class="track-card" style="margin-bottom:16px">
+      <div class="track-card-header"><div class="track-dot" style="background:${trackColors[track]}"></div>${track}</div>
+      <div class="track-card-table-wrap"><table>
+        <thead><tr><th>Month</th><th>Income</th><th>Expenses</th><th>Net</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table></div>
+    </div>`;
+  }
+
+  document.getElementById('pnl-content').innerHTML = `
+    <div class="track-card" style="margin-bottom:24px">
+      <div class="track-card-header">All Tracks Combined</div>
+      <div class="track-card-table-wrap"><table>
+        <thead><tr><th>Month</th><th>Income</th><th>Expenses</th><th>Net</th></tr></thead>
+        <tbody>${summaryRows}</tbody>
+      </table></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:16px">${trackHtml}</div>
+  `;
+}
+
+async function loadByCategory() {
+  document.getElementById('cat-content').innerHTML = '<div class="loading">Loading...</div>';
+  try {
+    const entries = await apiFetch('/entries?limit=500');
+    renderByCategory(entries.filter(e => e.mode === 'Actual'));
+  } catch (err) {
+    document.getElementById('cat-content').innerHTML = `<div class="empty">${err.message}</div>`;
+  }
+}
+
+function renderByCategory(entries) {
+  if (!entries.length) {
+    document.getElementById('cat-content').innerHTML = '<div class="empty">No entries yet.</div>';
+    return;
+  }
+
+  const tracks = ['Studio', 'Artist', 'Producer', 'Camera'];
+  const trackColors = { Studio: 'var(--gold)', Artist: 'var(--purple)', Producer: 'var(--blue)', Camera: 'var(--orange)' };
+  const types = ['Income', 'Expense'];
+
+  let html = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:16px">';
 
   for (const track of tracks) {
-    const trackRows = rows.filter(r => r.track === track);
-    if (!trackRows.length) continue;
+    const trackEntries = entries.filter(e => e.track === track);
+    if (!trackEntries.length) continue;
 
-    const months = [...new Set(trackRows.map(r => r.month))].sort().reverse();
-    let tableRows = '';
+    let sections = '';
+    for (const type of types) {
+      const typed = trackEntries.filter(e => e.type === type);
+      if (!typed.length) continue;
 
-    for (const month of months) {
-      const incRow = trackRows.find(r => r.month === month && r.type === 'Income');
-      const expRow = trackRows.find(r => r.month === month && r.type === 'Expense');
-
-      const actInc = Number(incRow?.actual_cop || 0);
-      const planInc = Number(incRow?.planned_cop || 0);
-      const actExp = Number(expRow?.actual_cop || 0);
-      const planExp = Number(expRow?.planned_cop || 0);
-      const actNet = actInc - actExp;
-      const planNet = planInc - planExp;
-      const varNet = actNet - planNet;
-
-      tableRows += `
-        <tr>
-          <td>${month}</td>
-          <td class="positive">${formatCOP(actInc)}</td>
-          <td style="color:var(--text-dim)">${formatCOP(planInc)}</td>
-          <td class="negative">${formatCOP(actExp)}</td>
-          <td style="color:var(--text-dim)">${formatCOP(planExp)}</td>
-          <td class="${actNet >= 0 ? 'positive' : 'negative'}">${formatCOP(actNet)}</td>
-          <td class="${planNet >= 0 ? 'positive' : 'negative'}">${formatCOP(planNet)}</td>
-          <td class="${varNet >= 0 ? 'variance-positive' : 'variance-negative'}">${varNet >= 0 ? '+' : ''}${formatCOP(varNet)}</td>
-        </tr>
-      `;
-    }
-
-    html += `
-      <div style="margin-bottom:20px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;font-weight:600;">
-          <div class="track-dot ${trackDots[track]}"></div>${track}
-        </div>
-        <div style="overflow-x:auto">
-          <table class="pva-table">
-            <thead>
-              <tr>
-                <th>Month</th>
-                <th>Ing. Real</th>
-                <th>Ing. Plan</th>
-                <th>Gas. Real</th>
-                <th>Gas. Plan</th>
-                <th>Actual Net</th>
-                <th>Planned Net</th>
-                <th>Variación</th>
-              </tr>
-            </thead>
-            <tbody>${tableRows}</tbody>
-          </table>
-        </div>
-      </div>
-    `;
-  }
-
-  document.getElementById('pva-content').innerHTML = html;
-}
-
-// ---- Modal ----
-function openModal(prefill = null) {
-  document.getElementById('modal-title').textContent = prefill ? 'Edit Money Entry' : 'New Money Entry';
-  document.getElementById('submit-btn').textContent = prefill ? 'Save Changes' : 'Save';
-  document.getElementById('edit-id').value = prefill?.id || '';
-  document.getElementById('f-track').value = prefill?.track || '';
-  document.getElementById('f-type').value = prefill?.type || '';
-  document.getElementById('f-mode').value = prefill?.mode || 'Actual';
-  document.getElementById('f-date').value = prefill?.date ? prefill.date.slice(0,10) : new Date().toISOString().slice(0,10);
-  document.getElementById('f-amount-cop').value = prefill?.amount_cop || '';
-  document.getElementById('f-amount-usd').value = prefill?.amount_usd || '';
-  document.getElementById('f-source').value = prefill?.payment_source || 'Cash';
-  document.getElementById('f-description').value = prefill?.description || '';
-  document.getElementById('f-project').value = prefill?.client_project || '';
-  updateCategories();
-  if (prefill?.category) document.getElementById('f-category').value = prefill.category;
-  document.getElementById('modal-overlay').classList.add('open');
-}
-
-function closeModal() {
-  document.getElementById('modal-overlay').classList.remove('open');
-  document.getElementById('entry-form').reset();
-  document.getElementById('edit-id').value = '';
-}
-
-function handleOverlayClick(e) {
-  if (e.target === document.getElementById('modal-overlay')) closeModal();
-}
-
-function updateCategories() {
-  const track = document.getElementById('f-track').value;
-  const type = document.getElementById('f-type').value;
-  const cats = (CATEGORIES[track] && CATEGORIES[track][type]) || [];
-  const sel = document.getElementById('f-category');
-  sel.innerHTML = '<option value="">Uncategorized</option>' + cats.map(c => `<option value="${c}">${c}</option>`).join('');
-}
-
-let _submitting = false;
-async function submitEntry(e) {
-  e.preventDefault();
-  if (_submitting) return;
-  _submitting = true;
-  const btn = document.getElementById('submit-btn');
-  const origText = btn.textContent;
-  btn.disabled = true;
-  btn.textContent = 'Saving…';
-  const id = document.getElementById('edit-id').value;
-  const payload = {
-    track: document.getElementById('f-track').value,
-    type: document.getElementById('f-type').value,
-    mode: document.getElementById('f-mode').value,
-    date: document.getElementById('f-date').value,
-    amount_cop: document.getElementById('f-amount-cop').value,
-    amount_usd: document.getElementById('f-amount-usd').value || null,
-    currency: 'COP',
-    payment_source: document.getElementById('f-source').value,
-    category: document.getElementById('f-category').value || null,
-    description: document.getElementById('f-description').value,
-    client_project: document.getElementById('f-project').value || null,
-  };
-
-  try {
-    if (id) {
-      await apiFetch(`/entries/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
-      showToast('Entry updated', 'success');
-    } else {
-      await apiFetch('/entries', { method: 'POST', body: JSON.stringify(payload) });
-      showToast('Entry saved', 'success');
-    }
-    closeModal();
-    // Refresh current tab data
-    if (currentTab === 'dashboard') loadDashboard();
-    if (currentTab === 'entries') loadEntries();
-    if (currentTab === 'planvsactual') loadPlanVsActual();
-  } catch (err) {
-    showToast(err.message, 'error');
-  } finally {
-    _submitting = false;
-    btn.disabled = false;
-    btn.textContent = origText;
-  }
-}
-
-function editEntry(id) {
-  const entry = allEntries.find(e => e.id === id);
-  if (!entry) { loadEntries().then(() => editEntry(id)); return; }
-  openModal(entry);
-}
-
-async function deleteEntry(id) {
-  if (!confirm('Delete this entry?')) return;
-  try {
-    await apiFetch(`/entries/${id}`, { method: 'DELETE' });
-    showToast('Entry deleted', 'success');
-    loadEntries();
-    if (currentTab === 'dashboard') loadDashboard();
-  } catch (err) {
-    showToast(err.message, 'error');
-  }
-}
-
-// ---- Payback Tracker ----
-async function loadPayback() {
-  try {
-    const data = await apiFetch('/payback');
-    paybackData = data;
-    renderPayback(data);
-  } catch (err) {
-    console.error('Payback load error:', err);
-  }
-}
-
-function renderPayback(data) {
-  const COP_TO_USD = 1 / 4400;
-  const JAVIER_SALARY_COP = data.javierSalaryCOP;
-  const OPERATING_COP = data.operatingCOP;
-
-  // Cumulative profit in COP and USD
-  const totalProfitCOP = data.totalProfit;
-  const totalProfitUSD = totalProfitCOP * COP_TO_USD;
-
-  // Phase thresholds
-  const RYAN_PHASE1_TARGET_USD = data.ryanPhase1TargetUSD; // 70,000
-  const TOTAL_PROFIT_NEEDED_USD = data.totalProfitNeededUSD; // ~93,333
-
-  // Ryan's share earned in Phase 1
-  const ryanEarnedP1USD = Math.min(totalProfitUSD * 0.75, RYAN_PHASE1_TARGET_USD);
-  const remainingUSD = Math.max(RYAN_PHASE1_TARGET_USD - ryanEarnedP1USD, 0);
-  const pctToTarget = Math.min((ryanEarnedP1USD / RYAN_PHASE1_TARGET_USD) * 100, 100);
-  const inPhase2 = totalProfitUSD >= TOTAL_PROFIT_NEEDED_USD;
-
-  // Javier Phase 1 share
-  const javierP1USD = totalProfitUSD * 0.25;
-  // Phase 2 (only if threshold exceeded)
-  const profitInPhase2COP = inPhase2 ? Math.max(totalProfitCOP - (TOTAL_PROFIT_NEEDED_USD / COP_TO_USD), 0) : 0;
-  const profitInPhase2USD = profitInPhase2COP * COP_TO_USD;
-  const ryanP2USD = profitInPhase2USD * 0.20;
-  const javierP2USD = profitInPhase2USD * 0.80;
-
-  // Total takes
-  const ryanTotalUSD = ryanEarnedP1USD + ryanP2USD;
-  const javierTotalUSD = javierP1USD + javierP2USD;
-
-  // Monthly Javier salary in USD
-  const JAVIER_SALARY_USD = 625;
-  const javierTotalWithSalaryUSD = javierTotalUSD + JAVIER_SALARY_USD;
-
-  // Format helpers
-  const fmtCOP = (n) => '$' + Math.round(n || 0).toLocaleString('es-CO', { maximumFractionDigits: 0 });
-  const fmtUSD = (n) => '$' + Math.round(n || 0).toLocaleString('en-US', { maximumFractionDigits: 0 });
-  const fmtUSDFull = (n) => '$' + Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
-
-  // ---- Left: Progress Card ----
-  const phaseBadge = document.getElementById('payback-phase-badge');
-  const phaseLabel = document.getElementById('payback-phase-label');
-  if (inPhase2) {
-    phaseBadge.className = 'phase-badge p2';
-    phaseLabel.textContent = 'Phase 2';
-  } else {
-    phaseBadge.className = 'phase-badge p1';
-    phaseLabel.textContent = 'Phase 1';
-  }
-
-  const barFill = document.getElementById('payback-bar-fill');
-  const isHigh = pctToTarget >= 75;
-  barFill.style.width = pctToTarget + '%';
-  barFill.className = 'payback-bar-fill' + (inPhase2 ? ' phase2' : isHigh ? ' almost' : '');
-
-  const pctLabel = document.getElementById('payback-pct-label');
-  pctLabel.textContent = Math.round(pctToTarget) + '%';
-  pctLabel.className = 'payback-bar-pct' + (inPhase2 ? ' phase2' : '');
-
-  document.getElementById('payback-ryan-earned').textContent = fmtUSD(ryanTotalUSD);
-  document.getElementById('payback-needed').innerHTML = remainingUSD > 0
-    ? `(faltan <strong>${fmtUSD(remainingUSD)}</strong>)`
-    : '<span style="color:var(--green)">— completado</span>';
-
-  // Phase 1 info block
-  document.getElementById('payback-total-needed').textContent = fmtUSDFull(TOTAL_PROFIT_NEEDED_USD) + ' USD';
-  document.getElementById('payback-cumulative-usd').textContent = fmtUSD(totalProfitUSD);
-  document.getElementById('payback-total-income').textContent = fmtCOP(data.totalIncome);
-  document.getElementById('payback-total-expense').textContent = fmtCOP(data.totalExpense);
-  document.getElementById('payback-net-profit').textContent = fmtCOP(totalProfitCOP);
-  document.getElementById('payback-net-profit').className = 'payback-info-value' + (totalProfitCOP >= 0 ? ' positive' : ' negative');
-
-  // Phase 2 info
-  document.getElementById('payback-phase2-info').style.display = inPhase2 ? '' : 'none';
-  document.getElementById('payback-phase2-label').style.display = inPhase2 ? '' : 'none';
-  document.getElementById('payback-phase2-earned').textContent = fmtUSD(ryanP2USD);
-  document.getElementById('p2-badge').style.display = inPhase2 ? 'inline-block' : 'none';
-
-  // Estimated date — project based on current monthly run rate
-  if (remainingUSD > 0 && data.entryCount > 1 && data.firstEntry && data.lastEntry) {
-    const startDate = new Date(data.firstEntry);
-    const endDate = new Date(data.lastEntry);
-    const days = (endDate - startDate) / 86400000;
-    if (days > 0) {
-      const monthlyRunRateUSD = (totalProfitUSD / days) * 30;
-      if (monthlyRunRateUSD > 0) {
-        const monthsToGo = remainingUSD / (monthlyRunRateUSD * 0.75);
-        const estDate = new Date();
-        estDate.setMonth(estDate.getMonth() + Math.ceil(monthsToGo));
-        const monthName = estDate.toLocaleString('es-CO', { month: 'long', year: 'numeric' });
-        document.getElementById('payback-estimate-text').textContent = 'Estimado: ' + monthName;
-        document.getElementById('payback-estimate-wrap').style.display = '';
-      } else {
-        document.getElementById('payback-estimate-wrap').style.display = 'none';
+      // Group by category
+      const catMap = {};
+      for (const e of typed) {
+        const cat = e.category || 'Uncategorized';
+        catMap[cat] = (catMap[cat] || 0) + Number(e.amount_cop);
       }
-    } else {
-      document.getElementById('payback-estimate-wrap').style.display = 'none';
-    }
-  } else {
-    document.getElementById('payback-estimate-wrap').style.display = 'none';
-  }
+      const total = Object.values(catMap).reduce((s,v) => s+v, 0);
+      const sorted = Object.entries(catMap).sort((a,b) => b[1]-a[1]);
 
-  // ---- Right: Running Totals ----
-  document.getElementById('rt-total-usd').textContent = fmtUSD(totalProfitUSD);
-  document.getElementById('rt-total-cop').textContent = fmtCOP(totalProfitCOP);
+      const rows = sorted.map(([cat, amt]) => {
+        const pct = total > 0 ? Math.round((amt/total)*100) : 0;
+        return `<tr>
+          <td>${escapeHtml(cat)}</td>
+          <td class="${type === 'Income' ? 'positive' : 'negative'}">${formatCOP(amt)}</td>
+          <td style="width:100px;padding-right:14px">
+            <div style="height:6px;border-radius:3px;background:var(--surface2);overflow:hidden">
+              <div style="height:100%;width:${pct}%;background:${type === 'Income' ? 'var(--green)' : 'var(--red)'};border-radius:3px"></div>
+            </div>
+          </td>
+          <td style="color:var(--text-dim);font-size:11px;text-align:right;padding-right:14px">${pct}%</td>
+        </tr>`;
+      }).join('');
 
-  // Ryan
-  document.getElementById('rt-ryan-p1').textContent = fmtUSD(ryanEarnedP1USD);
-  document.getElementById('rt-ryan-p2').textContent = fmtUSD(ryanP2USD);
-  document.getElementById('rt-ryan-total').textContent = fmtUSD(ryanTotalUSD);
-
-  // Javier
-  document.getElementById('rt-javier-p1').textContent = fmtUSD(javierP1USD);
-  document.getElementById('rt-javier-p2').textContent = fmtUSD(javierP2USD);
-  document.getElementById('rt-javier-total').textContent = fmtUSD(javierTotalWithSalaryUSD);
-  document.getElementById('rt-javier-total-cop').textContent = fmtCOP(data.totalProfit * 0.25 + JAVIER_SALARY_COP);
-}
-
-// ---- Helpers ----
-function showToast(msg, type = 'success') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = `show ${type}`;
-  setTimeout(() => { t.className = ''; }, 3000);
-}
-
-function escapeHtml(str) {
-  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-// ---- Plan sub-tab switcher ----
-let currentPlanSubtab = 'pva';
-let currentScenario = 'conservative';
-
-function switchPlanSubtab(sub) {
-  currentPlanSubtab = sub;
-  document.getElementById('subtab-pva').style.display = sub === 'pva' ? '' : 'none';
-  document.getElementById('subtab-scenario').style.display = sub === 'scenario' ? '' : 'none';
-  document.getElementById('subtab-pva-btn').classList.toggle('active', sub === 'pva');
-  document.getElementById('subtab-scenario-btn').classList.toggle('active', sub === 'scenario');
-  if (sub === 'pva') loadPlanVsActual();
-  if (sub === 'scenario') renderScenario(currentScenario);
-}
-
-// ---- Scenario Forecast ----
-function setScenario(s) {
-  currentScenario = s;
-  ['conservative', 'mid', 'homerun'].forEach(k => {
-    const btn = document.getElementById('btn-' + k);
-    btn.className = 'scenario-btn' + (k === s ? ` active-${k}` : '');
-  });
-  renderScenario(s);
-}
-
-function formatUSD(n) {
-  return '$' + Number(n || 0).toLocaleString('en-US', { maximumFractionDigits: 0 });
-}
-
-function renderScenario(s) {
-  const data = SCENARIOS[s];
-  if (!data) return;
-
-  const trackOrder = ['Producer', 'Artist', 'Camera', 'Studio'];
-  const trackDots = { Studio: 'dot-studio', Artist: 'dot-artist', Producer: 'dot-producer', Camera: 'dot-camera' };
-  const trackColors = { Studio: 'track-studio', Artist: 'track-artist', Producer: 'track-producer', Camera: 'track-camera' };
-
-  document.getElementById('scenario-desc').textContent = data.desc;
-  document.getElementById('scenario-total-badge').innerHTML = `<span style="color:var(--text-dim);font-size:12px;font-weight:500;">Total anual:</span> <span style="color:var(--gold)">${formatUSD(data.total)}</span>`;
-
-  let html = '<div class="forecast-grid">';
-  for (const track of trackOrder) {
-    const td = data[track];
-    if (!td) continue;
-    const rows = td.categories.map(c => `
-      <tr>
-        <td>${c.name}</td>
-        <td style="text-align:right;color:var(--green)">${formatUSD(c.amount)}</td>
-      </tr>
-    `).join('');
-    html += `
-      <div class="forecast-card">
-        <div class="forecast-card-header">
-          <div class="forecast-card-title">
-            <div class="track-dot ${trackDots[track]}"></div>
-            <span class="${trackColors[track]}">${track}</span>
-          </div>
-          <div class="forecast-card-total positive">${formatUSD(td.total)}</div>
+      sections += `<div style="padding:0 0 4px">
+        <div style="padding:10px 16px 6px;font-size:11px;text-transform:uppercase;letter-spacing:0.6px;color:${type === 'Income' ? 'var(--green)' : 'var(--red)'}">
+          ${type} · ${formatCOP(total)}
         </div>
-        <table>
-          <thead><tr><th>Category</th><th style="text-align:right">Annual (USD)</th></tr></thead>
+        <table style="width:100%;border-collapse:collapse">
           <tbody>${rows}</tbody>
         </table>
-      </div>
-    `;
-  }
-  html += '</div>';
-  html += `
-    <div class="forecast-grand-total">
-      <div>
-        <div class="forecast-grand-label">Total Proyectado Anual</div>
-        <div style="font-size:11px;color:var(--text-dim);margin-top:2px;">${data.label} — ${data.desc}</div>
-      </div>
-      <div class="forecast-grand-value positive">${formatUSD(data.total)}</div>
-    </div>
-  `;
+      </div>`;
+    }
 
-  document.getElementById('scenario-content').innerHTML = html;
+    html += `<div class="track-card">
+      <div class="track-card-header"><div class="track-dot" style="background:${trackColors[track]}"></div>${track}</div>
+      ${sections}
+    </div>`;
+  }
+
+  html += '</div>';
+  document.getElementById('cat-content').innerHTML = html;
 }
 
 // ---- OCR Receipt Scanning ----
