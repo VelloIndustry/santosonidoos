@@ -10,7 +10,10 @@ const pool = new Pool({
   ssl: process.env.DATABASE_URL?.includes('localhost') ? false : { rejectUnauthorized: false },
   connectionTimeoutMillis: 8000,
   idleTimeoutMillis: 30000,
-  statement_timeout: 10000,
+});
+
+pool.on('connect', client => {
+  client.query('SET statement_timeout = 10000');
 });
 
 module.exports = pool;
