@@ -897,15 +897,32 @@ async function apiFetch(path, opts = {}) {
 
 // ---- Dashboard ----
 async function loadDashboard() {
+  const setErr = (msg) => {
+    const el = `<div class="empty"><div class="empty-icon">⚠️</div>${msg}</div>`;
+    document.getElementById('summary-cards').innerHTML = el;
+    document.getElementById('monthly-grid').innerHTML = el;
+  };
+  let summary, entries;
   try {
-    const [summary, entries] = await Promise.all([
+    [summary, entries] = await Promise.all([
       apiFetch('/summary?months=4'),
       apiFetch('/entries?limit=1000')
     ]);
+  } catch (err) {
+    console.error('loadDashboard fetch error:', err);
+    return setErr(err.message);
+  }
+  try {
     renderSummaryCards(summary, entries);
+  } catch (err) {
+    console.error('renderSummaryCards error:', err);
+    document.getElementById('summary-cards').innerHTML = `<div class="empty">⚠️ Render error: ${err.message}</div>`;
+  }
+  try {
     renderMonthlyGrid(summary);
   } catch (err) {
-    document.getElementById('summary-cards').innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div>${err.message}</div>`;
+    console.error('renderMonthlyGrid error:', err);
+    document.getElementById('monthly-grid').innerHTML = `<div class="empty">⚠️ Render error: ${err.message}</div>`;
   }
 }
 
