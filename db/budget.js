@@ -83,8 +83,8 @@ async function updateEntry(id, fields) {
  * Summary: income, expenses, net per track per month (last N months).
  * Returns rows: { track, month (YYYY-MM), type, mode, total }
  */
-async function getMonthlySummary({ months = 4 } = {}) {
-  const safeMonths = Math.min(Math.max(Number(months) || 4, 1), 24);
+async function getMonthlySummary({ months = 12 } = {}) {
+  const safeMonths = Math.min(Math.max(Number(months) || 12, 1), 24);
   const { rows } = await pool.query(`
     SELECT
       track,
@@ -93,10 +93,10 @@ async function getMonthlySummary({ months = 4 } = {}) {
       mode,
       SUM(amount_cop) AS total_cop
     FROM budget_entries
-    WHERE date >= DATE_TRUNC('month', NOW()) - (($1::int - 1) * INTERVAL '1 month')
     GROUP BY track, month, type, mode
     ORDER BY track, month DESC, type, mode
-  `, [safeMonths]);
+    LIMIT 500
+  `);
   return rows;
 }
 
