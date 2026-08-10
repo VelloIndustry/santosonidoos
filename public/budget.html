@@ -913,27 +913,24 @@ async function loadDashboard() {
     document.getElementById('summary-cards').innerHTML = el;
     document.getElementById('monthly-grid').innerHTML = el;
   };
-  let summary, entries;
+  let entries;
   try {
-    [summary, entries] = await Promise.all([
-      apiFetch('/summary?months=4'),
-      apiFetch('/entries?limit=1000')
-    ]);
+    entries = await apiFetch('/entries?limit=500');
   } catch (err) {
     console.error('loadDashboard fetch error:', err);
     return setErr(err.message);
   }
   try {
-    renderSummaryCards(summary, entries);
+    renderSummaryCards(entries);
   } catch (err) {
     console.error('renderSummaryCards error:', err);
-    document.getElementById('summary-cards').innerHTML = `<div class="empty">⚠️ Render error: ${err.message}</div>`;
+    document.getElementById('summary-cards').innerHTML = `<div class="empty">⚠️ ${err.message}</div>`;
   }
   try {
-    renderMonthlyGrid(summary);
+    renderMonthlyGrid(entries);
   } catch (err) {
     console.error('renderMonthlyGrid error:', err);
-    document.getElementById('monthly-grid').innerHTML = `<div class="empty">⚠️ Render error: ${err.message}</div>`;
+    document.getElementById('monthly-grid').innerHTML = `<div class="empty">⚠️ ${err.message}</div>`;
   }
 }
 
@@ -945,7 +942,7 @@ function formatCOP(n) {
   return '$' + Number(n || 0).toLocaleString('es-CO', { maximumFractionDigits: 0 });
 }
 
-function renderSummaryCards(summary, entries) {
+function renderSummaryCards(entries) {
   const actual = entries.filter(e => e.mode === 'Actual');
   const totalIncome = actual.filter(e => e.type === 'Income').reduce((s, e) => s + Number(e.amount_cop), 0);
   const totalExpense = actual.filter(e => e.type === 'Expense').reduce((s, e) => s + Number(e.amount_cop), 0);
@@ -1019,22 +1016,23 @@ function renderSummaryCards(summary, entries) {
   document.getElementById('track-flow-labels').innerHTML = labelsHtml;
 }
 
-function renderMonthlyGrid(summary) {
+function renderMonthlyGrid(entries) {
   const tracks = ['Studio', 'Artist', 'Producer', 'Camera'];
   const trackDots = { Studio: 'dot-studio', Artist: 'dot-artist', Producer: 'dot-producer', Camera: 'dot-camera' };
+  const actual = entries.filter(e => e.mode === 'Actual');
 
-  // Collect all months
-  const months = [...new Set(summary.map(r => r.month))].sort().reverse();
+  // Collect all months from entries
+  const months = [...new Set(actual.map(e => e.date ? e.date.slice(0, 7) : null).filter(Boolean))].sort().reverse();
 
   let html = '';
   for (const track of tracks) {
-    const rows = summary.filter(r => r.track === track);
+    const trackEntries = actual.filter(e => e.track === track);
     let tableRows = '';
     for (const month of months) {
-      const income = rows.find(r => r.month === month && r.type === 'Income' && r.mode === 'Actual');
-      const expense = rows.find(r => r.month === month && r.type === 'Expense' && r.mode === 'Actual');
-      const inc = Number(income?.total_cop || 0);
-      const exp = Number(expense?.total_cop || 0);
+      const monthEntries = trackEntries.filter(e => e.date && e.date.slice(0, 7) === month);
+      const inc = monthEntries.filter(e => e.type === 'Income').reduce((s, e) => s + Number(e.amount_cop), 0);
+      const exp = monthEntries.filter(e => e.type === 'Expense').reduce((s, e) => s + Number(e.amount_cop), 0);
+      if (inc === 0 && exp === 0) continue;
       const net = inc - exp;
       const total = inc + exp;
       const incPct = total > 0 ? Math.round((inc / total) * 100) : 0;
