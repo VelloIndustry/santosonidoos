@@ -855,10 +855,9 @@ let allEntries = [];
 
 // ---- Init ----
 document.addEventListener('DOMContentLoaded', () => {
-  // Set today as default date in form
-  document.getElementById('f-date').value = new Date().toISOString().slice(0, 10);
+  document.getElementById('summary-cards').innerHTML = '<div class="loading">JS running — fetching data...</div>';
 
-  // Update categories when track changes
+  document.getElementById('f-date').value = new Date().toISOString().slice(0, 10);
   document.getElementById('f-track').addEventListener('change', updateCategories);
   document.getElementById('f-type').addEventListener('change', updateCategories);
 
