@@ -863,8 +863,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('f-type').addEventListener('change', updateCategories);
 
   loadDashboard();
-  // Pre-render scenario so it's ready when tab opens
-  renderScenario('conservative');
 });
 
 // ---- Tab switching ----
@@ -909,6 +907,10 @@ async function loadDashboard() {
   } catch (err) {
     document.getElementById('summary-cards').innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div>${err.message}</div>`;
   }
+}
+
+function escapeHtml(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 function formatCOP(n) {
