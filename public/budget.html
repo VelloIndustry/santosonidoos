@@ -908,29 +908,24 @@ async function apiFetch(path, opts = {}) {
 
 // ---- Dashboard ----
 async function loadDashboard() {
-  const setErr = (msg) => {
-    const el = `<div class="empty"><div class="empty-icon">⚠️</div>${msg}</div>`;
-    document.getElementById('summary-cards').innerHTML = el;
-    document.getElementById('monthly-grid').innerHTML = el;
-  };
+  document.getElementById('summary-cards').innerHTML = '<div style="color:#22c55e;padding:20px;font-size:16px;">✓ JS reached loadDashboard</div>';
+  document.getElementById('monthly-grid').innerHTML = '<div style="color:#22c55e;padding:20px;font-size:16px;">✓ monthly-grid also found</div>';
+
   let entries;
   try {
     entries = await apiFetch('/entries?limit=500');
+    document.getElementById('summary-cards').innerHTML = '<div style="color:#22c55e;padding:20px;">✓ fetch ok — ' + entries.length + ' entries</div>';
   } catch (err) {
-    console.error('loadDashboard fetch error:', err);
-    return setErr(err.message);
+    document.getElementById('summary-cards').innerHTML = '<div style="color:#ef4444;padding:20px;">✗ fetch failed: ' + err.message + '</div>';
+    document.getElementById('monthly-grid').innerHTML = '';
+    return;
   }
-  try {
-    renderSummaryCards(entries);
-  } catch (err) {
-    console.error('renderSummaryCards error:', err);
-    document.getElementById('summary-cards').innerHTML = `<div class="empty">⚠️ ${err.message}</div>`;
+
+  try { renderSummaryCards(entries); } catch (err) {
+    document.getElementById('summary-cards').innerHTML = '<div style="color:#ef4444;padding:20px;">✗ renderSummaryCards: ' + err.message + '</div>';
   }
-  try {
-    renderMonthlyGrid(entries);
-  } catch (err) {
-    console.error('renderMonthlyGrid error:', err);
-    document.getElementById('monthly-grid').innerHTML = `<div class="empty">⚠️ ${err.message}</div>`;
+  try { renderMonthlyGrid(entries); } catch (err) {
+    document.getElementById('monthly-grid').innerHTML = '<div style="color:#ef4444;padding:20px;">✗ renderMonthlyGrid: ' + err.message + '</div>';
   }
 }
 
