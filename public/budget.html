@@ -855,11 +855,14 @@ let allEntries = [];
 
 // ---- Init ----
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('f-date').value = new Date().toISOString().slice(0, 10);
-  document.getElementById('f-track').addEventListener('change', updateCategories);
-  document.getElementById('f-type').addEventListener('change', updateCategories);
-
   loadDashboard();
+  try {
+    document.getElementById('f-date').value = new Date().toISOString().slice(0, 10);
+    document.getElementById('f-track').addEventListener('change', updateCategories);
+    document.getElementById('f-type').addEventListener('change', updateCategories);
+  } catch (e) {
+    console.warn('Form init error:', e);
+  }
 });
 
 // ---- Tab switching ----
