@@ -1434,9 +1434,9 @@ function clearOcrImage() {
 }
 
 // ---- Payback Tab ----
-const RYAN_INVESTED_USD = 19474;   // $10,000 + $9,474
-const RYAN_TOTAL_INVEST_USD = 35000;
-const RYAN_RECOUP_TARGET_USD = RYAN_TOTAL_INVEST_USD * 2; // $70,000
+const RYAN_INVESTED_USD = 19474;    // capital deployed so far: $10,000 + $9,474
+const RYAN_TOTAL_INVEST_USD = 35000; // total planned investment
+const RYAN_RECOUP_TARGET_USD = RYAN_TOTAL_INVEST_USD * 2; // 2× = $70,000
 const REVENUE_SHARE = 0.75;
 const COP_TO_USD = 4400;
 
@@ -1444,7 +1444,7 @@ async function loadPayback() {
   const el = document.getElementById('payback-content');
   el.innerHTML = '<div class="loading">Loading payback data...</div>';
   try {
-    const entries = await apiFetch('/entries?limit=500&mode=Actual');
+    const entries = await apiFetch('/entries?limit=500');
     renderPayback(entries, el);
   } catch (err) {
     el.innerHTML = `<div class="error">Failed to load: ${escapeHtml(err.message)}</div>`;
@@ -1457,7 +1457,17 @@ function renderPayback(entries, el) {
   const totalRevenueUSD = totalRevenueCOP / COP_TO_USD;
   const appliedUSD = totalRevenueUSD * REVENUE_SHARE;
 
-  // Running monthly log
+  // Capital deployed progress
+  const pctDeployed = Math.min(1, RYAN_INVESTED_USD / RYAN_TOTAL_INVEST_USD);
+  const remainingCapital = Math.max(0, RYAN_TOTAL_INVEST_USD - RYAN_INVESTED_USD);
+
+  // Payback progress
+  const pctRecouped = Math.min(1, appliedUSD / RYAN_TOTAL_INVEST_USD);
+  const pct2x = Math.min(1, appliedUSD / RYAN_RECOUP_TARGET_USD);
+  const remainingToRecoup = Math.max(0, RYAN_TOTAL_INVEST_USD - appliedUSD);
+  const remainingTo2x = Math.max(0, RYAN_RECOUP_TARGET_USD - appliedUSD);
+
+  // Monthly payback log
   const byMonth = {};
   for (const e of income) {
     const m = (e.date || '').slice(0, 7);
@@ -1465,102 +1475,139 @@ function renderPayback(entries, el) {
     byMonth[m] = (byMonth[m] || 0) + Number(e.amount_cop || 0);
   }
   const months = Object.keys(byMonth).sort();
-
   let cumApplied = 0;
   let monthRows = '';
   for (const m of months) {
     const revUSD = byMonth[m] / COP_TO_USD;
     const appliedM = revUSD * REVENUE_SHARE;
     cumApplied += appliedM;
-    const remaining = Math.max(0, RYAN_INVESTED_USD - cumApplied);
+    const stillOwed = Math.max(0, RYAN_TOTAL_INVEST_USD - cumApplied);
     monthRows += `<tr>
-      <td>${m}</td>
-      <td>${fmtUSD(revUSD)}</td>
-      <td>${fmtUSD(appliedM)}</td>
-      <td>${fmtUSD(cumApplied)}</td>
-      <td style="color:${remaining <= 0 ? 'var(--green)' : 'var(--text-dim)'}">${remaining <= 0 ? '✓ Paid back' : fmtUSD(remaining)}</td>
+      <td style="padding:10px 14px">${m}</td>
+      <td style="padding:10px 14px;text-align:right;color:var(--green)">${fmtUSD(revUSD)}</td>
+      <td style="padding:10px 14px;text-align:right">${fmtUSD(appliedM)}</td>
+      <td style="padding:10px 14px;text-align:right;font-weight:600">${fmtUSD(cumApplied)}</td>
+      <td style="padding:10px 14px;text-align:right;color:${stillOwed <= 0 ? 'var(--green)' : 'var(--text-dim)'}">${stillOwed <= 0 ? '✓ Done' : fmtUSD(stillOwed)}</td>
     </tr>`;
   }
 
-  const pctPaidBack = Math.min(1, appliedUSD / RYAN_INVESTED_USD);
-  const pctToFull = Math.min(1, appliedUSD / RYAN_RECOUP_TARGET_USD);
-  const remainingInvest = Math.max(0, RYAN_INVESTED_USD - appliedUSD);
-  const remainingFull = Math.max(0, RYAN_RECOUP_TARGET_USD - appliedUSD);
-
   el.innerHTML = `
-    <div style="max-width:760px">
+    <div style="max-width:820px">
 
-      <!-- Header cards -->
-      <div class="summary-grid" style="margin-bottom:24px">
-        <div class="card">
-          <div class="card-label">Ryan's Investment</div>
-          <div class="card-value" style="color:var(--gold)">${fmtUSD(RYAN_INVESTED_USD)}</div>
-          <div style="font-size:12px;color:var(--text-dim);margin-top:4px">of ${fmtUSD(RYAN_TOTAL_INVEST_USD)} total planned</div>
+      <!-- Big visual: Capital Deployed -->
+      <div class="card" style="margin-bottom:20px;padding:28px 28px 24px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <div>
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--text-dim);margin-bottom:4px">Capital Deployed</div>
+            <div style="font-size:32px;font-weight:700;color:var(--gold);font-variant-numeric:tabular-nums">${fmtUSD(RYAN_INVESTED_USD)}</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:11px;color:var(--text-dim);margin-bottom:4px">of ${fmtUSD(RYAN_TOTAL_INVEST_USD)} planned</div>
+            <div style="font-size:22px;font-weight:600;color:var(--text-dim)">${(pctDeployed*100).toFixed(0)}%</div>
+          </div>
         </div>
-        <div class="card">
-          <div class="card-label">Total Revenue (Actual)</div>
-          <div class="card-value">${fmtUSD(totalRevenueUSD)}</div>
-          <div style="font-size:12px;color:var(--text-dim);margin-top:4px">${fmtCOP(totalRevenueCOP)} COP</div>
+        <!-- Stacked bar: deployed vs remaining -->
+        <div style="background:var(--surface2);border-radius:8px;height:20px;overflow:hidden;margin:14px 0 8px;position:relative">
+          <div style="background:var(--gold);height:100%;width:${(pctDeployed*100).toFixed(1)}%;border-radius:8px 0 0 8px;transition:width .5s"></div>
         </div>
-        <div class="card">
-          <div class="card-label">75% Applied to Payback</div>
-          <div class="card-value" style="color:var(--green)">${fmtUSD(appliedUSD)}</div>
-          <div style="font-size:12px;color:var(--text-dim);margin-top:4px">${(pctPaidBack * 100).toFixed(1)}% of investment recouped</div>
+        <div style="display:flex;justify-content:space-between;font-size:12px">
+          <span style="color:var(--gold)">▌ ${fmtUSD(RYAN_INVESTED_USD)} deployed</span>
+          <span style="color:var(--text-dim)">▌ ${fmtUSD(remainingCapital)} remaining</span>
         </div>
-        <div class="card">
-          <div class="card-label">Remaining to Recoup</div>
-          <div class="card-value" style="color:${remainingInvest <= 0 ? 'var(--green)' : 'var(--red)'}">${remainingInvest <= 0 ? '✓ Done' : fmtUSD(remainingInvest)}</div>
-          <div style="font-size:12px;color:var(--text-dim);margin-top:4px">Principal only</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
+          <div>
+            <div style="font-size:11px;color:var(--text-dim);margin-bottom:4px">Tranche 1</div>
+            <div style="font-weight:600">$10,000</div>
+            <div style="font-size:11px;color:var(--green);margin-top:2px">✓ Deployed</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--text-dim);margin-bottom:4px">Tranche 2</div>
+            <div style="font-weight:600">$9,474</div>
+            <div style="font-size:11px;color:var(--green);margin-top:2px">✓ Deployed</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--text-dim);margin-bottom:4px">Remaining Capital</div>
+            <div style="font-weight:600">${fmtUSD(remainingCapital)}</div>
+            <div style="font-size:11px;color:var(--text-dim);margin-top:2px">Not yet deployed</div>
+          </div>
         </div>
       </div>
 
-      <!-- Progress bars -->
-      <div class="card" style="margin-bottom:24px">
-        <div class="card-label" style="margin-bottom:12px">Phase 1 — Recoup Principal (${fmtUSD(RYAN_INVESTED_USD)})</div>
-        <div style="background:var(--surface2);border-radius:6px;height:14px;overflow:hidden;margin-bottom:6px">
-          <div style="background:var(--green);height:100%;width:${(pctPaidBack*100).toFixed(1)}%;transition:width .4s"></div>
-        </div>
-        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-dim)">
-          <span>${fmtUSD(appliedUSD)} applied</span>
-          <span>${(pctPaidBack*100).toFixed(1)}%</span>
-          <span>${fmtUSD(RYAN_INVESTED_USD)} target</span>
+      <!-- Big visual: Revenue Applied to Payback -->
+      <div class="card" style="margin-bottom:20px;padding:28px 28px 24px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <div>
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--text-dim);margin-bottom:4px">Revenue Applied (75% of ${fmtUSD(totalRevenueUSD)} income)</div>
+            <div style="font-size:32px;font-weight:700;color:var(--green);font-variant-numeric:tabular-nums">${fmtUSD(appliedUSD)}</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:11px;color:var(--text-dim);margin-bottom:4px">toward ${fmtUSD(RYAN_TOTAL_INVEST_USD)}</div>
+            <div style="font-size:22px;font-weight:600;color:var(--text-dim)">${(pctRecouped*100).toFixed(1)}%</div>
+          </div>
         </div>
 
-        <div class="card-label" style="margin-top:20px;margin-bottom:12px">Phase 2 — Full 2× Recoup (${fmtUSD(RYAN_RECOUP_TARGET_USD)})</div>
-        <div style="background:var(--surface2);border-radius:6px;height:14px;overflow:hidden;margin-bottom:6px">
-          <div style="background:var(--gold);height:100%;width:${(pctToFull*100).toFixed(1)}%;transition:width .4s"></div>
+        <!-- Phase 1: recoup full investment -->
+        <div style="margin-top:16px">
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-dim);margin-bottom:6px">
+            <span style="font-weight:600;color:var(--text)">Phase 1 — Recoup ${fmtUSD(RYAN_TOTAL_INVEST_USD)}</span>
+            <span>${(pctRecouped*100).toFixed(1)}% · ${fmtUSD(remainingToRecoup)} to go</span>
+          </div>
+          <div style="background:var(--surface2);border-radius:8px;height:18px;overflow:hidden;margin-bottom:4px">
+            <div style="background:var(--green);height:100%;width:${(pctRecouped*100).toFixed(1)}%;border-radius:8px 0 0 8px;transition:width .5s"></div>
+          </div>
         </div>
-        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-dim)">
-          <span>${fmtUSD(appliedUSD)} applied</span>
-          <span>${(pctToFull*100).toFixed(1)}%</span>
-          <span>${fmtUSD(RYAN_RECOUP_TARGET_USD)} target</span>
+
+        <!-- Phase 2: 2x recoup -->
+        <div style="margin-top:18px">
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-dim);margin-bottom:6px">
+            <span style="font-weight:600;color:var(--text)">Phase 2 — 2× Recoup ${fmtUSD(RYAN_RECOUP_TARGET_USD)}</span>
+            <span>${(pct2x*100).toFixed(1)}% · ${fmtUSD(remainingTo2x)} to go</span>
+          </div>
+          <div style="background:var(--surface2);border-radius:8px;height:18px;overflow:hidden;margin-bottom:4px">
+            <div style="background:var(--gold);height:100%;width:${(pct2x*100).toFixed(1)}%;border-radius:8px 0 0 8px;transition:width .5s"></div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
+          <div>
+            <div style="font-size:11px;color:var(--text-dim);margin-bottom:4px">Total Revenue (Actual)</div>
+            <div style="font-weight:600">${fmtUSD(totalRevenueUSD)}</div>
+            <div style="font-size:11px;color:var(--text-dim);margin-top:2px">${fmtCOP(totalRevenueCOP)} COP</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--text-dim);margin-bottom:4px">Applied (75%)</div>
+            <div style="font-weight:600;color:var(--green)">${fmtUSD(appliedUSD)}</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--text-dim);margin-bottom:4px">Still Needed (Phase 1)</div>
+            <div style="font-weight:600;color:${remainingToRecoup <= 0 ? 'var(--green)' : 'var(--red)'}">${remainingToRecoup <= 0 ? '✓ Done' : fmtUSD(remainingToRecoup)}</div>
+          </div>
         </div>
       </div>
 
-      <!-- Monthly breakdown -->
+      <!-- Monthly log -->
       <div class="card">
-        <div class="card-label" style="margin-bottom:16px">Monthly Payback Log</div>
-        ${months.length === 0 ? '<p style="color:var(--text-dim);font-size:13px">No Actual income entries yet.</p>' : `
-        <div style="overflow-x:auto">
-          <table style="width:100%;border-collapse:collapse;font-size:13px">
-            <thead>
-              <tr style="border-bottom:1px solid var(--border);color:var(--text-dim)">
-                <th style="padding:8px 12px;text-align:left">Month</th>
-                <th style="padding:8px 12px;text-align:right">Revenue</th>
-                <th style="padding:8px 12px;text-align:right">75% Applied</th>
-                <th style="padding:8px 12px;text-align:right">Cumulative</th>
-                <th style="padding:8px 12px;text-align:right">Still Owed</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${monthRows}
-            </tbody>
-          </table>
-        </div>`}
+        <div style="font-size:13px;font-weight:600;margin-bottom:16px">Monthly Payback Log</div>
+        ${months.length === 0
+          ? '<p style="color:var(--text-dim);font-size:13px">No Actual income entries yet.</p>'
+          : `<div style="overflow-x:auto">
+              <table style="width:100%;border-collapse:collapse;font-size:13px">
+                <thead>
+                  <tr style="border-bottom:1px solid var(--border)">
+                    <th style="padding:8px 14px;text-align:left;color:var(--text-dim);font-weight:500">Month</th>
+                    <th style="padding:8px 14px;text-align:right;color:var(--text-dim);font-weight:500">Revenue</th>
+                    <th style="padding:8px 14px;text-align:right;color:var(--text-dim);font-weight:500">75% Applied</th>
+                    <th style="padding:8px 14px;text-align:right;color:var(--text-dim);font-weight:500">Cumulative</th>
+                    <th style="padding:8px 14px;text-align:right;color:var(--text-dim);font-weight:500">Still Owed</th>
+                  </tr>
+                </thead>
+                <tbody>${monthRows}</tbody>
+              </table>
+            </div>`}
       </div>
 
       <p style="font-size:11px;color:var(--text-dim);margin-top:16px">
-        Rate: 75% of all Actual income entries · Investment recouped first, then Phase 2 at 2× · COP→USD at 4,400
+        75% of all Actual income entries applied toward ${fmtUSD(RYAN_TOTAL_INVEST_USD)} total investment · 2× target = ${fmtUSD(RYAN_RECOUP_TARGET_USD)} · COP→USD at 4,400
       </p>
     </div>
   `;
