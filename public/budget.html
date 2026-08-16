@@ -446,6 +446,7 @@
     <div class="tab" onclick="switchTab('entries')">Entries</div>
     <div class="tab" onclick="switchTab('monthlypnl')">Monthly P&L</div>
     <div class="tab" onclick="switchTab('bycategory')">By Category</div>
+    <div class="tab" onclick="switchTab('payback')">Payback</div>
   </div>
 
   <!-- DASHBOARD TAB -->
@@ -522,6 +523,11 @@
   <!-- BY CATEGORY TAB -->
   <div id="tab-bycategory" style="display:none">
     <div id="cat-content"><div class="loading">Loading...</div></div>
+  </div>
+
+  <!-- PAYBACK TAB -->
+  <div id="tab-payback" style="display:none">
+    <div id="payback-content"><div class="loading">Loading...</div></div>
   </div>
 
 <!-- Add Entry Modal -->
@@ -868,7 +874,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // ---- Tab switching ----
 function switchTab(tab) {
   currentTab = tab;
-  const tabNames = ['dashboard', 'entries', 'monthlypnl', 'bycategory'];
+  const tabNames = ['dashboard', 'entries', 'monthlypnl', 'bycategory', 'payback'];
   document.querySelectorAll('.tab').forEach((el, i) => {
     el.classList.toggle('active', tabNames[i] === tab);
   });
@@ -876,10 +882,12 @@ function switchTab(tab) {
   document.getElementById('tab-entries').style.display = tab === 'entries' ? '' : 'none';
   document.getElementById('tab-monthlypnl').style.display = tab === 'monthlypnl' ? '' : 'none';
   document.getElementById('tab-bycategory').style.display = tab === 'bycategory' ? '' : 'none';
+  document.getElementById('tab-payback').style.display = tab === 'payback' ? '' : 'none';
 
   if (tab === 'entries') loadEntries();
   if (tab === 'monthlypnl') loadMonthlyPnl();
   if (tab === 'bycategory') loadByCategory();
+  if (tab === 'payback') loadPayback();
 }
 
 // ---- API helpers ----
@@ -1423,6 +1431,147 @@ function clearOcrState() {
 
 function clearOcrImage() {
   clearOcrState();
+}
+
+// ---- Payback Tab ----
+const RYAN_INVESTED_USD = 19474;   // $10,000 + $9,474
+const RYAN_TOTAL_INVEST_USD = 35000;
+const RYAN_RECOUP_TARGET_USD = RYAN_TOTAL_INVEST_USD * 2; // $70,000
+const REVENUE_SHARE = 0.75;
+const COP_TO_USD = 4400;
+
+async function loadPayback() {
+  const el = document.getElementById('payback-content');
+  el.innerHTML = '<div class="loading">Loading payback data...</div>';
+  try {
+    const entries = await apiFetch('/entries?limit=500&mode=Actual');
+    renderPayback(entries, el);
+  } catch (err) {
+    el.innerHTML = `<div class="error">Failed to load: ${escapeHtml(err.message)}</div>`;
+  }
+}
+
+function renderPayback(entries, el) {
+  const income = entries.filter(e => e.type === 'Income' && e.mode === 'Actual');
+  const totalRevenueCOP = income.reduce((s, e) => s + Number(e.amount_cop || 0), 0);
+  const totalRevenueUSD = totalRevenueCOP / COP_TO_USD;
+  const appliedUSD = totalRevenueUSD * REVENUE_SHARE;
+
+  // Running monthly log
+  const byMonth = {};
+  for (const e of income) {
+    const m = (e.date || '').slice(0, 7);
+    if (!m) continue;
+    byMonth[m] = (byMonth[m] || 0) + Number(e.amount_cop || 0);
+  }
+  const months = Object.keys(byMonth).sort();
+
+  let cumApplied = 0;
+  let monthRows = '';
+  for (const m of months) {
+    const revUSD = byMonth[m] / COP_TO_USD;
+    const appliedM = revUSD * REVENUE_SHARE;
+    cumApplied += appliedM;
+    const remaining = Math.max(0, RYAN_INVESTED_USD - cumApplied);
+    monthRows += `<tr>
+      <td>${m}</td>
+      <td>${fmtUSD(revUSD)}</td>
+      <td>${fmtUSD(appliedM)}</td>
+      <td>${fmtUSD(cumApplied)}</td>
+      <td style="color:${remaining <= 0 ? 'var(--green)' : 'var(--text-dim)'}">${remaining <= 0 ? '✓ Paid back' : fmtUSD(remaining)}</td>
+    </tr>`;
+  }
+
+  const pctPaidBack = Math.min(1, appliedUSD / RYAN_INVESTED_USD);
+  const pctToFull = Math.min(1, appliedUSD / RYAN_RECOUP_TARGET_USD);
+  const remainingInvest = Math.max(0, RYAN_INVESTED_USD - appliedUSD);
+  const remainingFull = Math.max(0, RYAN_RECOUP_TARGET_USD - appliedUSD);
+
+  el.innerHTML = `
+    <div style="max-width:760px">
+
+      <!-- Header cards -->
+      <div class="summary-grid" style="margin-bottom:24px">
+        <div class="card">
+          <div class="card-label">Ryan's Investment</div>
+          <div class="card-value" style="color:var(--gold)">${fmtUSD(RYAN_INVESTED_USD)}</div>
+          <div style="font-size:12px;color:var(--text-dim);margin-top:4px">of ${fmtUSD(RYAN_TOTAL_INVEST_USD)} total planned</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Total Revenue (Actual)</div>
+          <div class="card-value">${fmtUSD(totalRevenueUSD)}</div>
+          <div style="font-size:12px;color:var(--text-dim);margin-top:4px">${fmtCOP(totalRevenueCOP)} COP</div>
+        </div>
+        <div class="card">
+          <div class="card-label">75% Applied to Payback</div>
+          <div class="card-value" style="color:var(--green)">${fmtUSD(appliedUSD)}</div>
+          <div style="font-size:12px;color:var(--text-dim);margin-top:4px">${(pctPaidBack * 100).toFixed(1)}% of investment recouped</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Remaining to Recoup</div>
+          <div class="card-value" style="color:${remainingInvest <= 0 ? 'var(--green)' : 'var(--red)'}">${remainingInvest <= 0 ? '✓ Done' : fmtUSD(remainingInvest)}</div>
+          <div style="font-size:12px;color:var(--text-dim);margin-top:4px">Principal only</div>
+        </div>
+      </div>
+
+      <!-- Progress bars -->
+      <div class="card" style="margin-bottom:24px">
+        <div class="card-label" style="margin-bottom:12px">Phase 1 — Recoup Principal (${fmtUSD(RYAN_INVESTED_USD)})</div>
+        <div style="background:var(--surface2);border-radius:6px;height:14px;overflow:hidden;margin-bottom:6px">
+          <div style="background:var(--green);height:100%;width:${(pctPaidBack*100).toFixed(1)}%;transition:width .4s"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-dim)">
+          <span>${fmtUSD(appliedUSD)} applied</span>
+          <span>${(pctPaidBack*100).toFixed(1)}%</span>
+          <span>${fmtUSD(RYAN_INVESTED_USD)} target</span>
+        </div>
+
+        <div class="card-label" style="margin-top:20px;margin-bottom:12px">Phase 2 — Full 2× Recoup (${fmtUSD(RYAN_RECOUP_TARGET_USD)})</div>
+        <div style="background:var(--surface2);border-radius:6px;height:14px;overflow:hidden;margin-bottom:6px">
+          <div style="background:var(--gold);height:100%;width:${(pctToFull*100).toFixed(1)}%;transition:width .4s"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-dim)">
+          <span>${fmtUSD(appliedUSD)} applied</span>
+          <span>${(pctToFull*100).toFixed(1)}%</span>
+          <span>${fmtUSD(RYAN_RECOUP_TARGET_USD)} target</span>
+        </div>
+      </div>
+
+      <!-- Monthly breakdown -->
+      <div class="card">
+        <div class="card-label" style="margin-bottom:16px">Monthly Payback Log</div>
+        ${months.length === 0 ? '<p style="color:var(--text-dim);font-size:13px">No Actual income entries yet.</p>' : `
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:13px">
+            <thead>
+              <tr style="border-bottom:1px solid var(--border);color:var(--text-dim)">
+                <th style="padding:8px 12px;text-align:left">Month</th>
+                <th style="padding:8px 12px;text-align:right">Revenue</th>
+                <th style="padding:8px 12px;text-align:right">75% Applied</th>
+                <th style="padding:8px 12px;text-align:right">Cumulative</th>
+                <th style="padding:8px 12px;text-align:right">Still Owed</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${monthRows}
+            </tbody>
+          </table>
+        </div>`}
+      </div>
+
+      <p style="font-size:11px;color:var(--text-dim);margin-top:16px">
+        Rate: 75% of all Actual income entries · Investment recouped first, then Phase 2 at 2× · COP→USD at 4,400
+      </p>
+    </div>
+  `;
+}
+
+function fmtUSD(n) {
+  return '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+}
+
+function fmtCOP(n) {
+  return Number(n).toLocaleString('es-CO', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 }
 </script>
 </body>
