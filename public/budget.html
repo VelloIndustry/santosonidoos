@@ -585,11 +585,6 @@
         <option value="Producer">Producer</option>
         <option value="Camera">Camera</option>
       </select>
-      <select id="filter-mode" onchange="loadEntries()">
-        <option value="">Actual + Planned</option>
-        <option value="Actual">Actual</option>
-        <option value="Planned">Planned</option>
-      </select>
       <select id="filter-source" onchange="loadEntries()">
         <option value="">All sources</option>
         <option value="Cash">Cash</option>
@@ -608,7 +603,6 @@
             <th>Date</th>
             <th>Track</th>
             <th>Type</th>
-            <th>Mode</th>
             <th>Amount COP</th>
             <th>USD</th>
             <th>Source</th>
@@ -744,18 +738,9 @@
         </div>
       </div>
 
-      <div class="form-grid-2">
-        <div class="form-row">
-          <label class="form-label">Mode *</label>
-          <select id="f-mode" required>
-            <option value="Actual">Actual</option>
-            <option value="Planned">Planned</option>
-          </select>
-        </div>
-        <div class="form-row">
-          <label class="form-label">Date *</label>
-          <input type="date" id="f-date" required>
-        </div>
+      <div class="form-row">
+        <label class="form-label">Date *</label>
+        <input type="date" id="f-date" required>
       </div>
 
       <div class="form-grid-2">
@@ -979,7 +964,6 @@ function openModal(entry = null) {
   if (entry) {
     document.getElementById('f-track').value = entry.track || '';
     document.getElementById('f-type').value = entry.type || '';
-    document.getElementById('f-mode').value = entry.mode || '';
     document.getElementById('f-date').value = (entry.date || '').slice(0, 10);
     document.getElementById('f-amount-cop').value = entry.amount_cop || '';
     document.getElementById('f-amount-usd').value = entry.amount_usd || '';
@@ -1044,7 +1028,7 @@ async function submitEntry(e) {
   const payload = {
     track:          document.getElementById('f-track').value,
     type:           document.getElementById('f-type').value,
-    mode:           document.getElementById('f-mode').value,
+    mode:           'Actual',
     date:           document.getElementById('f-date').value,
     amount_cop:     Number(document.getElementById('f-amount-cop').value),
     amount_usd:     document.getElementById('f-amount-usd').value ? Number(document.getElementById('f-amount-usd').value) : null,
@@ -1202,7 +1186,7 @@ function formatCOP(n) {
 }
 
 function renderSummaryCards(entries) {
-  const actual = entries.filter(e => e.mode === 'Actual');
+  const actual = entries;
   const totalIncome = actual.filter(e => e.type === 'Income').reduce((s, e) => s + Number(e.amount_cop), 0);
   const totalExpense = actual.filter(e => e.type === 'Expense').reduce((s, e) => s + Number(e.amount_cop), 0);
   const net = totalIncome - totalExpense;
@@ -1278,7 +1262,7 @@ function renderSummaryCards(entries) {
 function renderMonthlyGrid(entries) {
   const tracks = ['Studio', 'Artist', 'Producer', 'Camera'];
   const trackDots = { Studio: 'dot-studio', Artist: 'dot-artist', Producer: 'dot-producer', Camera: 'dot-camera' };
-  const actual = entries.filter(e => e.mode === 'Actual');
+  const actual = entries;
 
   // Collect all months from entries
   const months = [...new Set(actual.map(e => e.date ? e.date.slice(0, 7) : null).filter(Boolean))].sort().reverse();
@@ -1336,12 +1320,10 @@ function renderMonthlyGrid(entries) {
 async function loadEntries() {
   const params = new URLSearchParams();
   const track = document.getElementById('filter-track').value;
-  const mode = document.getElementById('filter-mode').value;
   const source = document.getElementById('filter-source').value;
   const from = document.getElementById('filter-from').value;
   const to = document.getElementById('filter-to').value;
   if (track) params.set('track', track);
-  if (mode) params.set('mode', mode);
   if (source) params.set('payment_source', source);
   if (from) params.set('date_from', from);
   if (to) params.set('date_to', to);
@@ -1374,7 +1356,6 @@ function renderEntries(entries) {
       <td>${e.date ? e.date.slice(0,10) : ''}</td>
       <td><span class="pill pill-${e.track.toLowerCase()}">${e.track}</span></td>
       <td><span class="pill ${e.type === 'Income' ? 'pill-income' : 'pill-expense'}">${e.type === 'Income' ? 'Income' : 'Expense'}</span></td>
-      <td><span class="pill ${e.mode === 'Actual' ? 'pill-actual' : 'pill-planned'}">${e.mode === 'Actual' ? 'Actual' : 'Planned'}</span></td>
       <td class="${e.type === 'Income' ? 'positive' : 'negative'}">${formatCOP(e.amount_cop)}</td>
       <td>${e.amount_usd ? '$' + Number(e.amount_usd).toFixed(2) + ' USD' : '—'}</td>
       <td>${e.payment_source} ${sourceTag}</td>
@@ -1392,7 +1373,6 @@ function renderEntries(entries) {
 
 function clearFilters() {
   document.getElementById('filter-track').value = '';
-  document.getElementById('filter-mode').value = '';
   document.getElementById('filter-source').value = '';
   document.getElementById('filter-from').value = '';
   document.getElementById('filter-to').value = '';
@@ -1404,7 +1384,7 @@ async function loadMonthlyPnl() {
   document.getElementById('pnl-content').innerHTML = '<div class="loading">Loading...</div>';
   try {
     const entries = await apiFetch('/entries?limit=500');
-    renderMonthlyPnl(entries.filter(e => e.mode === 'Actual'));
+    renderMonthlyPnl(entries);
   } catch (err) {
     document.getElementById('pnl-content').innerHTML = `<div class="empty">${err.message}</div>`;
   }
@@ -1481,7 +1461,7 @@ async function loadByCategory() {
   document.getElementById('cat-content').innerHTML = '<div class="loading">Loading...</div>';
   try {
     const entries = await apiFetch('/entries?limit=500');
-    renderByCategory(entries.filter(e => e.mode === 'Actual'));
+    renderByCategory(entries);
   } catch (err) {
     document.getElementById('cat-content').innerHTML = `<div class="empty">${err.message}</div>`;
   }
@@ -1707,7 +1687,7 @@ async function loadPayback() {
 const FIXED_COST_CATEGORIES = ['Studio Rent', 'Staff / Engineer'];
 
 function renderPayback(entries, el) {
-  const actual = entries.filter(e => e.mode === 'Actual');
+  const actual = entries;
   const income = actual.filter(e => e.type === 'Income');
   const fixedExpenses = actual.filter(e => e.type === 'Expense' && FIXED_COST_CATEGORIES.includes(e.category));
 
@@ -1755,8 +1735,6 @@ function renderPayback(entries, el) {
   }
   const months = allMonths;
 
-  const allIncome = entries.filter(e => e.type === 'Income');
-  const plannedIncomeCOP = allIncome.filter(e => e.mode === 'Planned').reduce((s,e) => s + Number(e.amount_cop||0), 0);
 
   el.innerHTML = `
     <div style="max-width:820px">
@@ -1775,9 +1753,6 @@ function renderPayback(entries, el) {
           <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:3px">Rate Used</div>
           <div style="font-size:20px;font-weight:700;font-variant-numeric:tabular-nums">${fmtCOP(COP_TO_USD)} COP/USD</div>
         </div>
-        ${plannedIncomeCOP > 0 ? `<div style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:6px;padding:10px 14px;font-size:12px;color:#fbbf24">
-          ⚠️ ${fmtCOP(plannedIncomeCOP)} COP in <strong>Planned</strong> income not counted — only Actual entries apply to payback
-        </div>` : ''}
       </div>
 
       <!-- Big visual: Capital Deployed -->
