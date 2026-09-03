@@ -1010,14 +1010,30 @@ function handleOverlayClick(e) {
 }
 
 // ---- Form submit ----
-let _submitting = false;
 async function submitEntry(e) {
   e.preventDefault();
-  if (_submitting) return;
-  _submitting = true;
   const btn = document.getElementById('submit-btn');
+  if (btn.disabled) return;
   btn.disabled = true;
   btn.textContent = 'Saving...';
+
+  // show inline error inside modal (always visible, even on mobile)
+  const showFormError = (msg) => {
+    let errEl = document.getElementById('form-error');
+    if (!errEl) {
+      errEl = document.createElement('div');
+      errEl.id = 'form-error';
+      errEl.style.cssText = 'background:#7f1d1d;color:#fca5a5;padding:12px 14px;border-radius:6px;font-size:13px;margin-bottom:12px;';
+      document.getElementById('entry-form').prepend(errEl);
+    }
+    errEl.textContent = msg;
+    errEl.style.display = '';
+  };
+  const clearFormError = () => {
+    const el = document.getElementById('form-error');
+    if (el) el.style.display = 'none';
+  };
+  clearFormError();
 
   const payload = {
     track:          document.getElementById('f-track').value,
@@ -1035,21 +1051,18 @@ async function submitEntry(e) {
   try {
     if (editingId) {
       await apiFetch(`/entries/${editingId}`, { method: 'PUT', body: JSON.stringify(payload) });
-      showToast('Entry updated', 'success');
     } else {
       await apiFetch('/entries', { method: 'POST', body: JSON.stringify(payload) });
-      showToast('Entry saved', 'success');
     }
     closeModal();
+    showToast(editingId ? 'Entry updated' : 'Entry saved', 'success');
     loadDashboard();
     if (currentTab === 'entries') loadEntries();
     if (currentTab === 'monthlypnl') loadMonthlyPnl();
     if (currentTab === 'bycategory') loadByCategory();
     if (currentTab === 'payback') loadPayback();
   } catch (err) {
-    showToast('Error: ' + err.message, 'error');
-  } finally {
-    _submitting = false;
+    showFormError('Error: ' + err.message);
     btn.disabled = false;
     btn.textContent = editingId ? 'Update' : 'Save';
   }
@@ -1089,7 +1102,7 @@ function switchTab(tab) {
 // ---- API helpers ----
 async function apiFetch(path, opts = {}) {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 12000);
+  const timer = setTimeout(() => controller.abort(), 8000);
   try {
     const res = await fetch('/api/budget' + path, {
       ...opts,
