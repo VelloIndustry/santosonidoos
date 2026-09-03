@@ -1755,8 +1755,30 @@ function renderPayback(entries, el) {
   }
   const months = allMonths;
 
+  const allIncome = entries.filter(e => e.type === 'Income');
+  const plannedIncomeCOP = allIncome.filter(e => e.mode === 'Planned').reduce((s,e) => s + Number(e.amount_cop||0), 0);
+
   el.innerHTML = `
     <div style="max-width:820px">
+
+      <!-- Revenue check banner -->
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin-bottom:20px;display:flex;flex-wrap:wrap;gap:24px;align-items:center">
+        <div>
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:3px">Actual Income Entries</div>
+          <div style="font-size:20px;font-weight:700;color:var(--green);font-variant-numeric:tabular-nums">${income.length} entries</div>
+        </div>
+        <div>
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:3px">Total COP (Actual)</div>
+          <div style="font-size:20px;font-weight:700;font-variant-numeric:tabular-nums">$ ${fmtCOP(totalRevenueCOP)} COP</div>
+        </div>
+        <div>
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:3px">Rate Used</div>
+          <div style="font-size:20px;font-weight:700;font-variant-numeric:tabular-nums">${fmtCOP(COP_TO_USD)} COP/USD</div>
+        </div>
+        ${plannedIncomeCOP > 0 ? `<div style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:6px;padding:10px 14px;font-size:12px;color:#fbbf24">
+          ⚠️ ${fmtCOP(plannedIncomeCOP)} COP in <strong>Planned</strong> income not counted — only Actual entries apply to payback
+        </div>` : ''}
+      </div>
 
       <!-- Big visual: Capital Deployed -->
       <div class="card" style="margin-bottom:20px;padding:28px 28px 24px">
