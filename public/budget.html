@@ -981,7 +981,8 @@ function openModal(entry = null) {
     document.getElementById('f-type').value = entry.type || '';
     document.getElementById('f-mode').value = entry.mode || '';
     document.getElementById('f-date').value = (entry.date || '').slice(0, 10);
-    document.getElementById('f-amount').value = entry.amount_cop || '';
+    document.getElementById('f-amount-cop').value = entry.amount_cop || '';
+    document.getElementById('f-amount-usd').value = entry.amount_usd || '';
     document.getElementById('f-source').value = entry.payment_source || 'Other';
     document.getElementById('f-description').value = entry.description || '';
     document.getElementById('f-project').value = entry.client_project || '';
@@ -1023,7 +1024,8 @@ async function submitEntry(e) {
     type:           document.getElementById('f-type').value,
     mode:           document.getElementById('f-mode').value,
     date:           document.getElementById('f-date').value,
-    amount_cop:     Number(document.getElementById('f-amount').value),
+    amount_cop:     Number(document.getElementById('f-amount-cop').value),
+    amount_usd:     document.getElementById('f-amount-usd').value ? Number(document.getElementById('f-amount-usd').value) : null,
     payment_source: document.getElementById('f-source').value,
     description:    document.getElementById('f-description').value,
     category:       document.getElementById('f-category').value || null,
@@ -1141,12 +1143,9 @@ function escapeHtml(str) {
 function showToast(msg, type = 'info') {
   const el = document.getElementById('toast');
   el.textContent = msg;
-  el.style.background = type === 'error' ? '#7f1d1d' : type === 'success' ? '#14532d' : 'var(--surface2)';
-  el.style.color = '#fff';
-  el.style.opacity = '1';
-  el.style.transform = 'translateY(0)';
+  el.className = 'show ' + (type === 'error' ? 'error' : type === 'success' ? 'success' : '');
   clearTimeout(el._timer);
-  el._timer = setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateY(80px)'; }, 3000);
+  el._timer = setTimeout(() => { el.className = ''; }, 3000);
 }
 
 function updateCategories() {
