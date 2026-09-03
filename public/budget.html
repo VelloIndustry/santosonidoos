@@ -1748,23 +1748,40 @@ function renderPayback(entries, el) {
     <div style="max-width:820px">
 
       <!-- Revenue check banner -->
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin-bottom:20px;display:flex;flex-wrap:wrap;gap:24px;align-items:center">
-        <div>
-          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:3px">Actual Income Entries</div>
-          <div style="font-size:20px;font-weight:700;color:var(--green);font-variant-numeric:tabular-nums">${income.length} entries</div>
-        </div>
-        <div>
-          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:3px">Total COP (Actual)</div>
-          <div style="font-size:20px;font-weight:700;font-variant-numeric:tabular-nums">$ ${fmtCOP(totalRevenueCOP)} COP</div>
-        </div>
-        <div>
-          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:3px">COP/USD Rate</div>
-          <div style="display:flex;align-items:center;gap:8px">
-            <input id="cop-rate-input" type="number" value="${COP_TO_USD}" min="1000" max="9999" step="10"
-              style="width:90px;font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;padding:4px 8px;border:1.5px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);outline:none"
-              onchange="saveCopRate(this.value)">
-            <span style="font-size:13px;color:var(--text-dim)">COP/USD</span>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin-bottom:20px">
+        <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:center;margin-bottom:14px">
+          <div>
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:3px">Actual Income Entries</div>
+            <div style="font-size:20px;font-weight:700;color:var(--green);font-variant-numeric:tabular-nums">${income.length} entries</div>
           </div>
+          <div>
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:3px">Total COP (Actual)</div>
+            <div style="font-size:20px;font-weight:700;font-variant-numeric:tabular-nums">$ ${fmtCOP(totalRevenueCOP)} COP</div>
+          </div>
+          <div>
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:3px">COP/USD Rate</div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <input id="cop-rate-input" type="number" value="${COP_TO_USD}" min="1000" max="9999" step="10"
+                style="width:90px;font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;padding:4px 8px;border:1.5px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);outline:none"
+                onchange="saveCopRate(this.value)">
+              <span style="font-size:13px;color:var(--text-dim)">COP/USD</span>
+            </div>
+          </div>
+        </div>
+        <div style="border-top:1px solid var(--border);padding-top:12px;display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;font-variant-numeric:tabular-nums">
+          <span style="color:var(--text-dim)">Revenue</span>
+          <span style="font-weight:700;color:var(--green)">${fmtUSD(totalRevenueUSD)}</span>
+          <span style="color:var(--text-dim);margin:0 4px">−</span>
+          <span style="color:var(--text-dim)">Fixed Costs</span>
+          <span style="font-weight:700;color:var(--red)">${fmtUSD(totalFixedUSD)}</span>
+          <span style="color:var(--text-dim);margin:0 4px">=</span>
+          <span style="color:var(--text-dim)">Net Profit</span>
+          <span style="font-weight:700">${fmtUSD(netProfitUSD)}</span>
+          <span style="color:var(--text-dim);margin:0 4px">×</span>
+          <span style="color:var(--text-dim)">75%</span>
+          <span style="color:var(--text-dim);margin:0 4px">=</span>
+          <span style="color:var(--text-dim)">Applied to Payback</span>
+          <span style="font-weight:700;color:var(--gold)">${fmtUSD(appliedUSD)}</span>
         </div>
       </div>
 
@@ -1788,7 +1805,7 @@ function renderPayback(entries, el) {
           <span style="color:var(--gold)">▌ ${fmtUSD(RYAN_INVESTED_USD)} deployed</span>
           <span style="color:var(--text-dim)">▌ ${fmtUSD(remainingCapital)} remaining</span>
         </div>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
           <div>
             <div style="font-size:11px;color:var(--text-dim);margin-bottom:4px">Tranche 1</div>
             <div style="font-weight:600">$10,000</div>
@@ -1804,10 +1821,15 @@ function renderPayback(entries, el) {
             <div style="font-weight:600">$5,000</div>
             <div style="font-size:11px;color:var(--green);margin-top:2px">✓ Deployed</div>
           </div>
+          <div style="border-left:1px solid var(--border);padding-left:16px">
+            <div style="font-size:11px;color:var(--text-dim);margin-bottom:4px">Revenue Applied</div>
+            <div style="font-weight:700;color:var(--green);font-variant-numeric:tabular-nums">${fmtUSD(appliedUSD)}</div>
+            <div style="font-size:11px;color:var(--green);margin-top:2px">↳ from net profit</div>
+          </div>
           <div>
             <div style="font-size:11px;color:var(--text-dim);margin-bottom:4px">Remaining Capital</div>
-            <div style="font-weight:600">${fmtUSD(remainingCapital)}</div>
-            <div style="font-size:11px;color:var(--text-dim);margin-top:2px">Not yet deployed</div>
+            <div style="font-weight:600;font-variant-numeric:tabular-nums">${fmtUSD(Math.max(0, remainingCapital - appliedUSD))}</div>
+            <div style="font-size:11px;color:var(--text-dim);margin-top:2px">after payback</div>
           </div>
         </div>
       </div>
