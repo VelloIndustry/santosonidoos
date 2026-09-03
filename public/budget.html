@@ -968,6 +968,90 @@ const SCENARIOS_UNUSED = {
 
 let currentTab = 'dashboard';
 let allEntries = [];
+let editingId = null;
+
+// ---- Modal open/close ----
+function openModal(entry = null) {
+  editingId = entry ? entry.id : null;
+  document.getElementById('modal-title').textContent = entry ? 'Edit Entry' : 'New Money Entry';
+  document.getElementById('submit-btn').textContent = entry ? 'Update' : 'Save';
+
+  if (entry) {
+    document.getElementById('f-track').value = entry.track || '';
+    document.getElementById('f-type').value = entry.type || '';
+    document.getElementById('f-mode').value = entry.mode || '';
+    document.getElementById('f-date').value = (entry.date || '').slice(0, 10);
+    document.getElementById('f-amount').value = entry.amount_cop || '';
+    document.getElementById('f-source').value = entry.payment_source || 'Other';
+    document.getElementById('f-description').value = entry.description || '';
+    document.getElementById('f-project').value = entry.client_project || '';
+    updateCategories();
+    document.getElementById('f-category').value = entry.category || '';
+  } else {
+    document.getElementById('entry-form').reset();
+    document.getElementById('f-date').value = new Date().toISOString().slice(0, 10);
+    updateCategories();
+  }
+
+  switchFormMode('manual');
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  editingId = null;
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+// ---- Form submit ----
+let _submitting = false;
+async function submitEntry(e) {
+  e.preventDefault();
+  if (_submitting) return;
+  _submitting = true;
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+
+  const payload = {
+    track:          document.getElementById('f-track').value,
+    type:           document.getElementById('f-type').value,
+    mode:           document.getElementById('f-mode').value,
+    date:           document.getElementById('f-date').value,
+    amount_cop:     Number(document.getElementById('f-amount').value),
+    payment_source: document.getElementById('f-source').value,
+    description:    document.getElementById('f-description').value,
+    category:       document.getElementById('f-category').value || null,
+    client_project: document.getElementById('f-project').value || null,
+  };
+
+  try {
+    if (editingId) {
+      await apiFetch(`/entries/${editingId}`, { method: 'PUT', body: JSON.stringify(payload) });
+      showToast('Entry updated', 'success');
+    } else {
+      await apiFetch('/entries', { method: 'POST', body: JSON.stringify(payload) });
+      showToast('Entry saved', 'success');
+    }
+    closeModal();
+    loadDashboard();
+    if (currentTab === 'entries') loadEntries();
+    if (currentTab === 'monthlypnl') loadMonthlyPnl();
+    if (currentTab === 'bycategory') loadByCategory();
+    if (currentTab === 'payback') loadPayback();
+  } catch (err) {
+    showToast('Error: ' + err.message, 'error');
+  } finally {
+    _submitting = false;
+    btn.disabled = false;
+    btn.textContent = editingId ? 'Update' : 'Save';
+  }
+}
 
 // ---- Init ----
 document.addEventListener('DOMContentLoaded', () => {
@@ -1052,6 +1136,47 @@ async function loadDashboard() {
 
 function escapeHtml(str) {
   return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function showToast(msg, type = 'info') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.background = type === 'error' ? '#7f1d1d' : type === 'success' ? '#14532d' : 'var(--surface2)';
+  el.style.color = '#fff';
+  el.style.opacity = '1';
+  el.style.transform = 'translateY(0)';
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateY(80px)'; }, 3000);
+}
+
+function updateCategories() {
+  const track = document.getElementById('f-track')?.value;
+  const type  = document.getElementById('f-type')?.value;
+  const sel   = document.getElementById('f-category');
+  if (!sel) return;
+  const cats = (CATEGORIES[track] && CATEGORIES[track][type]) || [];
+  sel.innerHTML = '<option value="">— Select category —</option>' +
+    cats.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+}
+
+function editEntry(id) {
+  const entry = allEntries.find(e => e.id === id);
+  if (entry) openModal(entry);
+}
+
+async function deleteEntry(id) {
+  if (!confirm('Delete this entry?')) return;
+  try {
+    await apiFetch(`/entries/${id}`, { method: 'DELETE' });
+    showToast('Entry deleted', 'success');
+    loadDashboard();
+    if (currentTab === 'entries') loadEntries();
+    if (currentTab === 'monthlypnl') loadMonthlyPnl();
+    if (currentTab === 'bycategory') loadByCategory();
+    if (currentTab === 'payback') loadPayback();
+  } catch (err) {
+    showToast('Error: ' + err.message, 'error');
+  }
 }
 
 function formatCOP(n) {
