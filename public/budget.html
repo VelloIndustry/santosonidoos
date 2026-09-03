@@ -30,6 +30,7 @@
       font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-size: 14px;
       min-height: 100vh;
+      -webkit-text-size-adjust: 100%;
     }
 
     /* Layout */
@@ -416,12 +417,118 @@
     .split-p1 { background: rgba(34,197,94,0.15); color: var(--green); }
     .split-p2 { background: rgba(212,168,71,0.15); color: var(--gold); }
 
-    /* Responsive */
+    /* ── Responsive / Mobile ───────────────────────────────────────── */
     @media (max-width: 700px) {
-      .summary-grid { grid-template-columns: 1fr 1fr; }
+      /* Layout */
+      .main { padding: 16px 12px; }
+
+      /* Header — compact on mobile */
+      .header { padding: 12px 16px; }
+      .logo { font-size: 16px; }
+      .badge { display: none; }
+      .header a, .header form button { font-size: 12px; }
+      .header .btn-primary { padding: 8px 14px; font-size: 13px; }
+
+      /* Tabs — scrollable row, no wrapping */
+      .tabs {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        gap: 0;
+        padding-bottom: 0;
+      }
+      .tabs::-webkit-scrollbar { display: none; }
+      .tab { padding: 10px 14px; font-size: 12px; white-space: nowrap; flex-shrink: 0; }
+
+      /* Summary cards — 2 col */
+      .summary-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .card { padding: 14px; }
+      .card-value { font-size: 18px; }
+
+      /* Monthly / track grids */
       .monthly-grid { grid-template-columns: 1fr; }
-      .filters { gap: 8px; }
+
+      /* Filters row */
+      .filters { flex-direction: column; gap: 8px; }
+      .filters select { width: 100%; }
+
+      /* Entry table — hide less important cols */
       .entry-table th:nth-child(n+5), .entry-table td:nth-child(n+5) { display: none; }
+      .entry-table th, .entry-table td { padding: 9px 10px; font-size: 12px; }
+
+      /* Modal — full-screen sheet on mobile */
+      .modal-overlay { align-items: flex-end; }
+      .modal {
+        max-width: 100%;
+        width: 100%;
+        max-height: 92vh;
+        border-radius: 16px 16px 0 0;
+        padding: 20px 18px 32px;
+      }
+
+      /* Form — stack 2-col grids to 1 col */
+      .form-grid-2 { grid-template-columns: 1fr; gap: 0; }
+
+      /* Larger touch targets for form inputs / selects */
+      .form-row select,
+      .form-row input,
+      .form-row textarea {
+        font-size: 16px; /* prevent iOS zoom */
+        padding: 12px 10px;
+        min-height: 44px;
+      }
+
+      /* Modal action buttons — full width stacked */
+      .modal-actions { flex-direction: column-reverse; gap: 8px; }
+      .modal-actions button { width: 100%; justify-content: center; padding: 14px; font-size: 15px; }
+
+      /* Payback formula row — stack vertically */
+      .formula { flex-direction: column; gap: 4px; }
+
+      /* Toast — full width at bottom */
+      #toast { left: 12px; right: 12px; bottom: 16px; text-align: center; }
+
+      /* OCR upload zone */
+      .upload-zone { padding: 28px 16px; }
+
+      /* Section header */
+      .section-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+    }
+
+    /* Extra small (320px phones) */
+    @media (max-width: 380px) {
+      .summary-grid { grid-template-columns: 1fr; }
+      .card-value { font-size: 16px; }
+    }
+
+    /* Floating action button — mobile only */
+    .fab {
+      display: none;
+    }
+    @media (max-width: 700px) {
+      .fab {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        bottom: 24px;
+        right: 20px;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: var(--gold);
+        color: #000;
+        font-size: 28px;
+        font-weight: 300;
+        border: none;
+        cursor: pointer;
+        z-index: 150;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+        line-height: 1;
+        /* keep above toast */
+      }
+      /* bump the toast up so it doesn't sit behind FAB */
+      #toast { bottom: 90px; }
     }
   </style>
 </head>
@@ -438,6 +545,9 @@
     <button class="btn btn-primary" onclick="openModal()">+ Money Entry</button>
   </div>
 </div>
+
+<!-- Mobile FAB -->
+<button class="fab" onclick="openModal()" aria-label="New money entry">+</button>
 
 <div class="main">
   <!-- Tabs -->
