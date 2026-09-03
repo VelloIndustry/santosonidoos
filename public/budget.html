@@ -994,6 +994,12 @@ function openModal(entry = null) {
     updateCategories();
   }
 
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = false;
+  btn.textContent = entry ? 'Update' : 'Save';
+  const errEl = document.getElementById('form-error');
+  if (errEl) errEl.style.display = 'none';
+
   switchFormMode('manual');
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
