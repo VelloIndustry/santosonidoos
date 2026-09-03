@@ -1667,11 +1667,19 @@ function clearOcrImage() {
 }
 
 // ---- Payback Tab ----
-const RYAN_INVESTED_USD = 19474;    // capital deployed so far: $10,000 + $9,474
+const RYAN_INVESTED_USD = 24474;    // capital deployed so far: $10,000 + $9,474 + $5,000
 const RYAN_TOTAL_INVEST_USD = 35000; // total planned investment
 const RYAN_RECOUP_TARGET_USD = RYAN_TOTAL_INVEST_USD * 2; // 2× = $70,000
 const REVENUE_SHARE = 0.75;
-const COP_TO_USD = 4400;
+let COP_TO_USD = +(localStorage.getItem('cop_to_usd') || 4100);
+
+function saveCopRate(val) {
+  const n = parseInt(val, 10);
+  if (isNaN(n) || n < 1000) return;
+  COP_TO_USD = n;
+  localStorage.setItem('cop_to_usd', n);
+  loadPayback();
+}
 
 async function loadPayback() {
   const el = document.getElementById('payback-content');
@@ -1750,8 +1758,13 @@ function renderPayback(entries, el) {
           <div style="font-size:20px;font-weight:700;font-variant-numeric:tabular-nums">$ ${fmtCOP(totalRevenueCOP)} COP</div>
         </div>
         <div>
-          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:3px">Rate Used</div>
-          <div style="font-size:20px;font-weight:700;font-variant-numeric:tabular-nums">${fmtCOP(COP_TO_USD)} COP/USD</div>
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:3px">COP/USD Rate</div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <input id="cop-rate-input" type="number" value="${COP_TO_USD}" min="1000" max="9999" step="10"
+              style="width:90px;font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;padding:4px 8px;border:1.5px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);outline:none"
+              onchange="saveCopRate(this.value)">
+            <span style="font-size:13px;color:var(--text-dim)">COP/USD</span>
+          </div>
         </div>
       </div>
 
