@@ -103,9 +103,9 @@
     </div>
 
     <section class="grid metrics">
-      <div class="card card-pad"><div class="metric-label">Month Income</div><div class="metric-value" id="m-income">--</div><div class="metric-sub">Actual entries</div></div>
-      <div class="card card-pad"><div class="metric-label">Month Expenses</div><div class="metric-value" id="m-expense">--</div><div class="metric-sub">Actual entries</div></div>
-      <div class="card card-pad"><div class="metric-label">Month Net</div><div class="metric-value" id="m-net">--</div><div class="metric-sub">Income minus expenses</div></div>
+      <div class="card card-pad"><div class="metric-label">All Time Income</div><div class="metric-value" id="m-income">--</div><div class="metric-sub">Actual entries</div></div>
+      <div class="card card-pad"><div class="metric-label">All Time Expenses</div><div class="metric-value" id="m-expense">--</div><div class="metric-sub">Actual entries</div></div>
+      <div class="card card-pad"><div class="metric-label">All Time Net</div><div class="metric-value" id="m-net">--</div><div class="metric-sub">Income minus expenses</div></div>
     </section>
 
     <section class="grid content">
@@ -150,7 +150,7 @@
 
     async function loadDashboard() {
       const [summary, entries] = await Promise.all([
-        getJson('/api/budget/summary?months=1').catch(() => []),
+        getJson('/api/budget/summary').catch(() => []),
         getJson('/api/budget/entries?limit=500').catch(() => null),
       ]);
 
