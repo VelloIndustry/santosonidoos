@@ -103,9 +103,9 @@
     </div>
 
     <section class="grid metrics">
-      <div class="card card-pad"><div class="metric-label">All Time Income</div><div class="metric-value" id="m-income">--</div><div class="metric-sub">Actual entries</div></div>
-      <div class="card card-pad"><div class="metric-label">All Time Expenses</div><div class="metric-value" id="m-expense">--</div><div class="metric-sub">Actual entries</div></div>
-      <div class="card card-pad"><div class="metric-label">All Time Net</div><div class="metric-value" id="m-net">--</div><div class="metric-sub">Income minus expenses</div></div>
+      <div class="card card-pad"><div class="metric-label">All Time Income</div><div class="metric-value" id="m-income">--</div><div class="metric-sub" id="m-income-usd" style="font-size:12px;margin-top:2px"></div></div>
+      <div class="card card-pad"><div class="metric-label">All Time Expenses</div><div class="metric-value" id="m-expense">--</div><div class="metric-sub" id="m-expense-usd" style="font-size:12px;margin-top:2px"></div></div>
+      <div class="card card-pad"><div class="metric-label">All Time Net</div><div class="metric-value" id="m-net">--</div><div class="metric-sub" id="m-net-usd" style="font-size:12px;margin-top:2px"></div></div>
     </section>
 
     <section class="grid content">
@@ -159,9 +159,14 @@
         if (row.type === 'Expense') expense += Number(row.total_cop || 0);
       });
 
-      document.getElementById('m-income').textContent = money(income);
-      document.getElementById('m-expense').textContent = money(expense);
-      document.getElementById('m-net').textContent = money(income - expense);
+      const DASH_RATE = 3300;
+      const usd = n => '$' + (n / DASH_RATE).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' USD';
+      document.getElementById('m-income').textContent = money(income) + ' COP';
+      document.getElementById('m-income-usd').textContent = usd(income);
+      document.getElementById('m-expense').textContent = money(expense) + ' COP';
+      document.getElementById('m-expense-usd').textContent = usd(expense);
+      document.getElementById('m-net').textContent = money(income - expense) + ' COP';
+      document.getElementById('m-net-usd').textContent = usd(income - expense);
 
       if (entries !== null) {
         const actual = entries;
