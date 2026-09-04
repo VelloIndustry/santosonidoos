@@ -109,11 +109,9 @@
     </section>
 
     <section class="grid content">
-      <div class="card">
-        <div class="section-head"><div class="section-title">All Money Entries</div><a class="section-link" href="/money">+ New Entry</a></div>
-        <div class="entries-scroll">
-          <div class="list" id="entries-list"><div class="empty">Loading...</div></div>
-        </div>
+      <div class="card card-pad" id="payback-card">
+        <div class="section-head"><div class="section-title">Investment &amp; Payback Plan</div><a class="section-link" href="/money#payback">Full Detail →</a></div>
+        <div id="payback-body"><div class="empty">Loading...</div></div>
       </div>
 
       <div class="stack">
@@ -165,30 +163,78 @@
       document.getElementById('m-expense').textContent = money(expense);
       document.getElementById('m-net').textContent = money(income - expense);
 
-      if (entries === null) {
-        setEmpty('entries-list', 'Could not load entries.');
-      } else {
-        const actual = entries.filter(e => e.mode === 'Actual');
+      if (entries !== null) {
+        const actual = entries;
         const totalIncome  = actual.filter(e => e.type === 'Income').reduce((s, e) => s + Number(e.amount_cop), 0);
         const totalExpense = actual.filter(e => e.type === 'Expense').reduce((s, e) => s + Number(e.amount_cop), 0);
         const net = totalIncome - totalExpense;
 
-        renderEntries(entries);
+        const FIXED = ['Studio Rent', 'Staff / Engineer'];
+        const copRate = +(localStorage.getItem('cop_to_usd') || 4100);
+        const INVESTED = 24474, TOTAL_PLANNED = 35000, RECOUP_TARGET = 70000, SHARE = 0.75;
+        const fixedCOP = actual.filter(e => e.type === 'Expense' && FIXED.includes(e.category)).reduce((s, e) => s + Number(e.amount_cop), 0);
+        const netProfitUSD = Math.max(0, totalIncome - fixedCOP) / copRate;
+        const appliedUSD = netProfitUSD * SHARE;
+        const pctRecouped = Math.min(1, appliedUSD / TOTAL_PLANNED);
+        const pct2x = Math.min(1, appliedUSD / RECOUP_TARGET);
+
+        renderPayback({ appliedUSD, pctRecouped, pct2x, INVESTED, TOTAL_PLANNED, RECOUP_TARGET, totalIncome, fixedCOP, netProfitUSD, copRate });
+
         drawPie('pie-chart', 'pie-legend', [
           { label: 'Income',   value: totalIncome,  color: '#22c55e' },
           { label: 'Expenses', value: totalExpense, color: '#ef4444' },
         ]);
         drawPie('net-chart', 'net-legend', net >= 0
-          ? [
-              { label: 'Net Profit', value: net,          color: '#22c55e' },
-              { label: 'Costs',      value: totalExpense, color: '#333' },
-            ]
-          : [
-              { label: 'Net Loss',  value: Math.abs(net), color: '#ef4444' },
-              { label: 'Income',    value: totalIncome,   color: '#333' },
-            ]
+          ? [{ label: 'Net Profit', value: net, color: '#22c55e' }, { label: 'Costs', value: totalExpense, color: '#333' }]
+          : [{ label: 'Net Loss', value: Math.abs(net), color: '#ef4444' }, { label: 'Income', value: totalIncome, color: '#333' }]
         );
       }
+    }
+
+    function fmtUSD(n) { return '$' + Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }); }
+    function bar(pct, color) {
+      return `<div style="background:#222;border-radius:6px;height:14px;overflow:hidden;margin:8px 0 4px">
+        <div style="background:${color};height:100%;width:${(pct*100).toFixed(1)}%;border-radius:6px;transition:width .5s"></div></div>`;
+    }
+
+    function renderPayback({ appliedUSD, pctRecouped, pct2x, INVESTED, TOTAL_PLANNED, RECOUP_TARGET, totalIncome, fixedCOP, netProfitUSD, copRate }) {
+      const revenueUSD = totalIncome / copRate;
+      const fixedUSD = fixedCOP / copRate;
+      document.getElementById('payback-body').innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
+          <div>
+            <div style="font-size:11px;color:#666;margin-bottom:2px;text-transform:uppercase;letter-spacing:.5px">Capital Deployed</div>
+            <div style="font-size:26px;font-weight:700;color:#f0b429">${fmtUSD(INVESTED)}</div>
+            <div style="font-size:11px;color:#666">of ${fmtUSD(TOTAL_PLANNED)} planned · ${((INVESTED/TOTAL_PLANNED)*100).toFixed(0)}%</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:#666;margin-bottom:2px;text-transform:uppercase;letter-spacing:.5px">Applied to Payback</div>
+            <div style="font-size:26px;font-weight:700;color:#22c55e">${fmtUSD(appliedUSD)}</div>
+            <div style="font-size:11px;color:#666">75% of net profit · ${(pctRecouped*100).toFixed(1)}% recouped</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:16px">
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#666">
+            <span>Phase 1 — Recoup ${fmtUSD(TOTAL_PLANNED)}</span>
+            <span>${fmtUSD(appliedUSD)} of ${fmtUSD(TOTAL_PLANNED)} · ${fmtUSD(TOTAL_PLANNED - appliedUSD)} to go</span>
+          </div>
+          ${bar(pctRecouped, '#22c55e')}
+        </div>
+
+        <div style="margin-bottom:20px">
+          <div style="display:flex;justify-content:space-between;font-size:12px;color:#666">
+            <span>Phase 2 — 2× Recoup ${fmtUSD(RECOUP_TARGET)}</span>
+            <span>${fmtUSD(appliedUSD)} of ${fmtUSD(RECOUP_TARGET)} · ${fmtUSD(RECOUP_TARGET - appliedUSD)} to go</span>
+          </div>
+          ${bar(pct2x, '#f0b429')}
+        </div>
+
+        <div style="border-top:1px solid #222;padding-top:12px;font-size:12px;color:#666;display:flex;gap:20px;flex-wrap:wrap">
+          <span>Revenue ${fmtUSD(revenueUSD)} − Fixed ${fmtUSD(fixedUSD)} = Net ${fmtUSD(netProfitUSD)} × 75% = <strong style="color:#22c55e">${fmtUSD(appliedUSD)}</strong></span>
+          <span style="margin-left:auto">After full recoup → 80% Javier / 20% Ryan</span>
+        </div>
+      `;
     }
 
     function drawPie(svgId, legendId, slices) {
@@ -229,19 +275,6 @@
           </div>
         </div>`;
       }).join('');
-    }
-
-    function renderEntries(items) {
-      if (!items.length) return setEmpty('entries-list', 'No money entries yet.');
-      document.getElementById('entries-list').innerHTML = items.map(e => `
-        <div class="row">
-          <div>
-            <div class="row-title">${escapeHtml(e.description)}</div>
-            <div class="row-meta">${shortDate(e.date)} · ${escapeHtml(e.track)} · ${escapeHtml(e.category || 'Uncategorized')}</div>
-          </div>
-          <span class="pill ${e.type === 'Income' ? 'green' : 'red'}">${e.type === 'Income' ? '+' : '−'} ${money(e.amount_cop)}</span>
-        </div>
-      `).join('');
     }
 
     loadDashboard();
