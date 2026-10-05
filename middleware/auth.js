@@ -11,6 +11,7 @@
  *   SESSION_SECRET      random string for signing cookies
  */
 const crypto = require('crypto');
+const sessionDb = require('../db/auth');
 
 // Active sessions: token -> { email, name, expires }
 const sessions = new Map();
@@ -37,6 +38,7 @@ function createSignedSession(user, expires) {
   if (!secret) return null;
 
   const payload = base64UrlEncode({
+    id: crypto.randomBytes(16).toString('hex'),
     email: user.email,
     name: user.name,
     expires: expires.toISOString(),
@@ -49,7 +51,9 @@ function getSignedSession(token) {
   const secret = getSessionSecret();
   if (!secret || !token || !token.includes('.')) return null;
 
-  const [payload, signature] = token.split('.');
+  const parts = token.split('.');
+  if (parts.length !== 2) return null;
+  const [payload, signature] = parts;
   if (!payload || !signature) return null;
 
   const expected = signPayload(payload, secret);
@@ -91,10 +95,12 @@ function login(email, password) {
   return { token, expires, name: user.name };
 }
 
-function getSession(token) {
+async function getSession(token) {
   if (!token) return null;
   const signedSession = getSignedSession(token);
-  if (signedSession) return signedSession;
+  if (signedSession) {
+    return await sessionDb.isRevoked(token) ? null : signedSession;
+  }
 
   const session = sessions.get(token);
   if (!session) return null;
@@ -102,35 +108,42 @@ function getSession(token) {
   return session;
 }
 
-function logout(token) {
+async function logout(token) {
+  const session = getSignedSession(token);
+  if (session) await sessionDb.revoke(token, session.expires);
   sessions.delete(token);
 }
 
+// Express 4 does not automatically forward rejected promises.
+function handleAuthErrors(handler) {
+  return (req, res, next) => Promise.resolve(handler(req, res, next)).catch(next);
+}
+
 // Middleware: redirect to /login if not authenticated
-function requireAuth(req, res, next) {
+const requireAuth = handleAuthErrors(async (req, res, next) => {
   const token = req.cookies?.session;
-  const session = getSession(token);
+  const session = await getSession(token);
   if (!session) {
     return res.redirect('/login?next=' + encodeURIComponent(req.originalUrl));
   }
   req.user = session;
   next();
-}
+});
 
 // Middleware: redirect to /login if not authenticated (for API routes — return 401 instead)
-function requireAuthApi(req, res, next) {
+const requireAuthApi = handleAuthErrors(async (req, res, next) => {
   const token = req.cookies?.session;
-  const session = getSession(token);
+  const session = await getSession(token);
   if (!session) return res.status(401).json({ error: 'Not authenticated' });
   req.user = session;
   next();
-}
+});
 
 // Internal APIs may be called from the logged-in admin UI, or by trusted
 // integrations that know BUDGET_SECRET. If neither credential is present,
 // keep the endpoint closed.
-function requireInternalAccess(req, res, next) {
-  const session = getSession(req.cookies?.session);
+const requireInternalAccess = handleAuthErrors(async (req, res, next) => {
+  const session = await getSession(req.cookies?.session);
   if (session) {
     req.user = session;
     return next();
@@ -141,6 +154,6 @@ function requireInternalAccess(req, res, next) {
   if (secret && provided === secret) return next();
 
   return res.status(401).json({ error: 'Unauthorized' });
-}
+});
 
 module.exports = { login, logout, getSession, requireAuth, requireAuthApi, requireInternalAccess };

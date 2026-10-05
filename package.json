@@ -6,7 +6,8 @@
     "start": "node server.js",
     "dev": "node server.js",
     "build": "npm run migrate",
-    "migrate": "node migrate.js"
+    "migrate": "node migrate.js",
+    "test": "node --test tests/*.test.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",

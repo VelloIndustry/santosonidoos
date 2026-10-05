@@ -26,14 +26,16 @@ function safeNextPath(next) {
 }
 
 // GET /login — show login page
-router.get('/login', (req, res) => {
-  const next = safeNextPath(req.query.next);
-  // If already logged in, redirect
-  const { getSession } = require('../middleware/auth');
-  const session = getSession(req.cookies?.session);
-  if (session) return res.redirect(next);
+router.get('/login', async (req, res, onError) => {
+  try {
+    const next = safeNextPath(req.query.next);
+    // If already logged in, redirect
+    const { getSession } = require('../middleware/auth');
+    const session = await getSession(req.cookies?.session);
+    if (session) return res.redirect(next);
 
-  res.send(loginPage(next, null));
+    res.send(loginPage(next, null));
+  } catch (err) { onError(err); }
 });
 
 // POST /login — handle login
@@ -61,11 +63,13 @@ router.post('/login', (req, res) => {
 });
 
 // POST /logout
-router.post('/logout', (req, res) => {
-  const token = req.cookies?.session;
-  if (token) logout(token);
-  res.clearCookie('session');
-  res.redirect('/login');
+router.post('/logout', async (req, res, next) => {
+  try {
+    const token = req.cookies?.session;
+    if (token) await logout(token);
+    res.clearCookie('session');
+    res.redirect('/login');
+  } catch (err) { next(err); }
 });
 
 function loginPage(next, error) {
