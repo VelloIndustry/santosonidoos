@@ -123,60 +123,23 @@ async function getPlanVsActual({ months = 4 } = {}) {
 
 /**
  * Payback tracker stats: cumulative profit, phase, run rate, projections.
- * Uses Actual-mode entries only. Deducts Javier's flat monthly salary ($625 USD ≈ 2,750,000 COP)
- * and operating costs before computing profit share.
+ * Uses shared monthly rules: Actual revenue less rent and the agreed 2,750,000 COP
+ * Javier allowance, no loss carryforward, 3,300 COP/USD.
  */
 async function getPaybackStats() {
-  const { rows } = await pool.query(`
-    SELECT
-      type,
-      mode,
-      SUM(amount_cop) AS total_cop
-    FROM budget_entries
-    WHERE mode = 'Actual'
-    GROUP BY type, mode
-    ORDER BY type
-  `);
-
-  let totalIncome = 0;
-  let totalExpense = 0;
-  for (const r of rows) {
-    if (r.type === 'Income') totalIncome += Number(r.total_cop);
-    if (r.type === 'Expense') totalExpense += Number(r.total_cop);
-  }
-
-  // Javier's salary in COP: $625/mo × 4400 COP/USD
-  const JAVIER_SALARY_COP = 625 * 4400; // 2,750,000 COP/month
-
-  // Operating costs flat/mo
-  const OPERATING_COP = 1375 * 4400; // 6,050,000 COP/month
-
-  // Phase 1 threshold: Ryan needs $70K cumulative share
-  const RYAN_PHASE1_TARGET_USD = 70000;
-  const RYAN_PHASE1_SPLIT = 0.75;
-  const TOTAL_PROFIT_NEEDED_USD = RYAN_PHASE1_TARGET_USD / RYAN_PHASE1_SPLIT; // ~93,333
-
-  // All Actual entries — compute first/last dates for run rate
-  const { rows: entryDates } = await pool.query(`
-    SELECT
-      MIN(date) AS first_entry,
-      MAX(date) AS last_entry,
-      COUNT(*) AS entry_count
-    FROM budget_entries
-    WHERE mode = 'Actual' AND type = 'Income'
-  `);
-
+  const { rows } = await pool.query("SELECT *, TO_CHAR(date, 'YYYY-MM-DD') AS date FROM budget_entries WHERE mode = 'Actual' ORDER BY date, id");
+  const finance = require('../public/finance');
+  const result = finance.calculate(rows);
+  const income = result.actual.filter(e => e.type === 'Income');
+  const totalExpense = result.actual.filter(e => e.type === 'Expense').reduce((s,e)=>s+Number(e.amount_cop),0);
   return {
-    totalIncome,
-    totalExpense,
-    totalProfit: totalIncome - totalExpense,
-    javierSalaryCOP: JAVIER_SALARY_COP,
-    operatingCOP: OPERATING_COP,
-    ryanPhase1TargetUSD: RYAN_PHASE1_TARGET_USD,
-    totalProfitNeededUSD: TOTAL_PROFIT_NEEDED_USD,
-    firstEntry: entryDates[0]?.first_entry,
-    lastEntry: entryDates[0]?.last_entry,
-    entryCount: Number(entryDates[0]?.entry_count || 0),
+    ...result, actual: undefined,
+    totalIncome: result.totalRevenueCOP, totalExpense,
+    totalProfit: result.totalRevenueCOP - totalExpense,
+    javierSalaryCOP: finance.SALARY_COP,
+    ryanPhase1TargetUSD: finance.TARGET_USD,
+    totalProfitNeededUSD: finance.TARGET_USD / 0.75,
+    firstEntry: income[0]?.date, lastEntry: income.at(-1)?.date, entryCount: income.length,
   };
 }
 

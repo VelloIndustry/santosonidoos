@@ -133,6 +133,7 @@
     </section>
   </main>
 
+  <script src="/finance.js"></script>
   <script>
     function money(n) { return '$' + Number(n || 0).toLocaleString('es-CO'); }
     function shortDate(d) { return d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '--'; }
@@ -147,19 +148,14 @@
     function setEmpty(id, text) { document.getElementById(id).innerHTML = `<div class="empty">${text}</div>`; }
 
     async function loadDashboard() {
-      const [summary, entries] = await Promise.all([
-        getJson('/api/budget/summary').catch(() => []),
-        getJson('/api/budget/entries?limit=500').catch(() => null),
-      ]);
+      let entries;
+      try { entries = await ChambaFinance.allEntries(path => getJson('/api/budget' + path)); }
+      catch (err) { setEmpty('payback-body', 'Financial records could not be loaded. Please retry.'); return; }
+      const posted = entries.filter(e => e.mode === 'Actual');
+      const income = posted.filter(e => e.type === 'Income').reduce((s,e)=>s+Number(e.amount_cop),0);
+      const expense = posted.filter(e => e.type === 'Expense').reduce((s,e)=>s+Number(e.amount_cop),0);
 
-      let income = 0, expense = 0;
-      summary.forEach(row => {
-        if (row.mode !== 'Actual') return;
-        if (row.type === 'Income') income += Number(row.total_cop || 0);
-        if (row.type === 'Expense') expense += Number(row.total_cop || 0);
-      });
-
-      const DASH_RATE = 3300;
+      const DASH_RATE = ChambaFinance.RATE;
       const usd = n => '$' + (n / DASH_RATE).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' USD';
       document.getElementById('m-income').textContent = money(income) + ' COP';
       document.getElementById('m-income-usd').textContent = usd(income);
@@ -169,17 +165,17 @@
       document.getElementById('m-net-usd').textContent = usd(income - expense);
 
       if (entries !== null) {
-        const actual = entries;
+        const actual = entries.filter(e => e.mode === 'Actual');
         const totalIncome  = actual.filter(e => e.type === 'Income').reduce((s, e) => s + Number(e.amount_cop), 0);
         const totalExpense = actual.filter(e => e.type === 'Expense').reduce((s, e) => s + Number(e.amount_cop), 0);
         const net = totalIncome - totalExpense;
 
-        const FIXED = ['Studio Rent', 'Staff / Engineer'];
-        const copRate = +(localStorage.getItem('cop_to_usd') || 4100);
-        const INVESTED = 24474, TOTAL_PLANNED = 35000, RECOUP_TARGET = 70000, SHARE = 0.75;
-        const fixedCOP = actual.filter(e => e.type === 'Expense' && FIXED.includes(e.category)).reduce((s, e) => s + Number(e.amount_cop), 0);
-        const netProfitUSD = Math.max(0, totalIncome - fixedCOP) / copRate;
-        const appliedUSD = netProfitUSD * SHARE;
+        const copRate = ChambaFinance.RATE;
+        const INVESTED = 24474, TOTAL_PLANNED = 35000, RECOUP_TARGET = 70000;
+        const calculation = ChambaFinance.calculate(entries);
+        const fixedCOP = calculation.totalFixedCOP;
+        const netProfitUSD = (calculation.totalRevenueCOP - fixedCOP) / copRate;
+        const appliedUSD = calculation.appliedUSD;
         const pctRecouped = Math.min(1, appliedUSD / TOTAL_PLANNED);
         const pct2x = Math.min(1, appliedUSD / RECOUP_TARGET);
 
@@ -213,16 +209,16 @@
             <div style="font-size:11px;color:#666">of ${fmtUSD(TOTAL_PLANNED)} planned · ${((INVESTED/TOTAL_PLANNED)*100).toFixed(0)}%</div>
           </div>
           <div>
-            <div style="font-size:11px;color:#666;margin-bottom:2px;text-transform:uppercase;letter-spacing:.5px">Applied to Payback</div>
+            <div style="font-size:11px;color:#666;margin-bottom:2px;text-transform:uppercase;letter-spacing:.5px">Calculated Payback Credit</div>
             <div style="font-size:26px;font-weight:700;color:#22c55e">${fmtUSD(appliedUSD)}</div>
-            <div style="font-size:11px;color:#666">75% of net profit · ${(pctRecouped*100).toFixed(1)}% recouped</div>
+            <div style="font-size:11px;color:#666">75% of positive monthly profit · ${(pctRecouped*100).toFixed(1)}% recouped</div>
           </div>
         </div>
 
         <div style="margin-bottom:16px">
           <div style="display:flex;justify-content:space-between;font-size:12px;color:#666">
             <span>Phase 1 — Recoup ${fmtUSD(TOTAL_PLANNED)}</span>
-            <span>${fmtUSD(appliedUSD)} of ${fmtUSD(TOTAL_PLANNED)} · ${fmtUSD(TOTAL_PLANNED - appliedUSD)} to go</span>
+            <span>${fmtUSD(appliedUSD)} of ${fmtUSD(TOTAL_PLANNED)} · ${fmtUSD(Math.max(0, TOTAL_PLANNED - appliedUSD))} to go</span>
           </div>
           ${bar(pctRecouped, '#22c55e')}
         </div>
@@ -230,14 +226,14 @@
         <div style="margin-bottom:20px">
           <div style="display:flex;justify-content:space-between;font-size:12px;color:#666">
             <span>Phase 2 — 2× Recoup ${fmtUSD(RECOUP_TARGET)}</span>
-            <span>${fmtUSD(appliedUSD)} of ${fmtUSD(RECOUP_TARGET)} · ${fmtUSD(RECOUP_TARGET - appliedUSD)} to go</span>
+            <span>${fmtUSD(appliedUSD)} of ${fmtUSD(RECOUP_TARGET)} · ${fmtUSD(Math.max(0, RECOUP_TARGET - appliedUSD))} to go</span>
           </div>
           ${bar(pct2x, '#f0b429')}
         </div>
 
         <div style="border-top:1px solid #222;padding-top:12px;font-size:12px;color:#666;display:flex;gap:20px;flex-wrap:wrap">
-          <span>Revenue ${fmtUSD(revenueUSD)} − Fixed ${fmtUSD(fixedUSD)} = Net ${fmtUSD(netProfitUSD)} × 75% = <strong style="color:#22c55e">${fmtUSD(appliedUSD)}</strong></span>
-          <span style="margin-left:auto">After full recoup → 80% Javier / 20% Ryan</span>
+          <span>Sum of positive monthly profit × 75% (rent + Javier allowance deducted; losses do not carry forward): <strong style="color:#22c55e">${fmtUSD(appliedUSD)}</strong></span>
+          <span style="margin-left:auto">Target $70,000 · 3,300 COP/USD · Calculated credit; payments/reinvestments require separate records</span>
         </div>
       `;
     }

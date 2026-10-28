@@ -792,20 +792,21 @@
 
 <div id="toast"></div>
 
+<script src="/finance.js"></script>
 <script>
 // ---- Config ----
 const CATEGORIES = {
   Studio: {
     Income:  ['Recording Session', 'Mix & Master', 'Beat Sale', 'Studio Rental', 'Podcast / Voice', 'Sound Design'],
-    Expense: ['Studio Rent', 'Equipment Purchase', 'Equipment Repair', 'Software & Plugins', 'Acoustic Treatment', 'Utilities', 'Marketing', 'Staff / Engineer'],
+    Expense: ['Studio Rent', 'Equipment Purchase', 'Equipment Repair', 'Software & Plugins', 'Acoustic Treatment', 'Utilities', 'Marketing', 'Staff / Engineer', 'Travel'],
   },
   Artist: {
     Income:  ['Streaming Royalties', 'Live Show / Performance', 'Merchandise', 'Sync Licensing', 'Brand Deal / Sponsorship', 'YouTube / Content'],
-    Expense: ['Studio Time', 'Music Video', 'Marketing & Promo', 'Distribution', 'Travel', 'Merchandise Production', 'Management Fee', 'PR / Press'],
+    Expense: ['Studio Time', 'Music Video', 'Marketing & Promo', 'Distribution', 'Travel', 'Merchandise Production', 'Management Fee', 'PR / Press', 'Javier Salary', 'Other Salaries', 'Wardrobe', 'Family Support', 'Personal Expenses', 'Equipment Purchase', 'Software & Plugins', 'Internet', 'Donations'],
   },
   Producer: {
     Income:  ['Beat License Non-Exclusive', 'Beat License Exclusive', 'Custom Beat', 'Production Fee', 'Royalty Payment', 'Collaboration Fee'],
-    Expense: ['Sample Clearance', 'Software & Plugins', 'Marketing & Ads', 'Collaboration Payment', 'Equipment', 'Outsourced Mix / Master'],
+    Expense: ['Sample Clearance', 'Software & Plugins', 'Marketing & Ads', 'Collaboration Payment', 'Equipment', 'Outsourced Mix / Master', 'Donations'],
   },
   Camera: {
     Income:  ['Music Video', 'Photo Session', 'Visualizer / Lyric Video', 'Retainer Client', 'Event Coverage', 'Content Creation'],
@@ -1123,7 +1124,7 @@ async function loadDashboard() {
 
   let entries;
   try {
-    entries = await apiFetch('/entries?limit=500');
+    entries = await ChambaFinance.allEntries(apiFetch);
     document.getElementById('summary-cards').innerHTML = '<div style="color:#22c55e;padding:20px;">✓ fetch ok — ' + entries.length + ' entries</div>';
   } catch (err) {
     document.getElementById('summary-cards').innerHTML = '<div style="color:#ef4444;padding:20px;">✗ fetch failed: ' + err.message + '</div>';
@@ -1186,7 +1187,7 @@ function formatCOP(n) {
 }
 
 function renderSummaryCards(entries) {
-  const actual = entries;
+  const actual = entries.filter(e => e.mode === 'Actual');
   const totalIncome = actual.filter(e => e.type === 'Income').reduce((s, e) => s + Number(e.amount_cop), 0);
   const totalExpense = actual.filter(e => e.type === 'Expense').reduce((s, e) => s + Number(e.amount_cop), 0);
   const net = totalIncome - totalExpense;
@@ -1262,7 +1263,7 @@ function renderSummaryCards(entries) {
 function renderMonthlyGrid(entries) {
   const tracks = ['Studio', 'Artist', 'Producer', 'Camera'];
   const trackDots = { Studio: 'dot-studio', Artist: 'dot-artist', Producer: 'dot-producer', Camera: 'dot-camera' };
-  const actual = entries;
+  const actual = entries.filter(e => e.mode === 'Actual');
 
   // Collect all months from entries
   const months = [...new Set(actual.map(e => e.date ? e.date.slice(0, 7) : null).filter(Boolean))].sort().reverse();
@@ -1330,7 +1331,7 @@ async function loadEntries() {
 
   document.getElementById('entries-body').innerHTML = '<tr><td colspan="11" class="loading">Loading...</td></tr>';
   try {
-    const entries = await apiFetch('/entries?' + params.toString());
+    const entries = await ChambaFinance.allEntries(apiFetch, params.toString());
     allEntries = entries;
     renderEntries(entries);
   } catch (err) {
@@ -1383,7 +1384,7 @@ function clearFilters() {
 async function loadMonthlyPnl() {
   document.getElementById('pnl-content').innerHTML = '<div class="loading">Loading...</div>';
   try {
-    const entries = await apiFetch('/entries?limit=500');
+    const entries = await ChambaFinance.allEntries(apiFetch);
     renderMonthlyPnl(entries);
   } catch (err) {
     document.getElementById('pnl-content').innerHTML = `<div class="empty">${err.message}</div>`;
@@ -1391,6 +1392,7 @@ async function loadMonthlyPnl() {
 }
 
 function renderMonthlyPnl(entries) {
+  entries = entries.filter(e => e.mode === 'Actual');
   if (!entries.length) {
     document.getElementById('pnl-content').innerHTML = '<div class="empty">No entries yet.</div>';
     return;
@@ -1460,7 +1462,7 @@ function renderMonthlyPnl(entries) {
 async function loadByCategory() {
   document.getElementById('cat-content').innerHTML = '<div class="loading">Loading...</div>';
   try {
-    const entries = await apiFetch('/entries?limit=500');
+    const entries = await ChambaFinance.allEntries(apiFetch);
     renderByCategory(entries);
   } catch (err) {
     document.getElementById('cat-content').innerHTML = `<div class="empty">${err.message}</div>`;
@@ -1468,6 +1470,7 @@ async function loadByCategory() {
 }
 
 function renderByCategory(entries) {
+  entries = entries.filter(e => e.mode === 'Actual');
   if (!entries.length) {
     document.getElementById('cat-content').innerHTML = '<div class="empty">No entries yet.</div>';
     return;
@@ -1671,41 +1674,29 @@ const RYAN_INVESTED_USD = 24474;    // capital deployed so far: $10,000 + $9,474
 const RYAN_TOTAL_INVEST_USD = 35000; // total planned investment
 const RYAN_RECOUP_TARGET_USD = RYAN_TOTAL_INVEST_USD * 2; // 2× = $70,000
 const REVENUE_SHARE = 0.75;
-let COP_TO_USD = +(localStorage.getItem('cop_to_usd') || 4100);
-
-function saveCopRate(val) {
-  const n = parseInt(val, 10);
-  if (isNaN(n) || n < 1000) return;
-  COP_TO_USD = n;
-  localStorage.setItem('cop_to_usd', n);
-  loadPayback();
-}
+const COP_TO_USD = ChambaFinance.RATE;
 
 async function loadPayback() {
   const el = document.getElementById('payback-content');
   el.innerHTML = '<div class="loading">Loading payback data...</div>';
   try {
-    const entries = await apiFetch('/entries?limit=500');
+    const entries = await ChambaFinance.allEntries(apiFetch);
     renderPayback(entries, el);
   } catch (err) {
     el.innerHTML = `<div class="error">Failed to load: ${escapeHtml(err.message)}</div>`;
   }
 }
 
-const FIXED_COST_CATEGORIES = ['Studio Rent', 'Staff / Engineer'];
+// Javier's salary is an agreed allowance, not a sum of salary expense entries.
 
 function renderPayback(entries, el) {
-  const actual = entries;
-  const income = actual.filter(e => e.type === 'Income');
-  const fixedExpenses = actual.filter(e => e.type === 'Expense' && FIXED_COST_CATEGORIES.includes(e.category));
-
-  const totalRevenueCOP = income.reduce((s, e) => s + Number(e.amount_cop || 0), 0);
-  const totalFixedCOP = fixedExpenses.reduce((s, e) => s + Number(e.amount_cop || 0), 0);
+  const calculation = ChambaFinance.calculate(entries);
+  const income = calculation.actual.filter(e => e.type === 'Income');
+  const { totalRevenueCOP, totalFixedCOP, appliedUSD } = calculation;
   const netProfitCOP = totalRevenueCOP - totalFixedCOP;
   const totalRevenueUSD = totalRevenueCOP / COP_TO_USD;
   const totalFixedUSD = totalFixedCOP / COP_TO_USD;
-  const netProfitUSD = Math.max(0, netProfitCOP) / COP_TO_USD;
-  const appliedUSD = netProfitUSD * REVENUE_SHARE;
+  const netProfitUSD = netProfitCOP / COP_TO_USD;
 
   // Capital deployed progress
   const pctDeployed = Math.min(1, RYAN_INVESTED_USD / RYAN_TOTAL_INVEST_USD);
@@ -1718,19 +1709,15 @@ function renderPayback(entries, el) {
   const remainingTo2x = Math.max(0, RYAN_RECOUP_TARGET_USD - appliedUSD);
 
   // Monthly payback log — deduct fixed costs per month
-  const allMonths = [...new Set([...income, ...fixedExpenses].map(e => (e.date||'').slice(0,7)))].filter(Boolean).sort();
-  let cumApplied = 0;
+  const allMonths = calculation.monthly.map(r => r.month);
   let monthRows = '';
-  for (const m of allMonths) {
-    const revCOP = income.filter(e => (e.date||'').startsWith(m)).reduce((s,e) => s + Number(e.amount_cop||0), 0);
-    const fixCOP = fixedExpenses.filter(e => (e.date||'').startsWith(m)).reduce((s,e) => s + Number(e.amount_cop||0), 0);
-    const netCOP = revCOP - fixCOP;
-    const revUSD = revCOP / COP_TO_USD;
-    const fixUSD = fixCOP / COP_TO_USD;
-    const netUSD = Math.max(0, netCOP) / COP_TO_USD;
-    const appliedM = netUSD * REVENUE_SHARE;
-    cumApplied += appliedM;
-    const stillOwed = Math.max(0, RYAN_TOTAL_INVEST_USD - cumApplied);
+  for (const row of calculation.monthly) {
+    const m = row.month, netCOP = row.netCOP;
+    const revUSD = row.revenueCOP / COP_TO_USD;
+    const fixUSD = row.fixedCOP / COP_TO_USD;
+    const netUSD = row.netCOP / COP_TO_USD;
+    const appliedM = row.appliedUSD, cumApplied = row.cumulativeUSD;
+    const stillOwed = Math.max(0, RYAN_RECOUP_TARGET_USD - cumApplied);
     monthRows += `<tr>
       <td style="padding:10px 14px">${m}</td>
       <td style="padding:10px 14px;text-align:right;color:var(--green)">${fmtUSD(revUSD)}</td>
@@ -1761,9 +1748,7 @@ function renderPayback(entries, el) {
           <div>
             <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:3px">COP/USD Rate</div>
             <div style="display:flex;align-items:center;gap:8px">
-              <input id="cop-rate-input" type="number" value="${COP_TO_USD}" min="1000" max="9999" step="10"
-                style="width:90px;font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;padding:4px 8px;border:1.5px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);outline:none"
-                onchange="saveCopRate(this.value)">
+              <span id="cop-rate-input">3,300</span>
               <span style="font-size:13px;color:var(--text-dim)">COP/USD</span>
             </div>
           </div>
@@ -1777,10 +1762,9 @@ function renderPayback(entries, el) {
           <span style="color:var(--text-dim);margin:0 4px">=</span>
           <span style="color:var(--text-dim)">Net Profit</span>
           <span style="font-weight:700">${fmtUSD(netProfitUSD)}</span>
-          <span style="color:var(--text-dim);margin:0 4px">×</span>
-          <span style="color:var(--text-dim)">75%</span>
-          <span style="color:var(--text-dim);margin:0 4px">=</span>
-          <span style="color:var(--text-dim)">Applied to Payback</span>
+
+          <span style="color:var(--text-dim);margin:0 4px">·</span>
+          <span style="color:var(--text-dim)">Monthly credits total</span>
           <span style="font-weight:700;color:var(--gold)">${fmtUSD(appliedUSD)}</span>
         </div>
       </div>
@@ -1822,28 +1806,28 @@ function renderPayback(entries, el) {
             <div style="font-size:11px;color:var(--green);margin-top:2px">✓ Deployed</div>
           </div>
           <div style="border-left:1px solid var(--border);padding-left:16px">
-            <div style="font-size:11px;color:var(--text-dim);margin-bottom:4px">Revenue Applied</div>
+            <div style="font-size:11px;color:var(--text-dim);margin-bottom:4px">Calculated Credit</div>
             <div style="font-weight:700;color:var(--green);font-variant-numeric:tabular-nums">${fmtUSD(appliedUSD)}</div>
             <div style="font-size:11px;color:var(--green);margin-top:2px">↳ from net profit</div>
           </div>
           <div>
-            <div style="font-size:11px;color:var(--text-dim);margin-bottom:4px">Remaining Capital</div>
-            <div style="font-weight:600;font-variant-numeric:tabular-nums">${fmtUSD(Math.max(0, remainingCapital - appliedUSD))}</div>
-            <div style="font-size:11px;color:var(--text-dim);margin-top:2px">after payback</div>
+            <div style="font-size:11px;color:var(--text-dim);margin-bottom:4px">Unfunded Commitment</div>
+            <div style="font-weight:600;font-variant-numeric:tabular-nums">${fmtUSD(remainingCapital)}</div>
+            <div style="font-size:11px;color:var(--text-dim);margin-top:2px">before any recorded reinvestment</div>
           </div>
         </div>
       </div>
 
-      <!-- Big visual: Revenue Applied to Payback -->
+      <!-- Big visual: Revenue Calculated Payback Credit -->
       <div class="card" style="margin-bottom:20px;padding:28px 28px 24px">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px">
           <div>
-            <div style="font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--text-dim);margin-bottom:4px">Applied to Payback (75% of net profit)</div>
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--text-dim);margin-bottom:4px">Calculated Payback Credit (75% of positive monthly profit)</div>
             <div style="font-size:32px;font-weight:700;color:var(--green);font-variant-numeric:tabular-nums">${fmtUSD(appliedUSD)}</div>
           </div>
           <div style="text-align:right">
-            <div style="font-size:11px;color:var(--text-dim);margin-bottom:4px">toward ${fmtUSD(RYAN_TOTAL_INVEST_USD)}</div>
-            <div style="font-size:22px;font-weight:600;color:var(--text-dim)">${(pctRecouped*100).toFixed(1)}%</div>
+            <div style="font-size:11px;color:var(--text-dim);margin-bottom:4px">toward ${fmtUSD(RYAN_RECOUP_TARGET_USD)}</div>
+            <div style="font-size:22px;font-weight:600;color:var(--text-dim)">${(pct2x*100).toFixed(1)}%</div>
           </div>
         </div>
 
@@ -1857,18 +1841,18 @@ function renderPayback(entries, el) {
           <div>
             <div style="font-size:10px;color:var(--text-dim);margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px">Fixed Costs</div>
             <div style="font-weight:600;color:var(--red)">${fmtUSD(totalFixedUSD)}</div>
-            <div style="font-size:10px;color:var(--text-dim);margin-top:2px">rent + salary</div>
+            <div style="font-size:10px;color:var(--text-dim);margin-top:2px">rent + Javier allowance</div>
           </div>
           <div style="color:var(--text-dim);font-size:18px;font-weight:300">=</div>
           <div>
             <div style="font-size:10px;color:var(--text-dim);margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px">Net Profit</div>
             <div style="font-weight:600;color:${netProfitCOP >= 0 ? 'var(--text)' : 'var(--red)'}">${fmtUSD(netProfitUSD)}</div>
           </div>
-          <div style="color:var(--text-dim);font-size:18px;font-weight:300">×</div>
+          <div style="color:var(--text-dim);font-size:18px;font-weight:300">·</div>
           <div>
             <div style="font-size:10px;color:var(--text-dim);margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px">Ryan's Share</div>
             <div style="font-weight:600;color:var(--gold)">75%</div>
-            <div style="font-size:10px;color:var(--text-dim);margin-top:2px">= ${fmtUSD(appliedUSD)}</div>
+            <div style="font-size:10px;color:var(--text-dim);margin-top:2px">Monthly credits: ${fmtUSD(appliedUSD)}</div>
           </div>
         </div>
 
@@ -1895,7 +1879,7 @@ function renderPayback(entries, el) {
         </div>
 
         <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
-          <div style="font-size:11px;color:var(--text-dim)">Still needed to recoup investment: <span style="font-weight:600;color:${remainingToRecoup <= 0 ? 'var(--green)' : 'var(--text)'}">${remainingToRecoup <= 0 ? '✓ Paid back' : fmtUSD(remainingToRecoup)}</span></div>
+          <div style="font-size:11px;color:var(--text-dim)">Remaining to $70,000 target: <span style="font-weight:600;color:${remainingTo2x <= 0 ? 'var(--green)' : 'var(--text)'}">${remainingTo2x <= 0 ? 'Target reached' : fmtUSD(remainingTo2x)}</span></div>
         </div>
       </div>
 
@@ -1914,7 +1898,7 @@ function renderPayback(entries, el) {
                     <th style="padding:8px 14px;text-align:right;color:var(--text-dim);font-weight:500">Net Profit</th>
                     <th style="padding:8px 14px;text-align:right;color:var(--text-dim);font-weight:500">75% Applied</th>
                     <th style="padding:8px 14px;text-align:right;color:var(--text-dim);font-weight:500">Cumulative</th>
-                    <th style="padding:8px 14px;text-align:right;color:var(--text-dim);font-weight:500">Still Owed</th>
+                    <th style="padding:8px 14px;text-align:right;color:var(--text-dim);font-weight:500">Remaining to $70,000</th>
                   </tr>
                 </thead>
                 <tbody>${monthRows}</tbody>
@@ -1923,7 +1907,7 @@ function renderPayback(entries, el) {
       </div>
 
       <p style="font-size:11px;color:var(--text-dim);margin-top:16px">
-        Formula: (Revenue − Studio Rent − Staff/Salary) × 75% = payback applied · Fixed costs only (variable expenses excluded) · 2× target = ${fmtUSD(RYAN_RECOUP_TARGET_USD)} · COP→USD at 4,400
+        Monthly credit = max(0, actual revenue − studio rent − 2,750,000 COP Javier allowance) × 75%. Losses do not carry forward. Other salaries and variable expenses are excluded. Target: ${fmtUSD(RYAN_RECOUP_TARGET_USD)}. Average rate: 3,300 COP/USD. Current month is provisional. Calculated credit is not proof of cash payment or reinvestment; reinvestments must be recorded separately.
       </p>
     </div>
   `;
