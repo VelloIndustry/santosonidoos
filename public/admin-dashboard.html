@@ -77,6 +77,7 @@
       .metrics, .content { grid-template-columns: 1fr; }
     }
   </style>
+<link rel="stylesheet" href="/finance-view.css">
 </head>
 <body>
   <header class="header">
@@ -85,200 +86,26 @@
       <span class="badge">Dashboard</span>
     </div>
     <nav class="nav">
-      <a href="/dashboard" class="active">Dashboard</a>
-      <a href="/money">Money</a>
+      <a href="/dashboard" class="active">Overview</a>
+      <a href="/money#entries">Transactions</a><a href="/money#payback">Investment &amp; Payback</a>
       <form method="POST" action="/logout" style="margin:0"><button>Logout</button></form>
     </nav>
   </header>
 
-  <main class="main">
-    <div class="page-top">
-      <div>
-        <h1>Business command center</h1>
-        <p class="sub">Clients, invoices, payments, and money movement in one place.</p>
-      </div>
-      <div class="quick">
-        <a class="btn" href="/money">+ Money Entry</a>
-      </div>
-    </div>
-
-    <section class="grid metrics">
-      <div class="card card-pad"><div class="metric-label">All Time Income</div><div class="metric-value" id="m-income">--</div><div class="metric-sub" id="m-income-usd" style="font-size:12px;margin-top:2px"></div></div>
-      <div class="card card-pad"><div class="metric-label">All Time Expenses</div><div class="metric-value" id="m-expense">--</div><div class="metric-sub" id="m-expense-usd" style="font-size:12px;margin-top:2px"></div></div>
-      <div class="card card-pad"><div class="metric-label">All Time Net</div><div class="metric-value" id="m-net">--</div><div class="metric-sub" id="m-net-usd" style="font-size:12px;margin-top:2px"></div></div>
-    </section>
-
-    <section class="grid content">
-      <div class="card card-pad" id="payback-card">
-        <div class="section-head"><div class="section-title">Investment &amp; Payback Plan</div><a class="section-link" href="/money#payback">Full Detail →</a></div>
-        <div id="payback-body"><div class="empty">Loading...</div></div>
-      </div>
-
-      <div class="stack">
-        <div class="card">
-          <div class="section-head"><div class="section-title">Income vs Expenses</div></div>
-          <div class="chart-wrap">
-            <svg id="pie-chart" width="120" height="120" viewBox="0 0 120 120"></svg>
-            <div class="chart-legend" id="pie-legend"></div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="section-head"><div class="section-title">Net Position</div></div>
-          <div class="chart-wrap">
-            <svg id="net-chart" width="120" height="120" viewBox="0 0 120 120"></svg>
-            <div class="chart-legend" id="net-legend"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
+  <main class="main"><div id="overview"><p role="status">Loading financial overview…</p></div></main>
   <script src="/finance.js"></script>
+  <script src="/finance-view.js"></script>
   <script>
-    function money(n) { return '$' + Number(n || 0).toLocaleString('es-CO'); }
-    function shortDate(d) { return d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '--'; }
-    function escapeHtml(value) {
-      return String(value || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-    }
-    async function getJson(url) {
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(url + ' failed');
-      return res.json();
-    }
-    function setEmpty(id, text) { document.getElementById(id).innerHTML = `<div class="empty">${text}</div>`; }
-
-    async function loadDashboard() {
-      let entries;
-      try { entries = await ChambaFinance.allEntries(path => getJson('/api/budget' + path)); }
-      catch (err) { setEmpty('payback-body', 'Financial records could not be loaded. Please retry.'); return; }
-      const posted = entries.filter(e => e.mode === 'Actual');
-      const income = posted.filter(e => e.type === 'Income').reduce((s,e)=>s+Number(e.amount_cop),0);
-      const expense = posted.filter(e => e.type === 'Expense').reduce((s,e)=>s+Number(e.amount_cop),0);
-
-      const DASH_RATE = ChambaFinance.RATE;
-      const usd = n => '$' + (n / DASH_RATE).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' USD';
-      document.getElementById('m-income').textContent = money(income) + ' COP';
-      document.getElementById('m-income-usd').textContent = usd(income);
-      document.getElementById('m-expense').textContent = money(expense) + ' COP';
-      document.getElementById('m-expense-usd').textContent = usd(expense);
-      document.getElementById('m-net').textContent = money(income - expense) + ' COP';
-      document.getElementById('m-net-usd').textContent = usd(income - expense);
-
-      if (entries !== null) {
-        const actual = entries.filter(e => e.mode === 'Actual');
-        const totalIncome  = actual.filter(e => e.type === 'Income').reduce((s, e) => s + Number(e.amount_cop), 0);
-        const totalExpense = actual.filter(e => e.type === 'Expense').reduce((s, e) => s + Number(e.amount_cop), 0);
-        const net = totalIncome - totalExpense;
-
-        const copRate = ChambaFinance.RATE;
-        const INVESTED = 24474, TOTAL_PLANNED = 35000, RECOUP_TARGET = 70000;
-        const calculation = ChambaFinance.calculate(entries);
-        const fixedCOP = calculation.totalFixedCOP;
-        const netProfitUSD = (calculation.totalRevenueCOP - fixedCOP) / copRate;
-        const appliedUSD = calculation.appliedUSD;
-        const pctRecouped = Math.min(1, appliedUSD / TOTAL_PLANNED);
-        const pct2x = Math.min(1, appliedUSD / RECOUP_TARGET);
-
-        renderPayback({ appliedUSD, pctRecouped, pct2x, INVESTED, TOTAL_PLANNED, RECOUP_TARGET, totalIncome, fixedCOP, netProfitUSD, copRate });
-
-        drawPie('pie-chart', 'pie-legend', [
-          { label: 'Income',   value: totalIncome,  color: '#22c55e' },
-          { label: 'Expenses', value: totalExpense, color: '#ef4444' },
-        ]);
-        drawPie('net-chart', 'net-legend', net >= 0
-          ? [{ label: 'Net Profit', value: net, color: '#22c55e' }, { label: 'Costs', value: totalExpense, color: '#333' }]
-          : [{ label: 'Net Loss', value: Math.abs(net), color: '#ef4444' }, { label: 'Income', value: totalIncome, color: '#333' }]
-        );
-      }
-    }
-
-    function fmtUSD(n) { return '$' + Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }); }
-    function bar(pct, color) {
-      return `<div style="background:#222;border-radius:6px;height:14px;overflow:hidden;margin:8px 0 4px">
-        <div style="background:${color};height:100%;width:${(pct*100).toFixed(1)}%;border-radius:6px;transition:width .5s"></div></div>`;
-    }
-
-    function renderPayback({ appliedUSD, pctRecouped, pct2x, INVESTED, TOTAL_PLANNED, RECOUP_TARGET, totalIncome, fixedCOP, netProfitUSD, copRate }) {
-      const revenueUSD = totalIncome / copRate;
-      const fixedUSD = fixedCOP / copRate;
-      document.getElementById('payback-body').innerHTML = `
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
-          <div>
-            <div style="font-size:11px;color:#666;margin-bottom:2px;text-transform:uppercase;letter-spacing:.5px">Capital Deployed</div>
-            <div style="font-size:26px;font-weight:700;color:#f0b429">${fmtUSD(INVESTED)}</div>
-            <div style="font-size:11px;color:#666">of ${fmtUSD(TOTAL_PLANNED)} planned · ${((INVESTED/TOTAL_PLANNED)*100).toFixed(0)}%</div>
-          </div>
-          <div>
-            <div style="font-size:11px;color:#666;margin-bottom:2px;text-transform:uppercase;letter-spacing:.5px">Calculated Payback Credit</div>
-            <div style="font-size:26px;font-weight:700;color:#22c55e">${fmtUSD(appliedUSD)}</div>
-            <div style="font-size:11px;color:#666">75% of positive monthly profit · ${(pctRecouped*100).toFixed(1)}% recouped</div>
-          </div>
-        </div>
-
-        <div style="margin-bottom:16px">
-          <div style="display:flex;justify-content:space-between;font-size:12px;color:#666">
-            <span>Phase 1 — Recoup ${fmtUSD(TOTAL_PLANNED)}</span>
-            <span>${fmtUSD(appliedUSD)} of ${fmtUSD(TOTAL_PLANNED)} · ${fmtUSD(Math.max(0, TOTAL_PLANNED - appliedUSD))} to go</span>
-          </div>
-          ${bar(pctRecouped, '#22c55e')}
-        </div>
-
-        <div style="margin-bottom:20px">
-          <div style="display:flex;justify-content:space-between;font-size:12px;color:#666">
-            <span>Phase 2 — 2× Recoup ${fmtUSD(RECOUP_TARGET)}</span>
-            <span>${fmtUSD(appliedUSD)} of ${fmtUSD(RECOUP_TARGET)} · ${fmtUSD(Math.max(0, RECOUP_TARGET - appliedUSD))} to go</span>
-          </div>
-          ${bar(pct2x, '#f0b429')}
-        </div>
-
-        <div style="border-top:1px solid #222;padding-top:12px;font-size:12px;color:#666;display:flex;gap:20px;flex-wrap:wrap">
-          <span>Sum of positive monthly profit × 75% (rent + Javier allowance deducted; losses do not carry forward): <strong style="color:#22c55e">${fmtUSD(appliedUSD)}</strong></span>
-          <span style="margin-left:auto">Target $70,000 · 3,300 COP/USD · Calculated credit; payments/reinvestments require separate records</span>
-        </div>
-      `;
-    }
-
-    function drawPie(svgId, legendId, slices) {
-      const total = slices.reduce((s, sl) => s + sl.value, 0);
-      const cx = 60, cy = 60, r = 52, inner = 30;
-      let angle = -Math.PI / 2;
-      let paths = '';
-
-      if (total === 0) {
-        paths = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#222"/>
-                 <circle cx="${cx}" cy="${cy}" r="${inner}" fill="#111"/>`;
-      } else {
-        slices.forEach(sl => {
-          if (sl.value === 0) return;
-          const sweep = (sl.value / total) * 2 * Math.PI;
-          const x1 = cx + r * Math.cos(angle);
-          const y1 = cy + r * Math.sin(angle);
-          angle += sweep;
-          const x2 = cx + r * Math.cos(angle);
-          const y2 = cy + r * Math.sin(angle);
-          const xi1 = cx + inner * Math.cos(angle);
-          const yi1 = cy + inner * Math.sin(angle);
-          const xi2 = cx + inner * Math.cos(angle - sweep);
-          const yi2 = cy + inner * Math.sin(angle - sweep);
-          const large = sweep > Math.PI ? 1 : 0;
-          paths += `<path d="M${x1},${y1} A${r},${r} 0 ${large},1 ${x2},${y2} L${xi1},${yi1} A${inner},${inner} 0 ${large},0 ${xi2},${yi2} Z" fill="${sl.color}"/>`;
-        });
-      }
-
-      document.getElementById(svgId).innerHTML = paths;
-      document.getElementById(legendId).innerHTML = slices.map(sl => {
-        const pct = total > 0 ? Math.round((sl.value / total) * 100) : 0;
-        return `<div class="legend-row">
-          <div class="legend-dot" style="background:${sl.color}"></div>
-          <div>
-            <div style="font-weight:600">${escapeHtml(sl.label)}</div>
-            <div class="legend-label">${pct}% · ${money(sl.value)}</div>
-          </div>
-        </div>`;
-      }).join('');
-    }
-
-    loadDashboard();
+  (async () => {
+    const el = document.getElementById('overview');
+    try {
+      const entries = await ChambaFinance.allEntries(async path => {
+        const response = await fetch('/api/budget' + path);
+        if (!response.ok) throw new Error('Unable to load financial records');
+        return response.json();
+      });
+      ChambaFinanceView.render(el, entries);
+    } catch (error) { el.textContent = 'Unable to load financial records. Please refresh to retry.'; }
+  })();
   </script>
-</body>
-</html>
+</body></html>
